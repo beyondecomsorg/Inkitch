@@ -1,0 +1,669 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify liquid section called "UGC Video Slider". This is a User Generated Content style video section with a dark black background (hex #080808) and a cinematic premium feel.
+    At the top center of the section show a small uppercase label in muted white (like "AS SEEN ON") and below it a large bold heading in white (like "Real People. Real Results.") using a strong display font.
+    Below the heading display a horizontal slider of UGC style video cards. Show 3 cards visible at a time on desktop, 1 card on mobile. Each card is tall and portrait shaped (like a phone/reel format — aspect ratio 9:16), with rounded corners (border-radius 16px) and a dark background.
+    Each video card should: autoplay the video automatically when the user hovers over the card, pause and reset to the beginning when the mouse leaves, have the video set to muted, loop, and playsinline so it works on all browsers and mobile. The video should fill the entire card using object-fit cover. Show a thin orange-red progress bar (hex #ff4d00) at the bottom of the card that animates from 0% to 100% while the video plays on hover.
+    On each card show a dark gradient overlay from transparent at the top to near black at the bottom. At the bottom left of the card show: a small colored tag label (like "New Arrivals"), a bold white title in large font, and a short subtitle in small muted white text. When the card is hovered all this text should smoothly fade out so the full video is visible.
+    Show a glowing play icon circle in the center of the card that appears only on hover with a smooth scale animation.
+    Add left and right arrow navigation buttons on the sides of the slider in a semi-transparent circle style. Add dot indicators below the slider showing the active slide in orange-red (hex #ff4d00) that stretches wider than the inactive dots.
+    In the theme editor allow me to: upload 3 MP4 video files (one per card), edit the tag label, card title, and card subtitle for each card, edit the section heading and label text, and change the accent color. On mobile show 1 card at a time with larger tap-friendly arrow buttons.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-ugc-video-slider-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    padding: 80px 20px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-ugc-video-slider__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-ugc-video-slider__label-{{ ai_gen_id }} {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .ai-ugc-video-slider__heading-{{ ai_gen_id }} {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-ugc-video-slider__container-{{ ai_gen_id }} {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-ugc-video-slider__track-wrapper-{{ ai_gen_id }} {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-ugc-video-slider__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-ugc-video-slider__card-{{ ai_gen_id }} {
+    flex: 0 0 calc((100% - 48px) / 3);
+    position: relative;
+    aspect-ratio: 9 / 16;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    cursor: pointer;
+  }
+
+  .ai-ugc-video-slider__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-ugc-video-slider__gradient-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-ugc-video-slider__card-{{ ai_gen_id }}:hover .ai-ugc-video-slider__gradient-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-ugc-video-slider__content-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-ugc-video-slider__card-{{ ai_gen_id }}:hover .ai-ugc-video-slider__content-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-ugc-video-slider__tag-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .ai-ugc-video-slider__title-{{ ai_gen_id }} {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+  }
+
+  .ai-ugc-video-slider__subtitle-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ai-ugc-video-slider__play-icon-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 3;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-ugc-video-slider__card-{{ ai_gen_id }}:hover .ai-ugc-video-slider__play-icon-{{ ai_gen_id }} {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  .ai-ugc-video-slider__play-icon-{{ ai_gen_id }} svg {
+    width: 32px;
+    height: 32px;
+    fill: #000000;
+    margin-left: 4px;
+  }
+
+  .ai-ugc-video-slider__progress-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background-color: {{ block.settings.accent_color }};
+    width: 0%;
+    transition: width 0.1s linear;
+    z-index: 4;
+  }
+
+  .ai-ugc-video-slider__nav-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 5;
+  }
+
+  .ai-ugc-video-slider__nav-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .ai-ugc-video-slider__nav-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+  }
+
+  .ai-ugc-video-slider__nav--prev-{{ ai_gen_id }} {
+    left: -24px;
+  }
+
+  .ai-ugc-video-slider__nav--next-{{ ai_gen_id }} {
+    right: -24px;
+  }
+
+  .ai-ugc-video-slider__dots-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+  }
+
+  .ai-ugc-video-slider__dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-ugc-video-slider__dot-{{ ai_gen_id }}.active {
+    width: 32px;
+    background-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-ugc-video-slider__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-ugc-video-slider-{{ ai_gen_id }} {
+      padding: 60px 16px;
+    }
+
+    .ai-ugc-video-slider__header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-ugc-video-slider__heading-{{ ai_gen_id }} {
+      font-size: 32px;
+    }
+
+    .ai-ugc-video-slider__card-{{ ai_gen_id }} {
+      flex: 0 0 100%;
+    }
+
+    .ai-ugc-video-slider__track-{{ ai_gen_id }} {
+      gap: 16px;
+    }
+
+    .ai-ugc-video-slider__nav-{{ ai_gen_id }} {
+      width: 56px;
+      height: 56px;
+    }
+
+    .ai-ugc-video-slider__nav--prev-{{ ai_gen_id }} {
+      left: 8px;
+    }
+
+    .ai-ugc-video-slider__nav--next-{{ ai_gen_id }} {
+      right: 8px;
+    }
+
+    .ai-ugc-video-slider__title-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+  }
+{% endstyle %}
+
+<ugc-video-slider-{{ ai_gen_id }} class="ai-ugc-video-slider-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-ugc-video-slider__header-{{ ai_gen_id }}">
+    {% if block.settings.label != blank %}
+      <div class="ai-ugc-video-slider__label-{{ ai_gen_id }}">{{ block.settings.label }}</div>
+    {% endif %}
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-ugc-video-slider__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+  </div>
+
+  <div class="ai-ugc-video-slider__container-{{ ai_gen_id }}">
+    <div class="ai-ugc-video-slider__track-wrapper-{{ ai_gen_id }}">
+      <div class="ai-ugc-video-slider__track-{{ ai_gen_id }}" data-track>
+        {% for i in (1..3) %}
+          {% liquid
+            assign video_key = 'video_' | append: i
+            assign tag_key = 'tag_' | append: i
+            assign tag_color_key = 'tag_color_' | append: i
+            assign title_key = 'title_' | append: i
+            assign subtitle_key = 'subtitle_' | append: i
+
+            assign video = block.settings[video_key]
+            assign tag = block.settings[tag_key]
+            assign tag_color = block.settings[tag_color_key]
+            assign title = block.settings[title_key]
+            assign subtitle = block.settings[subtitle_key]
+          %}
+
+          <div class="ai-ugc-video-slider__card-{{ ai_gen_id }}" data-card="{{ i }}">
+            {% if video != blank %}
+              <video
+                class="ai-ugc-video-slider__video-{{ ai_gen_id }}"
+                data-video
+                muted
+                loop
+                playsinline
+                preload="metadata"
+              >
+                <source src="{{ video }}" type="video/mp4">
+              </video>
+
+              <div class="ai-ugc-video-slider__progress-{{ ai_gen_id }}" data-progress></div>
+
+              <div class="ai-ugc-video-slider__play-icon-{{ ai_gen_id }}">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            {% else %}
+              <div class="ai-ugc-video-slider__placeholder-{{ ai_gen_id }}">
+                Upload video {{ i }}
+              </div>
+            {% endif %}
+
+            <div class="ai-ugc-video-slider__gradient-{{ ai_gen_id }}"></div>
+
+            <div class="ai-ugc-video-slider__content-{{ ai_gen_id }}">
+              {% if tag != blank %}
+                <div class="ai-ugc-video-slider__tag-{{ ai_gen_id }}" style="background-color: {{ tag_color }}; color: #ffffff;">
+                  {{ tag }}
+                </div>
+              {% endif %}
+              {% if title != blank %}
+                <h3 class="ai-ugc-video-slider__title-{{ ai_gen_id }}">{{ title }}</h3>
+              {% endif %}
+              {% if subtitle != blank %}
+                <p class="ai-ugc-video-slider__subtitle-{{ ai_gen_id }}">{{ subtitle }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button class="ai-ugc-video-slider__nav-{{ ai_gen_id }} ai-ugc-video-slider__nav--prev-{{ ai_gen_id }}" data-prev aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <button class="ai-ugc-video-slider__nav-{{ ai_gen_id }} ai-ugc-video-slider__nav--next-{{ ai_gen_id }}" data-next aria-label="Next slide">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+
+    <div class="ai-ugc-video-slider__dots-{{ ai_gen_id }}" data-dots></div>
+  </div>
+</ugc-video-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class UgcVideoSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.totalSlides = 3;
+        this.isTransitioning = false;
+        this.progressIntervals = [];
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.cards = this.querySelectorAll('[data-card]');
+        this.prevBtn = this.querySelector('[data-prev]');
+        this.nextBtn = this.querySelector('[data-next]');
+        this.dotsContainer = this.querySelector('[data-dots]');
+
+        this.setupDots();
+        this.setupNavigation();
+        this.setupVideoHover();
+        this.updateSlider();
+      }
+
+      setupDots() {
+        const slidesPerView = window.innerWidth <= 749 ? 1 : 3;
+        const totalDots = Math.ceil(this.totalSlides / slidesPerView);
+
+        for (let i = 0; i < totalDots; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'ai-ugc-video-slider__dot-{{ ai_gen_id }}';
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      setupNavigation() {
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+      }
+
+      setupVideoHover() {
+        this.cards.forEach((card) => {
+          const video = card.querySelector('[data-video]');
+          const progress = card.querySelector('[data-progress]');
+
+          if (!video) return;
+
+          let progressInterval;
+
+          card.addEventListener('mouseenter', () => {
+            video.currentTime = 0;
+            video.play();
+
+            if (progress) {
+              progress.style.width = '0%';
+              progressInterval = setInterval(() => {
+                const percent = (video.currentTime / video.duration) * 100;
+                progress.style.width = percent + '%';
+              }, 50);
+              this.progressIntervals.push(progressInterval);
+            }
+          });
+
+          card.addEventListener('mouseleave', () => {
+            video.pause();
+            video.currentTime = 0;
+
+            if (progress) {
+              progress.style.width = '0%';
+            }
+
+            if (progressInterval) {
+              clearInterval(progressInterval);
+              const index = this.progressIntervals.indexOf(progressInterval);
+              if (index > -1) {
+                this.progressIntervals.splice(index, 1);
+              }
+            }
+          });
+        });
+      }
+
+      updateSlider() {
+        const slidesPerView = window.innerWidth <= 749 ? 1 : 3;
+        const slideWidth = 100 / slidesPerView;
+        const gap = window.innerWidth <= 749 ? 16 : 24;
+        const gapPercent = (gap / this.track.offsetWidth) * 100;
+        const offset = -(this.currentSlide * (slideWidth + gapPercent));
+
+        this.track.style.transform = `translateX(${offset}%)`;
+
+        const dots = this.dotsContainer.querySelectorAll('.ai-ugc-video-slider__dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === this.currentSlide);
+        });
+      }
+
+      prevSlide() {
+        if (this.isTransitioning) return;
+        this.isTransitioning = true;
+
+        const slidesPerView = window.innerWidth <= 749 ? 1 : 3;
+        const maxSlide = Math.ceil(this.totalSlides / slidesPerView) - 1;
+
+        this.currentSlide = this.currentSlide > 0 ? this.currentSlide - 1 : maxSlide;
+        this.updateSlider();
+
+        setTimeout(() => {
+          this.isTransitioning = false;
+        }, 500);
+      }
+
+      nextSlide() {
+        if (this.isTransitioning) return;
+        this.isTransitioning = true;
+
+        const slidesPerView = window.innerWidth <= 749 ? 1 : 3;
+        const maxSlide = Math.ceil(this.totalSlides / slidesPerView) - 1;
+
+        this.currentSlide = this.currentSlide < maxSlide ? this.currentSlide + 1 : 0;
+        this.updateSlider();
+
+        setTimeout(() => {
+          this.isTransitioning = false;
+        }, 500);
+      }
+
+      goToSlide(index) {
+        if (this.isTransitioning) return;
+        this.isTransitioning = true;
+
+        this.currentSlide = index;
+        this.updateSlider();
+
+        setTimeout(() => {
+          this.isTransitioning = false;
+        }, 500);
+      }
+
+      disconnectedCallback() {
+        this.progressIntervals.forEach(interval => clearInterval(interval));
+      }
+    }
+
+    customElements.define('ugc-video-slider-{{ ai_gen_id }}', UgcVideoSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "UGC video slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "AS SEEN ON"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real People. Real Results."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#080808"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#ff4d00"
+    },
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "url",
+      "id": "video_1",
+      "label": "Video file URL"
+    },
+    {
+      "type": "text",
+      "id": "tag_1",
+      "label": "Tag label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "color",
+      "id": "tag_color_1",
+      "label": "Tag color",
+      "default": "#ff4d00"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Title",
+      "default": "Amazing Product"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_1",
+      "label": "Subtitle",
+      "default": "See it in action"
+    },
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "url",
+      "id": "video_2",
+      "label": "Video file URL"
+    },
+    {
+      "type": "text",
+      "id": "tag_2",
+      "label": "Tag label",
+      "default": "Trending"
+    },
+    {
+      "type": "color",
+      "id": "tag_color_2",
+      "label": "Tag color",
+      "default": "#ff4d00"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Title",
+      "default": "Customer Favorite"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_2",
+      "label": "Subtitle",
+      "default": "Loved by thousands"
+    },
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "url",
+      "id": "video_3",
+      "label": "Video file URL"
+    },
+    {
+      "type": "text",
+      "id": "tag_3",
+      "label": "Tag label",
+      "default": "Best Seller"
+    },
+    {
+      "type": "color",
+      "id": "tag_color_3",
+      "label": "Tag color",
+      "default": "#ff4d00"
+    },
+    {
+      "type": "text",
+      "id": "title_3",
+      "label": "Title",
+      "default": "Top Rated"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_3",
+      "label": "Subtitle",
+      "default": "5-star reviews"
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC video slider"
+    }
+  ]
+}
+{% endschema %}

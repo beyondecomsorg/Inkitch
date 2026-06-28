@@ -1,0 +1,698 @@
+{% doc %}
+  @prompt
+    Create a custom section called "Latest Deals". At the top, display a bold centered heading that says "Latest Deals". Below it, show a row of 3 deal cards side by side. Each card is split into two halves — the left half has a white background with deal text, and the right half shows a product image that fills the full height of the card.
+    The deal text on the left side should have: a small uppercase label at the top (like "UP TO" or "TAKE"), then a large bold red number (like "30", "20", "10") with a smaller "%" or "$" symbol and the word "off" next to it, and below that a short description in red (like "on Chemex" or "Sets of 4 mugs").
+    Each card should have a light gray thin border around it. The cards should be equal width, have no border radius, and sit flush in a row with small gaps between them. On mobile, the cards should stack vertically.
+    All deal content — the label text, number, symbol type (% or $), "off" text, and description — should be editable from the Shopify theme editor without touching code. The product image for each card should also be changeable from the theme editor. Each card should optionally link to a collection or product page., i want this also in slidding in moblie view not one by one 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-latest-deals-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+  }
+
+  .ai-latest-deals__heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-weight: 700;
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+    color: {{ block.settings.heading_color }};
+    font-family: 'Literata', serif;
+  }
+
+  .ai-latest-deals__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: {{ block.settings.card_gap }}px;
+    width: 100%;
+  }
+
+  .ai-latest-deals__card-{{ ai_gen_id }} {
+    display: flex;
+    border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+    border-radius: 0;
+    overflow: hidden;
+    height: {{ block.settings.card_height }}px;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+.ai-latest-deals__card-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+}
+
+.ai-latest-deals__content-{{ ai_gen_id }} {
+    width: 30%;
+}
+
+.ai-latest-deals__image-{{ ai_gen_id }} {
+    width: 70%;
+}
+
+.ai-latest-deals__image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+  .ai-latest-deals__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-2px);
+  }
+
+  .ai-latest-deals__card-content-{{ ai_gen_id }} {
+    flex: 1;
+    background-color: {{ block.settings.content_bg_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .ai-latest-deals__label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: {{ block.settings.deal_text_color }};
+  }
+
+  .ai-latest-deals__discount-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .ai-latest-deals__discount-number-{{ ai_gen_id }} {
+    font-size: {{ block.settings.number_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.deal_text_color }};
+    line-height: 1;
+  }
+
+  .ai-latest-deals__discount-symbol-{{ ai_gen_id }} {
+    font-size: {{ block.settings.symbol_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.deal_text_color }};
+    line-height: 1;
+  }
+
+  .ai-latest-deals__discount-off-{{ ai_gen_id }} {
+    font-size: {{ block.settings.off_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.deal_text_color }};
+    line-height: 1;
+  }
+
+  .ai-latest-deals__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.deal_text_color }};
+    text-align: center;
+  }
+
+  .ai-latest-deals__image-wrapper-{{ ai_gen_id }} {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-latest-deals__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-latest-deals__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-latest-deals__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-latest-deals__slider-wrapper-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-latest-deals__grid-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-latest-deals__slider-wrapper-{{ ai_gen_id }} {
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-latest-deals__slider-{{ ai_gen_id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: {{ block.settings.card_gap }}px;
+      padding: 0 16px;
+    }
+
+    .ai-latest-deals__slider-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-latest-deals__slider-{{ ai_gen_id }} .ai-latest-deals__card-{{ ai_gen_id }} {
+      flex: 0 0 85%;
+      scroll-snap-align: center;
+      height: {{ block.settings.card_height_mobile }}px;
+    }
+
+    .ai-latest-deals__dots-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .ai-latest-deals__dot-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #d0d0d0;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .ai-latest-deals__dot-{{ ai_gen_id }}.active {
+      background-color: {{ block.settings.deal_text_color }};
+    }
+  }
+{% endstyle %}
+
+<deals-slider-{{ ai_gen_id }} class="ai-latest-deals-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <h2 class="ai-latest-deals__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+
+  <div class="ai-latest-deals__grid-{{ ai_gen_id }}">
+    {% for i in (1..3) %}
+      {% liquid
+        assign label_key = 'deal_' | append: i | append: '_label'
+        assign number_key = 'deal_' | append: i | append: '_number'
+        assign symbol_key = 'deal_' | append: i | append: '_symbol'
+        assign description_key = 'deal_' | append: i | append: '_description'
+        assign image_key = 'deal_' | append: i | append: '_image'
+        assign link_key = 'deal_' | append: i | append: '_link'
+
+        assign label = block.settings[label_key]
+        assign number = block.settings[number_key]
+        assign symbol = block.settings[symbol_key]
+        assign description = block.settings[description_key]
+        assign image = block.settings[image_key]
+        assign link = block.settings[link_key]
+      %}
+
+      {% if link != blank %}
+        <a href="{{ link }}" class="ai-latest-deals__card-{{ ai_gen_id }}">
+      {% else %}
+        <div class="ai-latest-deals__card-{{ ai_gen_id }}">
+      {% endif %}
+
+        <div class="ai-latest-deals__card-content-{{ ai_gen_id }}">
+          {% if label != blank %}
+            <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
+          {% endif %}
+
+          <div class="ai-latest-deals__discount-wrapper-{{ ai_gen_id }}">
+            {% if number != blank %}
+              <span class="ai-latest-deals__discount-number-{{ ai_gen_id }}">{{ number }}</span>
+            {% endif %}
+            {% if symbol != blank %}
+              <span class="ai-latest-deals__discount-symbol-{{ ai_gen_id }}">{{ symbol }}</span>
+            {% endif %}
+            <span class="ai-latest-deals__discount-off-{{ ai_gen_id }}">off</span>
+          </div>
+
+          {% if description != blank %}
+            <div class="ai-latest-deals__description-{{ ai_gen_id }}">{{ description }}</div>
+          {% endif %}
+        </div>
+
+        <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
+          {% if image %}
+            <img
+              src="{{ image | image_url: width: 600 }}"
+              alt="{{ image.alt | escape }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+              class="ai-latest-deals__image-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-latest-deals__image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+      {% if link != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="ai-latest-deals__slider-wrapper-{{ ai_gen_id }}">
+    <div class="ai-latest-deals__slider-{{ ai_gen_id }}" data-slider>
+      {% for i in (1..3) %}
+        {% liquid
+          assign label_key = 'deal_' | append: i | append: '_label'
+          assign number_key = 'deal_' | append: i | append: '_number'
+          assign symbol_key = 'deal_' | append: i | append: '_symbol'
+          assign description_key = 'deal_' | append: i | append: '_description'
+          assign image_key = 'deal_' | append: i | append: '_image'
+          assign link_key = 'deal_' | append: i | append: '_link'
+
+          assign label = block.settings[label_key]
+          assign number = block.settings[number_key]
+          assign symbol = block.settings[symbol_key]
+          assign description = block.settings[description_key]
+          assign image = block.settings[image_key]
+          assign link = block.settings[link_key]
+        %}
+
+        {% if link != blank %}
+          <a href="{{ link }}" class="ai-latest-deals__card-{{ ai_gen_id }}" data-slide>
+        {% else %}
+          <div class="ai-latest-deals__card-{{ ai_gen_id }}" data-slide>
+        {% endif %}
+
+          <div class="ai-latest-deals__card-content-{{ ai_gen_id }}">
+            {% if label != blank %}
+              <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
+            {% endif %}
+
+            <div class="ai-latest-deals__discount-wrapper-{{ ai_gen_id }}">
+              {% if number != blank %}
+                <span class="ai-latest-deals__discount-number-{{ ai_gen_id }}">{{ number }}</span>
+              {% endif %}
+              {% if symbol != blank %}
+                <span class="ai-latest-deals__discount-symbol-{{ ai_gen_id }}">{{ symbol }}</span>
+              {% endif %}
+              <span class="ai-latest-deals__discount-off-{{ ai_gen_id }}">off</span>
+            </div>
+
+            {% if description != blank %}
+              <div class="ai-latest-deals__description-{{ ai_gen_id }}">{{ description }}</div>
+            {% endif %}
+          </div>
+
+          <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
+            {% if image %}
+              <img
+                src="{{ image | image_url: width: 600 }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+                class="ai-latest-deals__image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-latest-deals__image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+        {% if link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-latest-deals__dots-{{ ai_gen_id }}" data-dots>
+      <button class="ai-latest-deals__dot-{{ ai_gen_id }} active" data-dot="0" aria-label="Go to slide 1"></button>
+      <button class="ai-latest-deals__dot-{{ ai_gen_id }}" data-dot="1" aria-label="Go to slide 2"></button>
+      <button class="ai-latest-deals__dot-{{ ai_gen_id }}" data-dot="2" aria-label="Go to slide 3"></button>
+    </div>
+  </div>
+</deals-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class DealsSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.slider = this.querySelector('[data-slider]');
+        this.slides = this.querySelectorAll('[data-slide]');
+        this.dots = this.querySelectorAll('[data-dot]');
+
+        if (!this.slider || this.slides.length === 0) return;
+
+        this.currentSlide = 0;
+        this.setupEventListeners();
+        this.updateActiveDot();
+      }
+
+      setupEventListeners() {
+        this.slider.addEventListener('scroll', () => {
+          this.handleScroll();
+        });
+
+        this.dots.forEach((dot) => {
+          dot.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-dot'));
+            this.scrollToSlide(index);
+          });
+        });
+      }
+
+      handleScroll() {
+        const scrollLeft = this.slider.scrollLeft;
+        const slideWidth = this.slides[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.slider).gap) || 0;
+        const newIndex = Math.round(scrollLeft / (slideWidth + gap));
+
+        if (newIndex !== this.currentSlide) {
+          this.currentSlide = newIndex;
+          this.updateActiveDot();
+        }
+      }
+
+      scrollToSlide(index) {
+        const slideWidth = this.slides[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.slider).gap) || 0;
+        const scrollPosition = index * (slideWidth + gap);
+        this.slider.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        });
+      }
+
+      updateActiveDot() {
+        this.dots.forEach((dot, index) => {
+          if (index === this.currentSlide) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    customElements.define('deals-slider-{{ ai_gen_id }}', DealsSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Latest deals",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "Latest Deals"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing below heading",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "min": 200,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "label": "Card height (desktop)",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Card height (mobile)",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 4,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_color",
+      "label": "Content background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Deal text style"
+    },
+    {
+      "type": "color",
+      "id": "deal_text_color",
+      "label": "Text color",
+      "default": "#ff0000"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Label size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Number size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "symbol_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Symbol size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "off_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Off text size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Deal 1"
+    },
+    {
+      "type": "text",
+      "id": "deal_1_label",
+      "label": "Label",
+      "default": "UP TO"
+    },
+    {
+      "type": "text",
+      "id": "deal_1_number",
+      "label": "Number",
+      "default": "30"
+    },
+    {
+      "type": "text",
+      "id": "deal_1_symbol",
+      "label": "Symbol",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "deal_1_description",
+      "label": "Description",
+      "default": "on Chemex"
+    },
+    {
+      "type": "image_picker",
+      "id": "deal_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "deal_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Deal 2"
+    },
+    {
+      "type": "text",
+      "id": "deal_2_label",
+      "label": "Label",
+      "default": "TAKE"
+    },
+    {
+      "type": "text",
+      "id": "deal_2_number",
+      "label": "Number",
+      "default": "20"
+    },
+    {
+      "type": "text",
+      "id": "deal_2_symbol",
+      "label": "Symbol",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "deal_2_description",
+      "label": "Description",
+      "default": "Sets of 4 mugs"
+    },
+    {
+      "type": "image_picker",
+      "id": "deal_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "deal_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Deal 3"
+    },
+    {
+      "type": "text",
+      "id": "deal_3_label",
+      "label": "Label",
+      "default": "SAVE"
+    },
+    {
+      "type": "text",
+      "id": "deal_3_number",
+      "label": "Number",
+      "default": "10"
+    },
+    {
+      "type": "text",
+      "id": "deal_3_symbol",
+      "label": "Symbol",
+      "default": "$"
+    },
+    {
+      "type": "text",
+      "id": "deal_3_description",
+      "label": "Description",
+      "default": "on coffee beans"
+    },
+    {
+      "type": "image_picker",
+      "id": "deal_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "deal_3_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Latest deals"
+    }
+  ]
+}
+{% endschema %}

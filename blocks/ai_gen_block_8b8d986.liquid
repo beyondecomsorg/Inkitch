@@ -1,0 +1,422 @@
+{% doc %}
+  @prompt
+    <h2 style="text-align:center;font-size:42px;font-weight:700;margin-bottom:30px;">
+    Why Choose Our Stainless Steel Masala Box?
+    </h2>
+    
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:1200px;margin:auto;">
+    
+      <div>
+        <img src="YOUR_IMAGE_1_URL" style="width:100%;border-radius:12px;">
+      </div>
+    
+      <div style="display:flex;align-items:center;padding:20px;">
+        <div>
+          <h3>Premium Stainless Steel</h3>
+          <p>Crafted from high-quality food-grade stainless steel for durability and long-lasting performance.</p>
+        </div>
+      </div>
+    
+      <div style="display:flex;align-items:center;padding:20px;">
+        <div>
+          <h3>Airtight Freshness</h3>
+          <p>Keeps spices fresh and protected from moisture while preserving aroma and flavor.</p>
+        </div>
+      </div>
+    
+      <div>
+        <img src="YOUR_IMAGE_2_URL" style="width:100%;border-radius:12px;">
+      </div>
+    
+    </div>
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-feature-grid-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 20px;
+  }
+
+  .ai-feature-grid__heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-feature-grid__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-feature-grid__image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    background-color: #f4f4f4;
+  }
+
+  .ai-feature-grid__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-feature-grid__image-wrapper-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-feature-grid__text-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    padding: {{ block.settings.text_padding }}px;
+    background-color: {{ block.settings.text_background_color }};
+    border-radius: {{ block.settings.text_border_radius }}px;
+  }
+
+  .ai-feature-grid__text-content-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  .ai-feature-grid__feature-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_title_size }}px;
+    font-weight: 600;
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    color: {{ block.settings.feature_title_color }};
+  }
+
+  .ai-feature-grid__feature-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_text_size }}px;
+    line-height: 1.6;
+    margin: 0;
+    color: {{ block.settings.feature_text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-feature-grid__container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_grid_gap }}px;
+    }
+
+    .ai-feature-grid__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-feature-grid__image-wrapper-{{ ai_gen_id }} {
+      min-height: 250px;
+    }
+
+    .ai-feature-grid__text-wrapper-{{ ai_gen_id }} {
+      padding: {{ block.settings.text_padding | times: 0.7 }}px;
+    }
+  }
+{% endstyle %}
+
+<feature-grid-{{ ai_gen_id }} class="ai-feature-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h2 class="ai-feature-grid__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="ai-feature-grid__container-{{ ai_gen_id }}">
+    <div class="ai-feature-grid__image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.image_1 %}
+        <img
+          src="{{ block.settings.image_1 | image_url: width: 800 }}"
+          alt="{{ block.settings.image_1.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image_1.width }}"
+          height="{{ block.settings.image_1.height }}"
+          class="ai-feature-grid__image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+
+    <div class="ai-feature-grid__text-wrapper-{{ ai_gen_id }}">
+      <div class="ai-feature-grid__text-content-{{ ai_gen_id }}">
+        {% if block.settings.feature_1_title != blank %}
+          <h3 class="ai-feature-grid__feature-title-{{ ai_gen_id }}">{{ block.settings.feature_1_title }}</h3>
+        {% endif %}
+        {% if block.settings.feature_1_text != blank %}
+          <div class="ai-feature-grid__feature-text-{{ ai_gen_id }}">{{ block.settings.feature_1_text }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-feature-grid__text-wrapper-{{ ai_gen_id }}">
+      <div class="ai-feature-grid__text-content-{{ ai_gen_id }}">
+        {% if block.settings.feature_2_title != blank %}
+          <h3 class="ai-feature-grid__feature-title-{{ ai_gen_id }}">{{ block.settings.feature_2_title }}</h3>
+        {% endif %}
+        {% if block.settings.feature_2_text != blank %}
+          <div class="ai-feature-grid__feature-text-{{ ai_gen_id }}">{{ block.settings.feature_2_text }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-feature-grid__image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.image_2 %}
+        <img
+          src="{{ block.settings.image_2 | image_url: width: 800 }}"
+          alt="{{ block.settings.image_2.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image_2.width }}"
+          height="{{ block.settings.image_2.height }}"
+          class="ai-feature-grid__image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        {{ 'product-2' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+  </div>
+</feature-grid-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FeatureGrid{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+    customElements.define('feature-grid-{{ ai_gen_id }}', FeatureGrid{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Feature grid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Choose Our Stainless Steel Masala Box?"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Spacing below heading",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature_1_title",
+      "label": "Title",
+      "default": "Premium Stainless Steel"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_1_text",
+      "label": "Description",
+      "default": "<p>Crafted from high-quality food-grade stainless steel for durability and long-lasting performance.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature_2_title",
+      "label": "Title",
+      "default": "Airtight Freshness"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_2_text",
+      "label": "Description",
+      "default": "<p>Keeps spices fresh and protected from moisture while preserving aroma and flavor.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_grid_gap",
+      "label": "Mobile grid gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "color",
+      "id": "text_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "label": "Padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Title color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Spacing below title",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature grid"
+    }
+  ]
+}
+{% endschema %}

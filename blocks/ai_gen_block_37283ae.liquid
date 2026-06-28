@@ -1,0 +1,630 @@
+{% doc %}
+  @prompt
+    Create a custom section called "Brand Spotlight with Products". It should be a two-column layout with no gap between columns. The left column takes up 75% of the width and the right column takes up 25%.
+    The left column displays a grid of product cards — 3 cards per row, with thin light gray borders separating each card both horizontally and vertically (like a table grid). Each product card contains: a large centered product image in the upper area with a dark green circular "+" quick-add button in the top-right corner, and some cards may also show a dark green circular eye/preview icon button below the "+" button. Below the image, show the vendor/brand name in small gray text, the product name in bold darker text, the price in bold, and a small green dot with "In stock" text in green below the price. There is no border radius on the cards.
+    The right column is a tall sticky banner that stays fixed on the right side while the user scrolls through the product grid on the left. This banner has a full-height background image with a dark overlay. On top of the overlay, show a large bold white heading (like "Kalita"), a short white description paragraph below it, and a solid dark green rectangular button with bold white uppercase text (like "SHOP NOW") that links to a collection or brand page. All text is left-aligned with padding.
+    The product grid on the left should pull from a collection I select in the theme editor. Show 6 products by default (2 rows of 3). The right banner's background image, heading, description, button text, and button link should all be editable from the theme editor. On mobile, the banner should appear at the top and the product grid should stack below it in a single column.
+    
+    
+    Bonus tip — add this for the sticky effect:
+    
+    The right banner should use sticky positioning so it stays visible as the customer scrolls through all the products on the left, giving it a cinematic feel.
+    Sonnet 4.6
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-brand-spotlight-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-brand-spotlight-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    width: 100%;
+  }
+
+  .ai-brand-spotlight-products-{{ ai_gen_id }} {
+    width: 75%;
+    flex-shrink: 0;
+  }
+
+  .ai-brand-spotlight-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid #e5e5e5;
+  }
+
+  .ai-brand-spotlight-card-{{ ai_gen_id }} {
+    border-right: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 20px;
+    position: relative;
+    background: #ffffff;
+  }
+
+  .ai-brand-spotlight-card-{{ ai_gen_id }}:nth-child(3n) {
+    border-right: none;
+  }
+
+  .ai-brand-spotlight-card-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .ai-brand-spotlight-card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-brand-spotlight-card-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-brand-spotlight-card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-brand-spotlight-card-actions-{{ ai_gen_id }} {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-brand-spotlight-action-btn-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: {{ block.settings.action_button_color }};
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-brand-spotlight-action-btn-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-brand-spotlight-action-btn-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ai-brand-spotlight-card-vendor-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: #999999;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+
+  .ai-brand-spotlight-card-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .ai-brand-spotlight-card-price-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 700;
+    color: #121212;
+    margin-bottom: 8px;
+  }
+
+  .ai-brand-spotlight-card-stock-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: {{ block.settings.stock_text_color }};
+  }
+
+  .ai-brand-spotlight-stock-dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: {{ block.settings.stock_dot_color }};
+  }
+
+  .ai-brand-spotlight-banner-{{ ai_gen_id }} {
+    width: 25%;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: fit-content;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+
+  .ai-brand-spotlight-banner-inner-{{ ai_gen_id }} {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    padding: 40px;
+  }
+
+  .ai-brand-spotlight-banner-bg-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .ai-brand-spotlight-banner-bg-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .ai-brand-spotlight-banner-bg-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-brand-spotlight-banner-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, {{ block.settings.overlay_opacity }});
+    z-index: 2;
+  }
+
+  .ai-brand-spotlight-banner-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 3;
+    text-align: left;
+  }
+
+  .ai-brand-spotlight-banner-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.banner_heading_size }}px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .ai-brand-spotlight-banner-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.banner_text_size }}px;
+    color: #ffffff;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .ai-brand-spotlight-banner-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: {{ block.settings.banner_button_color }};
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-brand-spotlight-banner-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.banner_button_hover_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-brand-spotlight-container-{{ ai_gen_id }} {
+      flex-direction: column;
+    }
+
+    .ai-brand-spotlight-products-{{ ai_gen_id }} {
+      width: 100%;
+      order: 2;
+    }
+
+    .ai-brand-spotlight-banner-{{ ai_gen_id }} {
+      width: 100%;
+      position: relative;
+      order: 1;
+      max-height: none;
+    }
+
+    .ai-brand-spotlight-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-brand-spotlight-card-{{ ai_gen_id }} {
+      border-right: none;
+    }
+  }
+
+  @media screen and (min-width: 990px) and (max-width: 1200px) {
+    .ai-brand-spotlight-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-brand-spotlight-card-{{ ai_gen_id }}:nth-child(3n) {
+      border-right: 1px solid #e5e5e5;
+    }
+
+    .ai-brand-spotlight-card-{{ ai_gen_id }}:nth-child(2n) {
+      border-right: none;
+    }
+  }
+{% endstyle %}
+
+<brand-spotlight-{{ ai_gen_id }} class="ai-brand-spotlight-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-brand-spotlight-container-{{ ai_gen_id }}">
+    <div class="ai-brand-spotlight-products-{{ ai_gen_id }}">
+      <div class="ai-brand-spotlight-grid-{{ ai_gen_id }}">
+        {% if block.settings.collection != blank %}
+          {% for product in block.settings.collection.products limit: block.settings.products_to_show %}
+            <div class="ai-brand-spotlight-card-{{ ai_gen_id }}">
+              <div class="ai-brand-spotlight-card-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 600 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-brand-spotlight-card-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="600"
+                    height="{{ 600 | divided_by: product.featured_image.aspect_ratio | round }}"
+                  >
+                {% else %}
+                  <div class="ai-brand-spotlight-card-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                <div class="ai-brand-spotlight-card-actions-{{ ai_gen_id }}">
+                  {% if block.settings.show_quick_add %}
+                    <button
+                      class="ai-brand-spotlight-action-btn-{{ ai_gen_id }}"
+                      aria-label="Quick add {{ product.title }}"
+                      data-product-id="{{ product.id }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    </button>
+                  {% endif %}
+
+                  {% if block.settings.show_quick_view and forloop.index <= 3 %}
+                    <button
+                      class="ai-brand-spotlight-action-btn-{{ ai_gen_id }}"
+                      aria-label="Quick view {{ product.title }}"
+                      data-product-url="{{ product.url }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if product.vendor != blank %}
+                <div class="ai-brand-spotlight-card-vendor-{{ ai_gen_id }}">{{ product.vendor }}</div>
+              {% endif %}
+
+              <h3 class="ai-brand-spotlight-card-title-{{ ai_gen_id }}">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              <div class="ai-brand-spotlight-card-price-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </div>
+
+              {% if product.available %}
+                <div class="ai-brand-spotlight-card-stock-{{ ai_gen_id }}">
+                  <span class="ai-brand-spotlight-stock-dot-{{ ai_gen_id }}"></span>
+                  <span>{{ block.settings.in_stock_text }}</span>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..6) %}
+            <div class="ai-brand-spotlight-card-{{ ai_gen_id }}">
+              <div class="ai-brand-spotlight-card-image-wrapper-{{ ai_gen_id }}">
+                <div class="ai-brand-spotlight-card-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+
+                <div class="ai-brand-spotlight-card-actions-{{ ai_gen_id }}">
+                  {% if block.settings.show_quick_add %}
+                    <button class="ai-brand-spotlight-action-btn-{{ ai_gen_id }}" aria-label="Quick add">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    </button>
+                  {% endif %}
+
+                  {% if block.settings.show_quick_view and i <= 3 %}
+                    <button class="ai-brand-spotlight-action-btn-{{ ai_gen_id }}" aria-label="Quick view">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="ai-brand-spotlight-card-vendor-{{ ai_gen_id }}">Brand Name</div>
+
+              <h3 class="ai-brand-spotlight-card-title-{{ ai_gen_id }}">
+                Product Title
+              </h3>
+
+              <div class="ai-brand-spotlight-card-price-{{ ai_gen_id }}">
+                {{ 2999 | money }}
+              </div>
+
+              <div class="ai-brand-spotlight-card-stock-{{ ai_gen_id }}">
+                <span class="ai-brand-spotlight-stock-dot-{{ ai_gen_id }}"></span>
+                <span>{{ block.settings.in_stock_text }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-brand-spotlight-banner-{{ ai_gen_id }}">
+      <div class="ai-brand-spotlight-banner-inner-{{ ai_gen_id }}">
+        {% if block.settings.banner_image %}
+          <img
+            src="{{ block.settings.banner_image | image_url: width: 800 }}"
+            alt="{{ block.settings.banner_image.alt | escape }}"
+            class="ai-brand-spotlight-banner-bg-{{ ai_gen_id }}"
+            loading="lazy"
+          >
+        {% else %}
+          <div class="ai-brand-spotlight-banner-bg-placeholder-{{ ai_gen_id }}">
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        <div class="ai-brand-spotlight-banner-overlay-{{ ai_gen_id }}"></div>
+
+        <div class="ai-brand-spotlight-banner-content-{{ ai_gen_id }}">
+          {% if block.settings.banner_heading != blank %}
+            <h2 class="ai-brand-spotlight-banner-heading-{{ ai_gen_id }}">
+              {{ block.settings.banner_heading }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.banner_description != blank %}
+            <div class="ai-brand-spotlight-banner-description-{{ ai_gen_id }}">
+              {{ block.settings.banner_description }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.banner_button_text != blank and block.settings.banner_button_link != blank %}
+            <a
+              href="{{ block.settings.banner_button_link }}"
+              class="ai-brand-spotlight-banner-button-{{ ai_gen_id }}"
+            >
+              {{ block.settings.banner_button_text }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</brand-spotlight-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BrandSpotlight{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.setupQuickAddButtons();
+        this.setupQuickViewButtons();
+      }
+
+      setupQuickAddButtons() {
+        const quickAddButtons = this.querySelectorAll('.ai-brand-spotlight-action-btn-{{ ai_gen_id }}[data-product-id]');
+        
+        quickAddButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = button.dataset.productId;
+            console.log('Quick add clicked for product:', productId);
+          });
+        });
+      }
+
+      setupQuickViewButtons() {
+        const quickViewButtons = this.querySelectorAll('.ai-brand-spotlight-action-btn-{{ ai_gen_id }}[data-product-url]');
+        
+        quickViewButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productUrl = button.dataset.productUrl;
+            console.log('Quick view clicked for product:', productUrl);
+          });
+        });
+      }
+    }
+
+    customElements.define('brand-spotlight-{{ ai_gen_id }}', BrandSpotlight{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Brand spotlight",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product grid"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "label": "Products to show",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Show quick add button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_view",
+      "label": "Show quick view button",
+      "info": "Shows on first 3 products only",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "action_button_color",
+      "label": "Action button color",
+      "default": "#2d5016"
+    },
+    {
+      "type": "text",
+      "id": "in_stock_text",
+      "label": "In stock text",
+      "default": "In stock"
+    },
+    {
+      "type": "color",
+      "id": "stock_dot_color",
+      "label": "Stock indicator color",
+      "default": "#2d5016"
+    },
+    {
+      "type": "color",
+      "id": "stock_text_color",
+      "label": "Stock text color",
+      "default": "#2d5016"
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Overlay opacity",
+      "default": 0.5
+    },
+    {
+      "type": "text",
+      "id": "banner_heading",
+      "label": "Heading",
+      "default": "Kalita"
+    },
+    {
+      "type": "range",
+      "id": "banner_heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "richtext",
+      "id": "banner_description",
+      "label": "Description",
+      "default": "<p>Discover our curated collection of premium coffee brewing equipment.</p>"
+    },
+    {
+      "type": "range",
+      "id": "banner_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "banner_button_text",
+      "label": "Button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "banner_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "banner_button_color",
+      "label": "Button color",
+      "default": "#2d5016"
+    },
+    {
+      "type": "color",
+      "id": "banner_button_hover_color",
+      "label": "Button hover color",
+      "default": "#1f3810"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand spotlight"
+    }
+  ]
+}
+{% endschema %}

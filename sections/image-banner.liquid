@@ -1,0 +1,165 @@
+
+{% schema %}
+{
+  "name": "Custom Responsive Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Responsive Banner"
+    }
+  ]
+}
+{% endschema %}
+<style>
+.banner__buttons{
+position:absolute;
+bottom:20px;
+left:0;
+right:0;
+display:flex;
+justify-content:center;
+z-index:9;
+}
+</style>
+
+<style>
+
+.custom-responsive-banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.custom-responsive-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.desktop-banner {
+  display: block;
+}
+
+.mobile-banner {
+  display: none;
+}
+
+.banner-content {
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  transform: translateY(-50%);
+  z-index: 5;
+  color: #ffffff;
+}
+
+.banner-content h2 {
+  font-size: 48px;
+  margin: 0 0 20px;
+  line-height: 1.2;
+}
+
+.banner-button {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #000000;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+@media screen and (max-width: 749px) {
+
+  .desktop-banner {
+    display: none !important;
+  }
+
+  .mobile-banner {
+    display: block !important;
+  }
+
+  .banner-content {
+    left: 5%;
+  }
+
+  .banner-content h2 {
+    font-size: 28px;
+  }
+}
+
+</style>
+
+<div class="custom-responsive-banner">
+
+  {% if section.settings.desktop_image != blank %}
+    <div class="desktop-banner">
+      {{
+        section.settings.desktop_image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          alt: 'Desktop Banner'
+      }}
+    </div>
+  {% endif %}
+
+  {% if section.settings.mobile_image != blank %}
+    <div class="mobile-banner">
+      {{
+        section.settings.mobile_image
+        | image_url: width: 1200
+        | image_tag:
+          loading: 'lazy',
+          alt: 'Mobile Banner'
+      }}
+    </div>
+  {% endif %}
+
+  {% if section.settings.heading != blank or section.settings.button_label != blank %}
+    <div class="banner-content">
+
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          class="banner-button"
+          href="{{ section.settings.button_link }}"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+</div>

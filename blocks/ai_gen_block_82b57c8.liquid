@@ -1,0 +1,712 @@
+{% doc %}
+  @prompt
+    Create a custom section called "New & Popular". At the top, display a bold centered heading that says "New & Popular". Below the heading, show 3 tab links in a row centered on the page: "New Arrivals", "Best Sellers", and "Barista Picks". The active tab should have a dark underline beneath it and slightly bolder text. Clicking a tab switches the product grid below it.
+    Each tab displays a horizontal row of 5 product cards. Each card has a thin light gray border, no border radius, and a white background. The product image fills most of the card. In the top-right corner of each card, show a small dark green circular "+" quick-add button. If a product is sold out, show a dark gray "SOLD OUT" badge in the bottom-left corner of the card.
+    The "New Arrivals" tab should pull products from a collection I can select in the theme editor. The "Best Sellers" tab should pull from a second collection I can select. The "Barista Picks" tab should pull from a third collection I can select.
+    All three tab label names should be editable from the theme editor. The number of products shown per tab should be configurable (default 5). On mobile, the product row should scroll horizontally so all cards stay in a single row.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-new-popular-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-new-popular-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-new-popular-heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-weight: 700;
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 30px;
+    color: {{ block.settings.heading_color }};
+    font-family: 'Literata', serif;
+  }
+
+  .ai-new-popular-tabs-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid {{ block.settings.tab_border_color }};
+  }
+
+  .ai-new-popular-tab-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    padding: 12px 0;
+    font-size: {{ block.settings.tab_font_size }}px;
+    color: {{ block.settings.tab_color }};
+    cursor: pointer;
+    position: relative;
+    font-weight: 400;
+    transition: all 0.3s ease;
+  }
+
+  .ai-new-popular-tab-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.tab_active_color }};
+  }
+
+  .ai-new-popular-tab-{{ ai_gen_id }}.active {
+    font-weight: 600;
+    color: {{ block.settings.tab_active_color }};
+  }
+
+  .ai-new-popular-tab-{{ ai_gen_id }}.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: {{ block.settings.tab_active_underline_color }};
+  }
+
+  .ai-new-popular-content-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-new-popular-content-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-new-popular-grid-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 10px;
+  }
+
+  .ai-new-popular-grid-{{ ai_gen_id }}::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .ai-new-popular-grid-{{ ai_gen_id }}::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .ai-new-popular-grid-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .ai-new-popular-card-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: calc((100% - 64px) / 5);
+    min-width: 200px;
+    background: {{ block.settings.card_background }};
+    border: 1px solid {{ block.settings.card_border_color }};
+    position: relative;
+  }
+
+  .ai-new-popular-card-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 125%;
+    overflow: hidden;
+  }
+
+  .ai-new-popular-card-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-new-popular-card-image-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-new-popular-card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-new-popular-quick-add-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: {{ block.settings.quick_add_bg_color }};
+    color: {{ block.settings.quick_add_icon_color }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 300;
+    transition: transform 0.2s ease;
+    z-index: 2;
+  }
+
+  .ai-new-popular-quick-add-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-new-popular-sold-out-badge-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background-color: {{ block.settings.sold_out_bg_color }};
+    color: {{ block.settings.sold_out_text_color }};
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    z-index: 2;
+  }
+
+  .ai-new-popular-card-info-{{ ai_gen_id }} {
+    padding: 16px;
+  }
+
+  .ai-new-popular-card-title-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: {{ block.settings.product_title_color }};
+    text-decoration: none;
+    display: block;
+  }
+
+  .ai-new-popular-card-title-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+
+  .ai-new-popular-card-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.product_price_color }};
+  }
+
+  .ai-new-popular-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-new-popular-card-{{ ai_gen_id }} {
+      width: calc((100% - 48px) / 4);
+      min-width: 180px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-new-popular-tabs-{{ ai_gen_id }} {
+      gap: 20px;
+    }
+
+    .ai-new-popular-card-{{ ai_gen_id }} {
+      width: calc((100% - 32px) / 3);
+      min-width: 160px;
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    .ai-new-popular-card-{{ ai_gen_id }} {
+      width: calc((100% - 16px) / 2);
+      min-width: 150px;
+    }
+  }
+{% endstyle %}
+
+<new-popular-tabs-{{ ai_gen_id }} class="ai-new-popular-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-new-popular-container-{{ ai_gen_id }}">
+    <h2 class="ai-new-popular-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+
+    <div class="ai-new-popular-tabs-{{ ai_gen_id }}">
+      <button
+        class="ai-new-popular-tab-{{ ai_gen_id }} active"
+        data-tab="new-arrivals"
+        aria-selected="true"
+        role="tab"
+      >
+        {{ block.settings.tab_1_label }}
+      </button>
+      <button
+        class="ai-new-popular-tab-{{ ai_gen_id }}"
+        data-tab="best-sellers"
+        aria-selected="false"
+        role="tab"
+      >
+        {{ block.settings.tab_2_label }}
+      </button>
+      <button
+        class="ai-new-popular-tab-{{ ai_gen_id }}"
+        data-tab="barista-picks"
+        aria-selected="false"
+        role="tab"
+      >
+        {{ block.settings.tab_3_label }}
+      </button>
+    </div>
+
+    <div
+      class="ai-new-popular-content-{{ ai_gen_id }} active"
+      data-content="new-arrivals"
+      role="tabpanel"
+    >
+      {% if block.settings.collection_1 != blank %}
+        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+          {% for product in block.settings.collection_1.products limit: block.settings.products_per_tab %}
+            <div class="ai-new-popular-card-{{ ai_gen_id }}">
+              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="400"
+                    height="500"
+                  >
+                {% else %}
+                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if product.available %}
+                  <button
+                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                    data-product-id="{{ product.id }}"
+                    aria-label="Quick add {{ product.title }}"
+                  >
+                    +
+                  </button>
+                {% else %}
+                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                {% endif %}
+              </div>
+
+              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                <a
+                  href="{{ product.url }}"
+                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
+                >
+                  {{ product.title }}
+                </a>
+                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                  {{ product.price | money }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ai-new-popular-empty-{{ ai_gen_id }}">
+          Select a collection for {{ block.settings.tab_1_label }} in the theme editor
+        </div>
+      {% endif %}
+    </div>
+
+    <div
+      class="ai-new-popular-content-{{ ai_gen_id }}"
+      data-content="best-sellers"
+      role="tabpanel"
+    >
+      {% if block.settings.collection_2 != blank %}
+        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+          {% for product in block.settings.collection_2.products limit: block.settings.products_per_tab %}
+            <div class="ai-new-popular-card-{{ ai_gen_id }}">
+              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="400"
+                    height="500"
+                  >
+                {% else %}
+                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if product.available %}
+                  <button
+                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                    data-product-id="{{ product.id }}"
+                    aria-label="Quick add {{ product.title }}"
+                  >
+                    +
+                  </button>
+                {% else %}
+                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                {% endif %}
+              </div>
+
+              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                <a
+                  href="{{ product.url }}"
+                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
+                >
+                  {{ product.title }}
+                </a>
+                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                  {{ product.price | money }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ai-new-popular-empty-{{ ai_gen_id }}">
+          Select a collection for {{ block.settings.tab_2_label }} in the theme editor
+        </div>
+      {% endif %}
+    </div>
+
+    <div
+      class="ai-new-popular-content-{{ ai_gen_id }}"
+      data-content="barista-picks"
+      role="tabpanel"
+    >
+      {% if block.settings.collection_3 != blank %}
+        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+          {% for product in block.settings.collection_3.products limit: block.settings.products_per_tab %}
+            <div class="ai-new-popular-card-{{ ai_gen_id }}">
+              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="400"
+                    height="500"
+                  >
+                {% else %}
+                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if product.available %}
+                  <button
+                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                    data-product-id="{{ product.id }}"
+                    aria-label="Quick add {{ product.title }}"
+                  >
+                    +
+                  </button>
+                {% else %}
+                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                {% endif %}
+              </div>
+
+              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                <a
+                  href="{{ product.url }}"
+                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
+                >
+                  {{ product.title }}
+                </a>
+                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                  {{ product.price | money }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ai-new-popular-empty-{{ ai_gen_id }}">
+          Select a collection for {{ block.settings.tab_3_label }} in the theme editor
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</new-popular-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class NewPopularTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tabs = this.querySelectorAll('.ai-new-popular-tab-{{ ai_gen_id }}');
+        this.contents = this.querySelectorAll('.ai-new-popular-content-{{ ai_gen_id }}');
+        this.quickAddButtons = this.querySelectorAll('.ai-new-popular-quick-add-{{ ai_gen_id }}');
+
+        this.setupTabs();
+        this.setupQuickAdd();
+      }
+
+      setupTabs() {
+        this.tabs.forEach((tab) => {
+          tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+
+            this.tabs.forEach((t) => {
+              t.classList.remove('active');
+              t.setAttribute('aria-selected', 'false');
+            });
+
+            this.contents.forEach((c) => {
+              c.classList.remove('active');
+            });
+
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            const targetContent = this.querySelector(
+              `.ai-new-popular-content-{{ ai_gen_id }}[data-content="${targetTab}"]`
+            );
+            if (targetContent) {
+              targetContent.classList.add('active');
+            }
+          });
+        });
+      }
+
+      setupQuickAdd() {
+        this.quickAddButtons.forEach((button) => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = button.getAttribute('data-product-id');
+
+            fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: productId,
+                quantity: 1,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                window.location.href = '/cart';
+              })
+              .catch((error) => {
+                console.error('Error adding to cart:', error);
+              });
+          });
+        });
+      }
+    }
+
+    customElements.define('new-popular-tabs-{{ ai_gen_id }}', NewPopularTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "New & Popular",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New & Popular"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Tab 1 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 label",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Tab 2 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab 3 label",
+      "default": "Barista Picks"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Tab 3 collection"
+    },
+    {
+      "type": "range",
+      "id": "products_per_tab",
+      "label": "Products per tab",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "tab_font_size",
+      "label": "Tab font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "tab_color",
+      "label": "Tab color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_color",
+      "label": "Active tab color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_underline_color",
+      "label": "Active tab underline",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "tab_border_color",
+      "label": "Tab border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product title color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "product_price_color",
+      "label": "Product price color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Quick add button"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_bg_color",
+      "label": "Background color",
+      "default": "#1a4d2e"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Sold out badge"
+    },
+    {
+      "type": "color",
+      "id": "sold_out_bg_color",
+      "label": "Background color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "sold_out_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    }
+  ],
+  "presets": [
+    {
+      "name": "New & Popular"
+    }
+  ]
+}
+{% endschema %}

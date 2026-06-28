@@ -1,0 +1,543 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "177927702621cc9c83": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "image_banner": {
+      "type": "image-banner",
+      "custom_css": [],
+      "settings": {
+        "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.png",
+        "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.png",
+        "heading": "",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "177687342526c3aeca": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e998527_qKLGLQ": {
+          "type": "ai_gen_block_e998527",
+          "settings": {
+            "heading": "Shop by category",
+            "image_1": "shopify://shop_images/lunch_box.png",
+            "title_1": "Lunch Boxes",
+            "link_1": "tiffin-or-lunch-box",
+            "image_2": "shopify://shop_images/water_bottle.png",
+            "title_2": "Water Bottles & Flasks",
+            "link_2": "stainless-steel-bottle",
+            "image_3": "shopify://shop_images/Container.png",
+            "title_3": "Storage Containers",
+            "link_3": "storage-container",
+            "image_4": "shopify://shop_images/spice_box..png",
+            "title_4": "Spice Boxes",
+            "link_4": "spice-box",
+            "image_5": "shopify://shop_images/ChatGPT_Image_May_21_2026_04_40_47_PM.png",
+            "title_5": "Kitchen Tools",
+            "link_5": "plates-and-bowls",
+            "image_6": "shopify://shop_images/ChatGPT_Image_Jun_24_2026_12_26_31_PM.png",
+            "title_6": "Plates & Bowls",
+            "link_6": "stainless-steel-bottle",
+            "image_7": "shopify://shop_images/ChatGPT_Image_May_21_2026_03_25_28_PM.png",
+            "title_7": "Combos",
+            "link_7": "combo",
+            "title_8": "",
+            "link_8": ""
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_1e1add4_YX4aXA": {
+          "type": "ai_gen_block_1e1add4",
+          "settings": {
+            "heading": "Latest Deals",
+            "heading_size": 30,
+            "heading_color": "#121212",
+            "heading_spacing": 30,
+            "card_height": 300,
+            "card_height_mobile": 250,
+            "card_gap": 12,
+            "card_border_width": 1,
+            "card_border_color": "#e0e0e0",
+            "content_bg_color": "#ffffff",
+            "deal_text_color": "#ff0000",
+            "label_size": 14,
+            "number_size": 30,
+            "symbol_size": 30,
+            "off_size": 26,
+            "description_size": 14,
+            "deal_1_label": "Get instant",
+            "deal_1_number": "10",
+            "deal_1_symbol": "%",
+            "deal_1_description": "On Every Purchase",
+            "deal_1_image": "shopify://shop_images/ChatGPT_Image_May_22_2026_03_51_22_PM.png",
+            "deal_1_link": "",
+            "deal_2_label": "TAKE",
+            "deal_2_number": "10",
+            "deal_2_symbol": "%",
+            "deal_2_description": "Set of 3 container.",
+            "deal_2_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_17_33_PM.png",
+            "deal_2_link": "",
+            "deal_3_label": "SAVE",
+            "deal_3_number": "10",
+            "deal_3_symbol": "%",
+            "deal_3_description": "On Stainless steel bottle",
+            "deal_3_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_25_35_PM.png",
+            "deal_3_link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e998527_qKLGLQ",
+        "ai_gen_block_1e1add4_YX4aXA"
+      ],
+      "settings": {}
+    },
+    "1776874214582f2fe1": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_82b57c8_MKiQNN": {
+          "type": "ai_gen_block_82b57c8",
+          "settings": {
+            "heading": "New & Popular",
+            "heading_size": 32,
+            "heading_color": "#121212",
+            "tab_1_label": "New Arrivals",
+            "collection_1": "frontpage",
+            "tab_2_label": "Best Sellers",
+            "collection_2": "best-seller",
+            "tab_3_label": "",
+            "collection_3": "",
+            "products_per_tab": 5,
+            "tab_font_size": 16,
+            "tab_color": "#666666",
+            "tab_active_color": "#121212",
+            "tab_active_underline_color": "#121212",
+            "tab_border_color": "#e0e0e0",
+            "card_background": "#ffffff",
+            "card_border_color": "#e0e0e0",
+            "product_title_color": "#121212",
+            "product_price_color": "#121212",
+            "quick_add_bg_color": "#ff0000",
+            "quick_add_icon_color": "#ffffff",
+            "sold_out_bg_color": "#4a4a4a",
+            "sold_out_text_color": "#ffffff",
+            "max_width": 1200
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_7f2cc22_6mqtpt": {
+          "type": "ai_gen_block_7f2cc22",
+          "settings": {
+            "background_color": "#9f0a0a",
+            "label": "BACK IN STOCK",
+            "label_size": 12,
+            "label_color": "#ffffff",
+            "heading": "Everyday Essentials, Extraordinary Living",
+            "heading_size": 48,
+            "heading_color": "#ffffff",
+            "description": "Discover our premium stainless steel bottles crafted to keep your drinks fresh for hours. Sleek design, durable build, and perfect for home, office, gym, and travel.",
+            "description_size": 16,
+            "description_color": "#ffffff",
+            "text_padding": 60,
+            "button_text": "SHOP NOW",
+            "button_link": "shopify://collections/stainless-steel-bottle",
+            "button_text_size": 20,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#ff0000",
+            "product_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_55_52_PM.png"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_eaf3c45_3TN9X7": {
+          "type": "ai_gen_block_eaf3c45",
+          "settings": {
+            "title_text": "Top Picks for You",
+            "font_size": 40,
+            "font_weight": "700",
+            "line_height": "1.2",
+            "letter_spacing": 0,
+            "text_transform": "none",
+            "text_alignment": "center",
+            "desktop_width_percent": 100,
+            "padding_top": 40,
+            "padding_bottom": 40,
+            "text_color": "#121212"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_92036b8_6Cp8wU": {
+          "type": "ai_gen_block_92036b8",
+          "settings": {
+            "product_1": "inkitch-black-24hrs-hot-cold-flask-1-liter",
+            "product_2": "inkitch-grey-24hrs-hot-cold-flask-1-liter",
+            "product_3": "inkitch-hot-cold-bottle-1000ml-2-in-1-sipper-wide-mouth-dual-cap-sports-water-bottle-vacuum-insulated-stainless-steel-flask-leakproof-travel-gym-office-bottle-black",
+            "product_4": "inkitch-stainless-steel-tumbler-with-lid-500ml-bpa-free-water-tumbler-leak-proof-office-tumbler-rust-free-easy-grip-easy-to-carry-travel-bottle-pink-pack-of-1",
+            "product_5": "inkitch-water-bottle-750ml-isi-certified-stainless-steel-leak-proof-24-hour-hot-cold-blue",
+            "product_6": "inkitch-stainless-steel-water-bottle-1000-ml-silver-leak-proof-single-walled-office-bottle-gym-home-kitchen-hiking-trekking-travel-bottle-set-of-1",
+            "desktop_width_percent": 100,
+            "slides_per_view": 3,
+            "slides_per_view_mobile": "1",
+            "slide_gap": 16,
+            "card_background": "#ffffff",
+            "border_radius": 8,
+            "content_padding": 16,
+            "text_alignment": "left",
+            "shadow_horizontal": 0,
+            "shadow_vertical": 8,
+            "shadow_blur": 20,
+            "shadow_opacity": 0.2,
+            "shimmer_speed": 2,
+            "shimmer_opacity": 0.6,
+            "nav_button_color": "#121212",
+            "nav_button_hover_color": "#000000",
+            "nav_icon_color": "#ffffff",
+            "title_size": 16,
+            "title_color": "#121212",
+            "price_size": 14,
+            "price_color": "#121212"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_7f0d7e5_itXRiQ": {
+          "type": "ai_gen_block_7f0d7e5",
+          "settings": {
+            "heading": "Trending Products on Social Media",
+            "text_alignment": "left",
+            "desktop_width_percent": 100,
+            "padding_top": 30,
+            "padding_bottom": 15,
+            "padding_horizontal": 20,
+            "heading_size": 32,
+            "font_weight": "600",
+            "letter_spacing": 0,
+            "background_color": "#ffffff",
+            "text_color": "#121212"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_82b57c8_MKiQNN",
+        "ai_gen_block_7f2cc22_6mqtpt",
+        "ai_gen_block_eaf3c45_3TN9X7",
+        "ai_gen_block_92036b8_6Cp8wU",
+        "ai_gen_block_7f0d7e5_itXRiQ"
+      ],
+      "settings": {}
+    },
+    "center_carousel_AHm6fg": {
+      "type": "center-carousel",
+      "blocks": {
+        "slide_tBHiQG": {
+          "type": "slide",
+          "settings": {
+            "video": "https://cdn.shopify.com/videos/c/o/v/bd8153dde87440b1855d3bf69741a573.mp4",
+            "product_link": "https://www.amazon.in/dp/B0GFNFDP4M?th=1"
+          }
+        },
+        "slide_DFcLtB": {
+          "type": "slide",
+          "settings": {
+            "video": "https://cdn.shopify.com/videos/c/o/v/4ae4d3fb610f44c6b5c916a9cde930f7.mp4",
+            "product_link": "shopify://collections/combo"
+          }
+        },
+        "slide_Gyd7by": {
+          "type": "slide",
+          "settings": {
+            "video": "https://cdn.shopify.com/videos/c/o/v/1e87621e0fb54da8b0293163bbaf5740.mp4",
+            "product_link": "https://www.amazon.in/dp/B0FV9Z7NTX?th=1"
+          }
+        },
+        "slide_U8azpC": {
+          "type": "slide",
+          "settings": {
+            "video": "https://cdn.shopify.com/videos/c/o/v/d959c5d5079f4e59919d3392dd90ba3b.mp4",
+            "product_link": "https://www.amazon.in/dp/B0FV9Z7NTX?th=1"
+          }
+        },
+        "slide_LNU43E": {
+          "type": "slide",
+          "settings": {
+            "video": "https://cdn.shopify.com/videos/c/o/v/628bdd0191a44c0380e63021018a179a.mp4",
+            "product_link": "shopify://collections/combo"
+          }
+        }
+      },
+      "block_order": [
+        "slide_tBHiQG",
+        "slide_DFcLtB",
+        "slide_Gyd7by",
+        "slide_U8azpC",
+        "slide_LNU43E"
+      ],
+      "name": "Center Carousel",
+      "settings": {}
+    },
+    "17768748541cfee548": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a9e212e_yXiwDi": {
+          "type": "ai_gen_block_a9e212e",
+          "settings": {
+            "banner_image": "shopify://shop_images/ChatGPT_Image_May_22_2026_05_09_46_PM.png",
+            "desktop_height": 800,
+            "mobile_height": 350,
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 30,
+            "heading": "",
+            "subheading": "",
+            "text_alignment": "center",
+            "content_max_width": 700,
+            "heading_size": 48,
+            "heading_color": "#ffffff",
+            "subheading_size": 18,
+            "subheading_color": "#ffffff",
+            "text_spacing": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a9e212e_yXiwDi"
+      ],
+      "settings": {}
+    },
+    "17768757305788ece8": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "17769567983c5c5127": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_22e1668_4F6h88": {
+          "type": "ai_gen_block_22e1668",
+          "settings": {
+            "brand_username": "houseofnamah",
+            "show_caption_1": true,
+            "caption_1": "to the person who forces me",
+            "show_caption_2": true,
+            "caption_2": "",
+            "show_caption_3": true,
+            "caption_3": "",
+            "show_caption_4": true,
+            "caption_4": "",
+            "show_caption_5": true,
+            "caption_5": "",
+            "show_caption_6": true,
+            "caption_6": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_22e1668_4F6h88"
+      ],
+      "settings": {}
+    },
+    "17768839772f913238": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "1776876887e6e42cc3": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "1776876022a0f63424": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_3f5efb4_YzkaAE": {
+          "type": "ai_gen_block_3f5efb4",
+          "settings": {
+            "heading": "Why inKitch",
+            "heading_font": "assistant_n4",
+            "heading_size": 36,
+            "heading_weight": 600,
+            "heading_letter_spacing": 0,
+            "heading_margin": 20,
+            "heading_color": "#000000",
+            "description": "<p>Crafting premium kitchenware with precision and passion. Our commitment to quality and innovation has made us a trusted name in homes worldwide.</p>",
+            "body_font": "assistant_n4",
+            "description_size": 15,
+            "description_max_width": 600,
+            "description_color": "#000000",
+            "feature_1_icon": "certificate",
+            "feature_1_title": "ISO Certified",
+            "feature_2_icon": "experience",
+            "feature_2_title": "30+ Years Experience in Export Bussiness",
+            "feature_3_icon": "factory",
+            "feature_3_title": "Own Manufacturing",
+            "feature_4_icon": "customers",
+            "feature_4_title": "Millions Satisfied Customers",
+            "feature_5_icon": "range",
+            "feature_5_title": "Wide Range",
+            "feature_6_icon": "bestseller",
+            "feature_6_title": "Marketplace Bestsellers",
+            "icon_size": 50,
+            "icon_stroke_width": 1.5,
+            "icon_spacing": 15,
+            "icon_color": "#ff0000",
+            "feature_title_size": 13,
+            "feature_title_weight": 500,
+            "feature_title_color": "#000000",
+            "container_width": 900,
+            "header_spacing": 40,
+            "features_spacing": 50,
+            "grid_gap": 40,
+            "grid_column_gap": 30,
+            "feature_padding": 10,
+            "background_color": "#ffffff",
+            "section_padding_top": 60,
+            "section_padding_bottom": 60
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_32c9c2c_PKUUMt": {
+          "type": "ai_gen_block_32c9c2c",
+          "settings": {
+            "icon_1": "shield",
+            "heading_1": "Secure Payment",
+            "description_1": "100% secure & encrypted checkout",
+            "icon_2": "refresh",
+            "heading_2": "Quality Assured",
+            "description_2": "Trusted quality, built to last.",
+            "icon_3": "truck",
+            "heading_3": "Fast Shipping",
+            "description_3": "Free shipping on orders over $50",
+            "icon_4": "ribbon",
+            "heading_4": "Best Price",
+            "description_4": "Guaranteed unbeatable prices always",
+            "icon_5": "headset",
+            "heading_5": "24/7 Support",
+            "description_5": "Dedicated support team always available",
+            "max_width": 1200,
+            "padding_vertical": 20,
+            "padding_horizontal": 20,
+            "gap": 20,
+            "mobile_gap": 20,
+            "item_gap": 12,
+            "background_color": "#9f0a0a",
+            "icon_color": "#ffffff",
+            "heading_color": "#ffffff",
+            "description_color": "#ffffff",
+            "icon_size": 50,
+            "icon_border_width": 2,
+            "heading_size": 14,
+            "heading_weight": 700,
+            "heading_spacing": 4,
+            "description_size": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_3f5efb4_YzkaAE",
+        "ai_gen_block_32c9c2c_PKUUMt"
+      ],
+      "settings": {}
+    },
+    "1777046661b47992d7": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "featured_blog_MgEUfF": {
+      "type": "featured-blog",
+      "name": "t:sections.featured-blog.presets.name",
+      "settings": {
+        "blog": "news",
+        "post_limit": 2,
+        "heading": "Blog posts",
+        "heading_size": "h1",
+        "columns_desktop": 4,
+        "show_view_all": false,
+        "show_image": true,
+        "show_date": true,
+        "show_author": true,
+        "color_scheme": "scheme-2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "17804708302c7f8b07": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "1779278418b3f8f25d": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "1779279862fa4605f2": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_036e908_RpiJed": {
+          "type": "ai_gen_block_036e908",
+          "settings": {
+            "heading": "Testimonials",
+            "heading_color": "#ffffff",
+            "heading_size": 28,
+            "background_color": "#9f0a0a",
+            "card_background": "#ffffff",
+            "card_text_color": "#1a1a1a",
+            "card_radius": 24,
+            "shadow_opacity": 0.2,
+            "review_title_size": 26,
+            "review_text_size": 16,
+            "star_size": 24,
+            "star_color": "#ffc107",
+            "profile_image_size": 80,
+            "profile_border_color": "#ffffff",
+            "name_size": 16,
+            "review_title_1": "Superb Finish",
+            "review_text_1": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
+            "customer_name_1": "Ankit Agarwal",
+            "customer_image_1": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg",
+            "review_title_2": "Love the Quality",
+            "review_text_2": "Beautiful craftsmanship and attention to detail. These products have transformed my cooking experience!",
+            "customer_name_2": "Ansu Gogoi",
+            "customer_image_2": "shopify://shop_images/5_1eeb867c-e74d-4755-b406-84a23822ce4b.png",
+            "review_title_3": "Highly Recommend",
+            "review_text_3": "Worth every penny! The premium materials and elegant design make these a must-have for any kitchen enthusiast.",
+            "customer_name_3": "virat Kohli",
+            "customer_image_3": "shopify://shop_images/ChatGPT_Image_May_7_2026_03_11_19_PM.png"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_036e908_RpiJed"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "177927702621cc9c83",
+    "image_banner",
+    "177687342526c3aeca",
+    "1776874214582f2fe1",
+    "center_carousel_AHm6fg",
+    "17768748541cfee548",
+    "17768757305788ece8",
+    "17769567983c5c5127",
+    "17768839772f913238",
+    "1776876887e6e42cc3",
+    "1776876022a0f63424",
+    "1777046661b47992d7",
+    "featured_blog_MgEUfF",
+    "17804708302c7f8b07",
+    "1779278418b3f8f25d",
+    "1779279862fa4605f2"
+  ]
+}

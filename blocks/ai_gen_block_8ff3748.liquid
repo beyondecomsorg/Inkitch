@@ -1,0 +1,748 @@
+{% doc %}
+  @prompt
+    <style>
+      .product-info-section {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        max-width: 600px;
+        padding: 20px;
+        background: #ffffff;
+        color: #000000;
+      }
+    
+      .product-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0 0 12px 0;
+        line-height: 1.2;
+        color: #000000;
+      }
+    
+      .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+    
+      .stars {
+        display: flex;
+        gap: 2px;
+      }
+    
+      .star {
+        color: #a8c8e1;
+        font-size: 18px;
+        line-height: 1;
+      }
+    
+      .review-count {
+        font-size: 16px;
+        color: #333333;
+        font-weight: 400;
+      }
+    
+      .bestseller-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #000000;
+      }
+    
+      .rocket-icon {
+        font-size: 16px;
+      }
+    
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+    
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+    
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        border: 1.5px solid #4a7c9b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: transparent;
+      }
+    
+      .feature-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: #4a7c9b;
+        fill: none;
+        stroke-width: 1.5;
+      }
+    
+      .feature-text {
+        font-size: 14px;
+        color: #333333;
+        font-weight: 400;
+        line-height: 1.3;
+      }
+    
+      .pricing-area {
+        margin-bottom: 8px;
+      }
+    
+      .price-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+    
+      .current-price {
+        font-size: 36px;
+        font-weight: 700;
+        color: #000000;
+        line-height: 1;
+      }
+    
+      .original-price {
+        font-size: 22px;
+        color: #999999;
+        text-decoration: line-through;
+        font-weight: 400;
+        line-height: 1;
+      }
+    
+      .savings-badge {
+        background: #fff9c4;
+        color: #000000;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    
+      .tax-note {
+        font-size: 14px;
+        color: #888888;
+        margin-top: 6px;
+      }
+    
+      .shipping-banner {
+        background: #fffde7;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-size: 15px;
+        color: #333333;
+        margin-top: 12px;
+        font-weight: 400;
+      }
+    
+      .capacity-info {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000000;
+        margin-top: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+    </style>
+    
+    <div class="product-info-section">
+      
+      <!-- Product Title -->
+      <h1 class="product-title">Insulated Water Bottle</h1>
+      
+      <!-- Rating -->
+      <div class="product-rating">
+        <div class="stars">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <span class="review-count">664 reviews</span>
+      </div>
+      
+      <!-- Bestseller Badge -->
+      <div class="bestseller-badge">
+        <span class="rocket-icon">🚀</span>
+        <span>Best selling || 3000+ Sold Last Week</span>
+      </div>
+      
+      <!-- Features Grid -->
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <!-- Lid/Leak Proof Icon -->
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="8" rx="8" ry="3" stroke="#4a7c9b" fill="none"/>
+              <path d="M4 8v6c0 1.66 3.58 3 8 3s8-1.34 8-3V8" stroke="#4a7c9b" fill="none"/>
+              <line x1="12" y1="17" x2="12" y2="20" stroke="#4a7c9b"/>
+              <line x1="8" y1="20" x2="16" y2="20" stroke="#4a7c9b"/>
+            </svg>
+          </div>
+          <span class="feature-text">Leak Proof Lid</span>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">
+            <!-- Double Wall / Thermos Icon -->
+            <svg viewBox="0 0 24 24">
+              <rect x="8" y="3" width="8" height="18" rx="2" stroke="#4a7c9b" fill="none"/>
+              <rect x="10" y="5" width="4" height="14" rx="1" stroke="#4a7c9b" fill="none" stroke-dasharray="2 1"/>
+              <line x1="8" y1="8" x2="16" y2="8" stroke="#4a7c9b"/>
+              <line x1="8" y1="16" x2="16" y2="16" stroke="#4a7c9b"/>
+            </svg>
+          </div>
+          <span class="feature-text">Double Wall Insulation</span>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">
+            <!-- Temperature / Hot Cold Icon -->
+            <svg viewBox="0 0 24 24">
+              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="#4a7c9b" fill="none"/>
+              <line x1="11.5" y1="6" x2="11.5" y2="10" stroke="#4a7c9b"/>
+              <line x1="9" y1="8" x2="14" y2="8" stroke="#4a7c9b"/>
+              <path d="M17 8l2-2M17 12l2 2M19 10h-2" stroke="#4a7c9b" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <span class="feature-text">8hours Hot , 12hours Cold</span>
+        </div>
+        
+        <div 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-info-{{ ai_gen_id }} {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 600px;
+    padding: {{ block.settings.section_padding }}px;
+    background: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    width: {{ block.settings.desktop_width_percent }}%;
+  }
+
+  .ai-product-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-product-rating-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .ai-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ai-star-{{ ai_gen_id }} {
+    color: {{ block.settings.star_color }};
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .ai-review-count-{{ ai_gen_id }} {
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    font-weight: 400;
+  }
+
+  .ai-bestseller-badge-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-rocket-icon-{{ ai_gen_id }} {
+    font-size: 16px;
+  }
+
+  .ai-features-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    background: {{ block.settings.features_bg_color }};
+    padding: 20px;
+    border-radius: {{ block.settings.features_border_radius }}px;
+    margin-bottom: 16px;
+  }
+
+  .ai-feature-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ai-feature-icon-{{ ai_gen_id }} {
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid {{ block.settings.icon_border_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: transparent;
+  }
+
+  .ai-feature-icon-{{ ai_gen_id }} svg {
+    width: 22px;
+    height: 22px;
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .ai-feature-text-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .ai-pricing-area-{{ ai_gen_id }} {
+    margin-bottom: 8px;
+  }
+
+  .ai-price-row-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .ai-current-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.price_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    line-height: 1;
+  }
+
+  .ai-original-price-{{ ai_gen_id }} {
+    font-size: 22px;
+    color: {{ block.settings.compare_price_color }};
+    text-decoration: line-through;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .ai-savings-badge-{{ ai_gen_id }} {
+    background: {{ block.settings.savings_badge_bg }};
+    color: {{ block.settings.savings_badge_text }};
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .ai-tax-note-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.secondary_text_color }};
+    margin-top: 6px;
+  }
+
+  .ai-shipping-banner-{{ ai_gen_id }} {
+    background: {{ block.settings.shipping_banner_bg }};
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 15px;
+    color: {{ block.settings.text_color }};
+    margin-top: 12px;
+    font-weight: 400;
+  }
+
+  .ai-capacity-info-{{ ai_gen_id }} {
+    font-size: 20px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid {{ block.settings.divider_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-features-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-product-info-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.show_title %}
+    <h1 class="ai-product-title-{{ ai_gen_id }}">{{ product.title }}</h1>
+  {% endif %}
+
+  {% if block.settings.show_rating %}
+    <div class="ai-product-rating-{{ ai_gen_id }}">
+      <div class="ai-stars-{{ ai_gen_id }}">
+        <span class="ai-star-{{ ai_gen_id }}">★</span>
+        <span class="ai-star-{{ ai_gen_id }}">★</span>
+        <span class="ai-star-{{ ai_gen_id }}">★</span>
+        <span class="ai-star-{{ ai_gen_id }}">★</span>
+        <span class="ai-star-{{ ai_gen_id }}">★</span>
+      </div>
+      <span class="ai-review-count-{{ ai_gen_id }}">{{ block.settings.review_count }}</span>
+    </div>
+  {% endif %}
+
+  {% if block.settings.show_bestseller %}
+    <div class="ai-bestseller-badge-{{ ai_gen_id }}">
+      <span class="ai-rocket-icon-{{ ai_gen_id }}">🚀</span>
+      <span>{{ block.settings.bestseller_text }}</span>
+    </div>
+  {% endif %}
+
+  <div class="ai-features-grid-{{ ai_gen_id }}">
+    {% if block.settings.feature_1_text != blank %}
+      <div class="ai-feature-item-{{ ai_gen_id }}">
+        <div class="ai-feature-icon-{{ ai_gen_id }}">
+          <svg viewBox="0 0 24 24">
+            <ellipse cx="12" cy="8" rx="8" ry="3" stroke="currentColor" fill="none"/>
+            <path d="M4 8v6c0 1.66 3.58 3 8 3s8-1.34 8-3V8" stroke="currentColor" fill="none"/>
+            <line x1="12" y1="17" x2="12" y2="20" stroke="currentColor"/>
+            <line x1="8" y1="20" x2="16" y2="20" stroke="currentColor"/>
+          </svg>
+        </div>
+        <span class="ai-feature-text-{{ ai_gen_id }}">{{ block.settings.feature_1_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.feature_2_text != blank %}
+      <div class="ai-feature-item-{{ ai_gen_id }}">
+        <div class="ai-feature-icon-{{ ai_gen_id }}">
+          <svg viewBox="0 0 24 24">
+            <rect x="8" y="3" width="8" height="18" rx="2" stroke="currentColor" fill="none"/>
+            <rect x="10" y="5" width="4" height="14" rx="1" stroke="currentColor" fill="none" stroke-dasharray="2 1"/>
+            <line x1="8" y1="8" x2="16" y2="8" stroke="currentColor"/>
+            <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor"/>
+          </svg>
+        </div>
+        <span class="ai-feature-text-{{ ai_gen_id }}">{{ block.settings.feature_2_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.feature_3_text != blank %}
+      <div class="ai-feature-item-{{ ai_gen_id }}">
+        <div class="ai-feature-icon-{{ ai_gen_id }}">
+          <svg viewBox="0 0 24 24">
+            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="currentColor" fill="none"/>
+            <line x1="11.5" y1="6" x2="11.5" y2="10" stroke="currentColor"/>
+            <line x1="9" y1="8" x2="14" y2="8" stroke="currentColor"/>
+            <path d="M17 8l2-2M17 12l2 2M19 10h-2" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <span class="ai-feature-text-{{ ai_gen_id }}">{{ block.settings.feature_3_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.feature_4_text != blank %}
+      <div class="ai-feature-item-{{ ai_gen_id }}">
+        <div class="ai-feature-icon-{{ ai_gen_id }}">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/>
+            <path d="M12 6v6l4 2" stroke="currentColor" fill="none"/>
+          </svg>
+        </div>
+        <span class="ai-feature-text-{{ ai_gen_id }}">{{ block.settings.feature_4_text }}</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if block.settings.show_pricing %}
+    <div class="ai-pricing-area-{{ ai_gen_id }}">
+      <div class="ai-price-row-{{ ai_gen_id }}">
+        <span class="ai-current-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="ai-original-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+          {% assign savings = product.compare_at_price | minus: product.price %}
+          {% assign savings_percent = savings | times: 100 | divided_by: product.compare_at_price %}
+          <span class="ai-savings-badge-{{ ai_gen_id }}">Save {{ savings_percent }}%</span>
+        {% endif %}
+      </div>
+      {% if block.settings.tax_note != blank %}
+        <div class="ai-tax-note-{{ ai_gen_id }}">{{ block.settings.tax_note }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if block.settings.shipping_text != blank %}
+    <div class="ai-shipping-banner-{{ ai_gen_id }}">{{ block.settings.shipping_text }}</div>
+  {% endif %}
+
+  {% if block.settings.capacity_text != blank %}
+    <div class="ai-capacity-info-{{ ai_gen_id }}">{{ block.settings.capacity_text }}</div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Product info section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product title"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show product title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Rating"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count text",
+      "default": "664 reviews"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#a8c8e1"
+    },
+    {
+      "type": "header",
+      "content": "Bestseller badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bestseller",
+      "label": "Show bestseller badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "bestseller_text",
+      "label": "Bestseller text",
+      "default": "Best selling || 3000+ Sold Last Week"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_text",
+      "label": "Feature 1",
+      "default": "Leak Proof Lid"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_text",
+      "label": "Feature 2",
+      "default": "Double Wall Insulation"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_text",
+      "label": "Feature 3",
+      "default": "8hours Hot, 12hours Cold"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_text",
+      "label": "Feature 4",
+      "default": "24 Hour Temperature"
+    },
+    {
+      "type": "header",
+      "content": "Pricing"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pricing",
+      "label": "Show pricing",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "text",
+      "id": "tax_note",
+      "label": "Tax note",
+      "default": "Tax included."
+    },
+    {
+      "type": "header",
+      "content": "Additional info"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping text",
+      "default": "Free shipping on orders over ₹500"
+    },
+    {
+      "type": "text",
+      "id": "capacity_text",
+      "label": "Capacity text",
+      "default": "Capacity: 1000ml"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "features_border_radius",
+      "label": "Features border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_text_color",
+      "label": "Secondary text",
+      "default": "#888888"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare price",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "features_bg_color",
+      "label": "Features background",
+      "default": "#f0f8ff"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#4a7c9b"
+    },
+    {
+      "type": "color",
+      "id": "icon_border_color",
+      "label": "Icon border",
+      "default": "#4a7c9b"
+    },
+    {
+      "type": "color",
+      "id": "savings_badge_bg",
+      "label": "Savings badge background",
+      "default": "#fff9c4"
+    },
+    {
+      "type": "color",
+      "id": "savings_badge_text",
+      "label": "Savings badge text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "shipping_banner_bg",
+      "label": "Shipping banner background",
+      "default": "#fffde7"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#e0e0e0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product info section"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

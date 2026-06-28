@@ -1,0 +1,757 @@
+{% doc %}
+  @prompt
+    Here’s a clean React + Tailwind CSS + Framer Motion code for your Inkitch marketplace showcase section.
+    
+    ```jsx
+    "use client";
+    
+    import { motion } from "framer-motion";
+    
+    const marketplaces = [
+      {
+        name: "Amazon",
+        logo: "/logos/amazon.png",
+        url: "https://amazon.in",
+      },
+      {
+        name: "Flipkart",
+        logo: "/logos/flipkart.png",
+        url: "https://flipkart.com",
+      },
+      {
+        name: "Meesho",
+        logo: "/logos/meesho.png",
+        url: "https://meesho.com",
+      },
+      {
+        name: "Myntra",
+        logo: "/logos/myntra.png",
+        url: "https://myntra.com",
+      },
+      {
+        name: "Ajio",
+        logo: "/logos/ajio.png",
+        url: "https://ajio.com",
+      },
+      {
+        name: "Snapdeal",
+        logo: "/logos/snapdeal.png",
+        url: "https://snapdeal.com",
+      },
+      {
+        name: "JioMart",
+        logo: "/logos/jiomart.png",
+        url: "https://jiomart.com",
+      },
+      {
+        name: "Shopify",
+        logo: "/logos/shopify.png",
+        url: "https://shopify.com",
+      },
+    ];
+    
+    export default function MarketplaceShowcase() {
+      return (
+        <section className="py-20 overflow-hidden bg-white">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-black">
+              Available on Top Marketplaces
+            </h2>
+    
+            <p className="text-gray-500 mt-4 text-lg">
+              Shop Inkitch products across India’s leading platforms.
+            </p>
+          </div>
+    
+          <div className="relative">
+            <motion.div
+              className="flex gap-6 w-max"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                repeat: Infinity,
+                duration: 20,
+                ease: "linear",
+              }}
+            >
+              {[...marketplaces, ...marketplaces].map((item, index) => (
+                <a
+                  key={index}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <div className="w-36 h-36 bg-white rounded-3xl border border-gray-200 shadow-sm flex flex-col items-center justify-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
+                    
+                    <img
+                      src={item.logo}
+                      alt={item.name}
+                      className="w-20 h-20 object-contain"
+                    />
+    
+                    <p className="mt-3 text-sm font-medium text-gray-700">
+                      {item.name}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </motion.div>
+    
+            {/* Left Fade */}
+            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white to-transparent z-10"></div>
+    
+            {/* Right Fade */}
+            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white to-transparent z-10"></div>
+          </div>
+        </section>
+      );
+    }
+    ```
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-marketplace-showcase-{{ ai_gen_id }} {
+    display: block;
+    padding: {{ block.settings.section_padding }}px 0;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+    width: 100%;
+  }
+
+  .ai-marketplace-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+    padding: 0 20px;
+  }
+
+  .ai-marketplace-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 16px;
+  }
+
+  .ai-marketplace-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+  }
+
+  .ai-marketplace-carousel-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-marketplace-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.card_gap }}px;
+    animation: ai-marketplace-scroll-{{ ai_gen_id }} {{ block.settings.animation_duration }}s linear infinite;
+    width: max-content;
+  }
+
+  .ai-marketplace-carousel-track-{{ ai_gen_id }}:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes ai-marketplace-scroll-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ai-marketplace-card-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.card_size }}px;
+    height: {{ block.settings.card_size }}px;
+    background-color: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    border: 1px solid {{ block.settings.card_border_color }};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 20px;
+  }
+
+  .ai-marketplace-card-{{ ai_gen_id }}:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px) scale(1.05);
+  }
+
+  .ai-marketplace-logo-wrapper-{{ ai_gen_id }} {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .ai-marketplace-logo-{{ ai_gen_id }} {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-marketplace-logo-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-marketplace-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-marketplace-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_text_size }}px;
+    font-weight: 500;
+    color: {{ block.settings.card_text_color }};
+    margin: 0;
+    text-align: center;
+  }
+
+  .ai-marketplace-fade-left-{{ ai_gen_id }},
+  .ai-marketplace-fade-right-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    width: 128px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .ai-marketplace-fade-left-{{ ai_gen_id }} {
+    left: 0;
+    background: linear-gradient(to right, {{ block.settings.background_color }}, transparent);
+  }
+
+  .ai-marketplace-fade-right-{{ ai_gen_id }} {
+    right: 0;
+    background: linear-gradient(to left, {{ block.settings.background_color }}, transparent);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-marketplace-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.7);
+    }
+
+    .ai-marketplace-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.85);
+    }
+
+    .ai-marketplace-card-{{ ai_gen_id }} {
+      width: calc({{ block.settings.card_size }}px * 0.8);
+      height: calc({{ block.settings.card_size }}px * 0.8);
+    }
+
+    .ai-marketplace-logo-wrapper-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+
+    .ai-marketplace-fade-left-{{ ai_gen_id }},
+    .ai-marketplace-fade-right-{{ ai_gen_id }} {
+      width: 64px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-marketplace-showcase-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-marketplace-header-{{ ai_gen_id }}">
+    {% if block.settings.title != blank %}
+      <h2 class="ai-marketplace-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+    {% endif %}
+    {% if block.settings.subtitle != blank %}
+      <p class="ai-marketplace-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ai-marketplace-carousel-wrapper-{{ ai_gen_id }}">
+    <div class="ai-marketplace-carousel-track-{{ ai_gen_id }}">
+      {% for i in (1..8) %}
+        {% liquid
+          assign name_key = 'marketplace_' | append: i | append: '_name'
+          assign logo_key = 'marketplace_' | append: i | append: '_logo'
+          assign url_key = 'marketplace_' | append: i | append: '_url'
+          assign enabled_key = 'marketplace_' | append: i | append: '_enabled'
+
+          assign marketplace_name = block.settings[name_key]
+          assign marketplace_logo = block.settings[logo_key]
+          assign marketplace_url = block.settings[url_key]
+          assign marketplace_enabled = block.settings[enabled_key]
+        %}
+
+        {% if marketplace_enabled %}
+          <a
+            href="{{ marketplace_url }}"
+            class="ai-marketplace-card-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            {% if marketplace_name != blank %}
+              aria-label="{{ marketplace_name }}"
+            {% endif %}
+          >
+            <div class="ai-marketplace-logo-wrapper-{{ ai_gen_id }}">
+              {% if marketplace_logo %}
+                <img
+                  src="{{ marketplace_logo | image_url: width: 160 }}"
+                  alt="{{ marketplace_name | escape }}"
+                  class="ai-marketplace-logo-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-marketplace-logo-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            {% if marketplace_name != blank %}
+              <p class="ai-marketplace-name-{{ ai_gen_id }}">{{ marketplace_name }}</p>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      {% for i in (1..8) %}
+        {% liquid
+          assign name_key = 'marketplace_' | append: i | append: '_name'
+          assign logo_key = 'marketplace_' | append: i | append: '_logo'
+          assign url_key = 'marketplace_' | append: i | append: '_url'
+          assign enabled_key = 'marketplace_' | append: i | append: '_enabled'
+
+          assign marketplace_name = block.settings[name_key]
+          assign marketplace_logo = block.settings[logo_key]
+          assign marketplace_url = block.settings[url_key]
+          assign marketplace_enabled = block.settings[enabled_key]
+        %}
+
+        {% if marketplace_enabled %}
+          <a
+            href="{{ marketplace_url }}"
+            class="ai-marketplace-card-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            {% if marketplace_name != blank %}
+              aria-label="{{ marketplace_name }}"
+            {% endif %}
+          >
+            <div class="ai-marketplace-logo-wrapper-{{ ai_gen_id }}">
+              {% if marketplace_logo %}
+                <img
+                  src="{{ marketplace_logo | image_url: width: 160 }}"
+                  alt="{{ marketplace_name | escape }}"
+                  class="ai-marketplace-logo-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-marketplace-logo-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            {% if marketplace_name != blank %}
+              <p class="ai-marketplace-name-{{ ai_gen_id }}">{{ marketplace_name }}</p>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-marketplace-fade-left-{{ ai_gen_id }}"></div>
+    <div class="ai-marketplace-fade-right-{{ ai_gen_id }}"></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marketplace showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Available on top marketplaces"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Shop Inkitch products across India's leading platforms."
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "card_size",
+      "label": "Card size",
+      "min": 100,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Text color",
+      "default": "#374151"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Duration",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "s",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_1_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_1_name",
+      "label": "Name",
+      "default": "Amazon"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_1_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_1_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_2_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_2_name",
+      "label": "Name",
+      "default": "Flipkart"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_2_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_2_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_3_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_3_name",
+      "label": "Name",
+      "default": "Meesho"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_3_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_3_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_4_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_4_name",
+      "label": "Name",
+      "default": "Myntra"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_4_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_4_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_5_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_5_name",
+      "label": "Name",
+      "default": "Ajio"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_5_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_5_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_6_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_6_name",
+      "label": "Name",
+      "default": "Snapdeal"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_6_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_6_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_7_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_7_name",
+      "label": "Name",
+      "default": "JioMart"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_7_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_7_url",
+      "label": "URL"
+    },
+    {
+      "type": "header",
+      "content": "Marketplace 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "marketplace_8_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_8_name",
+      "label": "Name",
+      "default": "Shopify"
+    },
+    {
+      "type": "image_picker",
+      "id": "marketplace_8_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "url",
+      "id": "marketplace_8_url",
+      "label": "URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marketplace showcase"
+    }
+  ]
+}
+{% endschema %}

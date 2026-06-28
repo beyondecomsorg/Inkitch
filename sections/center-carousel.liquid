@@ -1,0 +1,198 @@
+<div class="cc-wrapper">
+  <div class="cc-container" id="cc-container">
+{% for block in section.blocks %}
+<div class="cc-slide" data-link="{{ block.settings.product_link }}">
+
+  
+
+    {% if block.settings.video != blank %}
+      <video class="cc-media cc-video" muted autoplay loop playsinline preload="metadata">
+        <source src="{{ block.settings.video }}" type="video/mp4">
+      </video>
+
+    {% elsif block.settings.image != blank %}
+      {{ block.settings.image | image_url: width: 1200 | image_tag: class: 'cc-media', loading: 'lazy', alt: 'slide' }}
+    {% endif %}
+
+  
+
+</div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.cc-wrapper {
+  padding: 40px 0;
+  overflow: hidden;
+}
+
+.cc-container {
+  display: flex;
+  flex-wrap: nowrap;
+overflow-x: auto;
+justify-content: center;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
+  padding-left: 20%;
+  padding-right: 20%;
+
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+.cc-container:active {
+  cursor: grabbing;
+}
+
+.cc-container::-webkit-scrollbar {
+  display: none;
+}
+
+.cc-slide {
+  flex: 0 0 260px;
+  scroll-snap-align: center;
+
+  transform: scale(0.85);
+  opacity: 0.5;
+  transition: all 0.35s ease;
+
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* CENTER POP */
+.cc-slide.active {
+  transform: scale(1);
+  opacity: 1;
+  z-index: 2;
+}
+
+/* MEDIA - NO CUTTING */
+.cc-media {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+  display: block;
+  border-radius: 16px;
+  background: #000;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .cc-container {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+
+  .cc-slide {
+    flex: 0 0 75%;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const container = document.getElementById("cc-container");
+  const slides = container.querySelectorAll(".cc-slide");
+
+  function updateCenter() {
+    let center = container.scrollLeft + container.offsetWidth / 2;
+
+    slides.forEach(slide => {
+      const box = slide.offsetLeft + slide.offsetWidth / 2;
+      const distance = Math.abs(center - box);
+
+      const video = slide.querySelector("video");
+
+      if (distance < slide.offsetWidth / 2) {
+        slide.classList.add("active");
+
+        if (video) {
+          video.play().catch(() => {});
+        }
+
+      } else {
+        slide.classList.remove("active");
+
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+      }
+    });
+  }
+
+  container.addEventListener("scroll", () => {
+    requestAnimationFrame(updateCenter);
+  });
+
+  updateCenter();
+
+  /* DESKTOP DRAG */
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  container.addEventListener("mousedown", (e) => {
+    isDown = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+  });
+
+  container.addEventListener("mouseleave", () => isDown = false);
+  container.addEventListener("mouseup", () => isDown = false);
+
+  container.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 2;
+    container.scrollLeft = scrollLeft - walk;
+  });
+  document.querySelectorAll('.cc-slide').forEach(function(slide) {
+  slide.onclick = function() {
+    if (this.dataset.link) {
+      window.location.href = this.dataset.link;
+    }
+  };
+});
+});
+</script>
+
+{% schema %}
+{
+  "name": "Center Carousel",
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "video",
+          "label": "Video URL (MP4)"
+        },
+        {
+    "type": "url",
+    "id": "product_link",
+    "label": "Product Link"
+  }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Center Carousel" 
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,394 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify liquid section called "Product Accordion" or add it to the product page template. It should display a clean accordion/collapsible FAQ style block with a white background and a thin light gray outer border around the entire accordion container.
+    Inside the container show 4 accordion rows in this exact order:
+    
+    Description
+    What's in the box
+    Care and Usage
+    Shipping & Returns
+    
+    Each row has a thin light gray bottom border separating it from the next row. Each row shows the section title in bold dark charcoal text on the left and a downward chevron arrow icon (∨) on the right. When clicked the chevron rotates to point upward and the content below the title smoothly expands to reveal the text. Clicking again collapses it with a smooth animation. Only one accordion row should be open at a time — opening one automatically closes any other open row.
+    The accordion rows should have generous padding (around 20px top and bottom). No background color change on hover or open — keep it clean white always. The expand and collapse animation should be smooth (CSS transition, around 0.3 seconds).
+    In the Shopify theme editor allow me to: edit each accordion row title, edit the content text for each row (support basic rich text like bullet points and bold text inside the content), toggle each row on or off, and add up to 8 accordion rows total. The first row "Description" should automatically pull from the product description field if placed on the product page.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-accordion-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+
+  .ai-product-accordion__item-{{ ai_gen_id }} {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .ai-product-accordion__item-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+  }
+
+  .ai-product-accordion__header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ai-product-accordion__title-{{ ai_gen_id }} {
+    font-weight: 600;
+    color: #333333;
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .ai-product-accordion__icon-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .ai-product-accordion__icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: #333333;
+  }
+
+  .ai-product-accordion__item-{{ ai_gen_id }}.active .ai-product-accordion__icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-product-accordion__content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} {
+    padding: 0 20px 20px 20px;
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} p {
+    margin: 0 0 12px 0;
+  }
+
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} ul,
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} ol {
+    margin: 0 0 12px 0;
+    padding-left: 20px;
+  }
+
+  .ai-product-accordion__content-inner-{{ ai_gen_id }} li {
+    margin-bottom: 8px;
+  }
+{% endstyle %}
+
+<product-accordion-{{ ai_gen_id }} class="ai-product-accordion-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% for i in (1..8) %}
+    {% liquid
+      assign enabled_key = 'accordion_' | append: i | append: '_enabled'
+      assign title_key = 'accordion_' | append: i | append: '_title'
+      assign content_key = 'accordion_' | append: i | append: '_content'
+      
+      assign is_enabled = block.settings[enabled_key]
+      assign title = block.settings[title_key]
+      assign content = block.settings[content_key]
+      
+      if i == 1 and product and product.description != blank
+        assign content = product.description
+      endif
+    %}
+    
+    {% if is_enabled and title != blank %}
+      <div class="ai-product-accordion__item-{{ ai_gen_id }}" data-accordion-item>
+        <button
+          class="ai-product-accordion__header-{{ ai_gen_id }}"
+          aria-expanded="false"
+          data-accordion-trigger
+        >
+          <h3 class="ai-product-accordion__title-{{ ai_gen_id }}">{{ title }}</h3>
+          <span class="ai-product-accordion__icon-{{ ai_gen_id }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </span>
+        </button>
+        <div class="ai-product-accordion__content-{{ ai_gen_id }}" data-accordion-content>
+          <div class="ai-product-accordion__content-inner-{{ ai_gen_id }}">
+            {{ content }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</product-accordion-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-accordion-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const trigger = item.querySelector('[data-accordion-trigger]');
+          const content = item.querySelector('[data-accordion-content]');
+          
+          trigger.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            this.items.forEach((otherItem) => {
+              if (otherItem !== item) {
+                this.closeItem(otherItem);
+              }
+            });
+            
+            if (isActive) {
+              this.closeItem(item);
+            } else {
+              this.openItem(item);
+            }
+          });
+        });
+      }
+
+      openItem(item) {
+        const trigger = item.querySelector('[data-accordion-trigger]');
+        const content = item.querySelector('[data-accordion-content]');
+        const contentInner = content.querySelector('.ai-product-accordion__content-inner-{{ ai_gen_id }}');
+        
+        item.classList.add('active');
+        trigger.setAttribute('aria-expanded', 'true');
+        content.style.maxHeight = contentInner.scrollHeight + 'px';
+      }
+
+      closeItem(item) {
+        const trigger = item.querySelector('[data-accordion-trigger]');
+        const content = item.querySelector('[data-accordion-content]');
+        
+        item.classList.remove('active');
+        trigger.setAttribute('aria-expanded', 'false');
+        content.style.maxHeight = '0';
+      }
+    }
+
+    customElements.define('product-accordion-{{ ai_gen_id }}', ProductAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product accordion",
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Accordion 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_1_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_1_title",
+      "label": "Title",
+      "default": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_1_content",
+      "label": "Content",
+      "info": "On product pages, this will automatically use the product description",
+      "default": "<p>Product description will appear here.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_2_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_2_title",
+      "label": "Title",
+      "default": "What's in the box"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_2_content",
+      "label": "Content",
+      "default": "<ul><li>1x Product</li><li>User manual</li><li>Warranty card</li></ul>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_3_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_3_title",
+      "label": "Title",
+      "default": "Care and Usage"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_3_content",
+      "label": "Content",
+      "default": "<p>Clean with a soft, damp cloth. Avoid harsh chemicals. Store in a cool, dry place.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_4_enabled",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_4_title",
+      "label": "Title",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_4_content",
+      "label": "Content",
+      "default": "<p>Free shipping on orders over ₹500. Returns accepted within 30 days of purchase.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_5_enabled",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "accordion_5_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_5_content",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_6_enabled",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "accordion_6_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_6_content",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_7_enabled",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "accordion_7_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_7_content",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Accordion 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_8_enabled",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "accordion_8_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_8_content",
+      "label": "Content"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product accordion"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

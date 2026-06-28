@@ -1,0 +1,490 @@
+{% doc %}
+  @prompt
+    <section class="product-video-features">
+      <h2>Product Features</h2>
+    
+      <div class="video-grid">
+    
+        <div class="video-card">
+          <video autoplay muted loop playsinline>
+            <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+          </video>
+          <h3>Leak Resistant</h3>
+          <p>No spills while carrying.</p>
+        </div>
+    
+        <div class="video-card">
+          <video autoplay muted loop playsinline>
+            <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+          </video>
+          <h3>Heavy Gauge Steel</h3>
+          <p>Strong and durable body.</p>
+        </div>
+    
+        <div class="video-card">
+          <video autoplay muted loop playsinline>
+            <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+          </video>
+          <h3>Secure Lock</h3>
+          <p>Tight locking system.</p>
+        </div>
+    
+        <div class="video-card">
+          <video autoplay muted loop playsinline>
+            <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+          </video>
+          <h3>Easy to Clean</h3>
+          <p>Hassle-free washing.</p>
+        </div>
+    
+      </div>
+    </section>
+    
+    <style>
+    .product-video-features {
+      padding: 60px;
+      background: #f6f5ec;
+    }
+    .product-video-features h2 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+    }
+    .video-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .video-card video {
+      width: 100%;
+      display: block;
+    }
+    .video-card h3 {
+      padding: 15px;
+    }
+    .video-card p {
+      padding: 0 15px 20px;
+    }
+    @media(max-width:768px){
+      .video-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+    </style>
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-video-features-{{ ai_gen_id }} {
+    display: block;
+    padding: {{ block.settings.section_padding }}px;
+    background: {{ block.settings.background_color }};
+    width: {{ block.settings.desktop_width_percent }}%;
+  }
+
+  .ai-product-video-features__heading-{{ ai_gen_id }} {
+    text-align: center;
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-product-video-features__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-product-video-features__card-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-product-video-features__video-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .ai-product-video-features__card-title-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px {{ block.settings.card_padding }}px 0;
+    margin: 0;
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_text_color }};
+  }
+
+  .ai-product-video-features__card-text-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.card_padding }}px {{ block.settings.card_padding }}px;
+    margin: 0;
+    font-size: {{ block.settings.card_text_size }}px;
+    color: {{ block.settings.card_text_color }};
+  }
+
+  .ai-product-video-features__video-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-product-video-features__video-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.3;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-product-video-features__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+  }
+{% endstyle %}
+
+<product-video-features-{{ ai_gen_id }} class="ai-product-video-features-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h2 class="ai-product-video-features__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="ai-product-video-features__grid-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign video_key = 'video_' | append: i
+        assign title_key = 'title_' | append: i
+        assign text_key = 'text_' | append: i
+        
+        assign video = block.settings[video_key]
+        assign title = block.settings[title_key]
+        assign text = block.settings[text_key]
+      %}
+
+      <div class="ai-product-video-features__card-{{ ai_gen_id }}">
+        {% if video != blank %}
+          <video
+            class="ai-product-video-features__video-{{ ai_gen_id }}"
+            autoplay
+            muted
+            loop
+            playsinline
+          >
+            <source src="{{ video }}" type="video/mp4">
+          </video>
+        {% else %}
+          <div class="ai-product-video-features__video-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        {% if title != blank %}
+          <h3 class="ai-product-video-features__card-title-{{ ai_gen_id }}">{{ title }}</h3>
+        {% endif %}
+
+        {% if text != blank %}
+          <p class="ai-product-video-features__card-text-{{ ai_gen_id }}">{{ text }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</product-video-features-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductVideoFeatures{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.videos = this.querySelectorAll('.ai-product-video-features__video-{{ ai_gen_id }}');
+        this.setupIntersectionObserver();
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.play();
+            } else {
+              entry.target.pause();
+            }
+          });
+        }, options);
+
+        this.videos.forEach((video) => {
+          observer.observe(video);
+        });
+      }
+    }
+
+    customElements.define('product-video-features-{{ ai_gen_id }}', ProductVideoFeatures{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product video features",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product Features"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f6f5ec"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading spacing",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Padding",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "url",
+      "id": "video_1",
+      "label": "Video URL"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_1",
+      "label": "Title",
+      "default": "Leak Resistant"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_1",
+      "label": "Text",
+      "default": "No spills while carrying."
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "url",
+      "id": "video_2",
+      "label": "Video URL"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_2",
+      "label": "Title",
+      "default": "Heavy Gauge Steel"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_2",
+      "label": "Text",
+      "default": "Strong and durable body."
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "url",
+      "id": "video_3",
+      "label": "Video URL"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_3",
+      "label": "Title",
+      "default": "Secure Lock"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_3",
+      "label": "Text",
+      "default": "Tight locking system."
+    },
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "url",
+      "id": "video_4",
+      "label": "Video URL"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_4",
+      "label": "Title",
+      "default": "Easy to Clean"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_4",
+      "label": "Text",
+      "default": "Hassle-free washing."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product video features"
+    }
+  ]
+}
+{% endschema %}

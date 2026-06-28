@@ -1,0 +1,440 @@
+{% doc %}
+  @prompt
+    Add trust badges (e.g. secure payment, free shipping, easy returns icons) below the product price on the product page, before the Add to Cart button.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-trust-badges-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: {{ block.settings.spacing_top }}px 0 {{ block.settings.spacing_bottom }}px;
+  }
+
+  .ai-trust-badges-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ block.settings.badge_spacing }}px;
+    justify-content: {{ block.settings.alignment }};
+    align-items: center;
+  }
+
+  .ai-trust-badge-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.icon_text_gap }}px;
+    padding: {{ block.settings.badge_padding }}px;
+    background-color: {{ block.settings.badge_background }};
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    border: {{ block.settings.badge_border_width }}px solid {{ block.settings.badge_border_color }};
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    flex-shrink: 0;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-trust-badge-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    font-weight: {{ block.settings.text_weight }};
+    line-height: 1.2;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-trust-badges-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-trust-badges-container-{{ ai_gen_id }} {
+      justify-content: {{ block.settings.mobile_alignment }};
+    }
+
+    .ai-trust-badge-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.9 }}px;
+      height: {{ block.settings.icon_size | times: 0.9 }}px;
+    }
+
+    .ai-trust-badge-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-trust-badges-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-trust-badges-container-{{ ai_gen_id }}">
+    {% if block.settings.show_secure_payment %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.secure_payment_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_free_shipping %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.free_shipping_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_easy_returns %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <polyline points="23 20 23 14 17 14"></polyline>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.easy_returns_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_warranty %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.warranty_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_support %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.support_text }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_custom %}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <span class="ai-trust-badge-text-{{ ai_gen_id }}">{{ block.settings.custom_text }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secure_payment",
+      "label": "Show secure payment",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secure_payment_text",
+      "label": "Secure payment text",
+      "default": "Secure payment"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_free_shipping",
+      "label": "Show free shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_text",
+      "label": "Free shipping text",
+      "default": "Free shipping"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_easy_returns",
+      "label": "Show easy returns",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "easy_returns_text",
+      "label": "Easy returns text",
+      "default": "Easy returns"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_warranty",
+      "label": "Show warranty",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "warranty_text",
+      "label": "Warranty text",
+      "default": "1 year warranty"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_support",
+      "label": "Show support",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "support_text",
+      "label": "Support text",
+      "default": "24/7 support"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom",
+      "label": "Show custom badge",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "custom_text",
+      "label": "Custom badge text",
+      "default": "Quality guaranteed"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Desktop alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "badge_spacing",
+      "label": "Space between badges",
+      "min": 4,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "badge_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Background",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "badge_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "icon_text_gap",
+      "label": "Gap between icon and text",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges"
+    }
+  ]
+}
+{% endschema %}

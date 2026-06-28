@@ -1,0 +1,570 @@
+{% doc %}
+  @prompt
+    <div style="padding:40px 0;">
+      <h2 style="text-align:center;font-size:42px;margin-bottom:30px;">
+        Product Features
+      </h2>
+    
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+    
+        <div>
+          <video autoplay loop muted playsinline width="100%">
+            <source src="YOUR_VIDEO_LINK.mp4" type="video/mp4">
+          </video>
+          <h3>Dishwasher Safe</h3>
+          <p>Top-rack dishwasher safe.</p>
+        </div>
+    
+        <div>
+          <video autoplay loop muted playsinline width="100%">
+            <source src="YOUR_VIDEO_LINK.mp4" type="video/mp4">
+          </video>
+          <h3>Smooth Open & Close</h3>
+          <p>Opens smoothly with ease.</p>
+        </div>
+    
+        <div>
+          <video autoplay loop muted playsinline width="100%">
+            <source src="YOUR_VIDEO_LINK.mp4" type="video/mp4">
+          </video>
+          <h3>Invisible Hinge</h3>
+          <p>Seamless hinge design.</p>
+        </div>
+    
+        <div>
+          <video autoplay loop muted playsinline width="100%">
+            <source src="YOUR_VIDEO_LINK.mp4" type="video/mp4">
+          </video>
+          <h3>100% Leak Resistant</h3>
+          <p>Tested against leakage.</p>
+        </div>
+    
+      </div>
+    </div>
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-features-{{ ai_gen_id }} {
+    display: block;
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+    width: 100%;
+  }
+
+  .ai-product-features__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-product-features__heading-{{ ai_gen_id }} {
+    text-align: {{ block.settings.heading_alignment }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-product-features__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-product-features__item-{{ ai_gen_id }} {
+    text-align: {{ block.settings.item_alignment }};
+  }
+
+  .ai-product-features__media-{{ ai_gen_id }} {
+    width: 100%;
+    margin-bottom: {{ block.settings.media_spacing }}px;
+    border-radius: {{ block.settings.media_border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.media_background }};
+  }
+
+  .ai-product-features__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-product-features__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-features__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-product-features__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: {{ block.settings.title_weight }};
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    color: {{ block.settings.title_color }};
+  }
+
+  .ai-product-features__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    margin: 0;
+    color: {{ block.settings.description_color }};
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-product-features__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+
+    .ai-product-features__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-features__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+
+    .ai-product-features__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-product-features__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.9);
+    }
+
+    .ai-product-features__description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-product-features-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-product-features__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-product-features__heading-{{ ai_gen_id }}">
+        {{ block.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="ai-product-features__grid-{{ ai_gen_id }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign video_key = 'feature_' | append: i | append: '_video'
+          assign title_key = 'feature_' | append: i | append: '_title'
+          assign description_key = 'feature_' | append: i | append: '_description'
+          
+          assign video = block.settings[video_key]
+          assign title = block.settings[title_key]
+          assign description = block.settings[description_key]
+        %}
+
+        <div class="ai-product-features__item-{{ ai_gen_id }}">
+          <div class="ai-product-features__media-{{ ai_gen_id }}">
+            {% if video != blank %}
+              <video
+                class="ai-product-features__video-{{ ai_gen_id }}"
+                autoplay
+                loop
+                muted
+                playsinline
+                {% if block.settings.lazy_load %}loading="lazy"{% endif %}
+              >
+                <source src="{{ video }}" type="video/mp4">
+              </video>
+            {% else %}
+              <div class="ai-product-features__placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if title != blank %}
+            <h3 class="ai-product-features__title-{{ ai_gen_id }}">
+              {{ title }}
+            </h3>
+          {% endif %}
+
+          {% if description != blank %}
+            <p class="ai-product-features__description-{{ ai_gen_id }}">
+              {{ description }}
+            </p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product features",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container max width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product Features"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Bottom spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns on tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap between items",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "item_alignment",
+      "label": "Item alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "range",
+      "id": "media_spacing",
+      "label": "Bottom spacing",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "media_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "media_background",
+      "label": "Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy_load",
+      "label": "Lazy load videos",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Feature titles"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Bottom spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Feature descriptions"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "url",
+      "id": "feature_1_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "Title",
+      "default": "Dishwasher Safe"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_1_description",
+      "label": "Description",
+      "default": "Top-rack dishwasher safe."
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "url",
+      "id": "feature_2_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "Title",
+      "default": "Smooth Open & Close"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_2_description",
+      "label": "Description",
+      "default": "Opens smoothly with ease."
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "url",
+      "id": "feature_3_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "Title",
+      "default": "Invisible Hinge"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_3_description",
+      "label": "Description",
+      "default": "Seamless hinge design."
+    },
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "url",
+      "id": "feature_4_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_title",
+      "label": "Title",
+      "default": "100% Leak Resistant"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_4_description",
+      "label": "Description",
+      "default": "Tested against leakage."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product features"
+    }
+  ]
+}
+{% endschema %}

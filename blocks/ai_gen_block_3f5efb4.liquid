@@ -1,0 +1,767 @@
+{% doc %}
+  @prompt
+    Generate a section where "Why inKitch" Section is displayed, Create the Items like "premium quality" in pair if two not one after another. , create a 2-column grid of simple black outline icons with short feature titles underneath each icon. Features include:
+    
+    ISO Certified
+    30+ Years Experience
+    Own Manufacturing
+    Millions Satisfied Customers
+    Wide Range
+    Marketplace Bestsellers, “Create a clean and premium mobile website section for a kitchenware/homeware brand. Minimal white background with elegant black typography. Large centered heading saying ‘Why inKitch’. Below it, add a short brand mission paragraph in modern sans-serif font with balanced spacing and centered alignment.
+    
+    Under the text, create a 2-column grid of simple black outline icons with short feature titles underneath each icon. Features include:
+    
+    ISO Certified
+    30+ Years Experience
+    Own Manufacturing
+    Millions Satisfied Customers
+    Wide Range
+    Marketplace Bestsellers
+    
+    Design style should be modern, minimal, luxury, and trustworthy — similar to premium cookware and lifestyle brands. Use soft spacing, clean layout, subtle iconography, and mobile-first responsive design. Keep everything centered with lots of white space. Use elegant typography like Poppins or Montserrat.”
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-why-inkitch-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-why-inkitch-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-why-inkitch-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-why-inkitch-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.heading_margin }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    line-height: 1.2;
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-family: 'Literata', serif;
+  }
+
+  .ai-why-inkitch-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.6;
+    max-width: {{ block.settings.description_max_width }}px;
+    margin: 0 auto;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+  }
+
+  .ai-why-inkitch-features-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.grid_gap }}px {{ block.settings.grid_column_gap }}px;
+    margin-top: {{ block.settings.features_spacing }}px;
+  }
+
+  .ai-why-inkitch-feature-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: {{ block.settings.feature_padding }}px;
+  }
+
+  .ai-why-inkitch-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: {{ block.settings.icon_spacing }}px;
+  }
+
+  .ai-why-inkitch-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: {{ block.settings.icon_stroke_width }};
+  }
+
+  .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_title_size }}px;
+    color: {{ block.settings.feature_title_color }};
+    margin: 0;
+    font-weight: {{ block.settings.feature_title_weight }};
+    line-height: 1.4;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-why-inkitch-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.7 }}px 16px {{ block.settings.section_padding_bottom | times: 0.7 }}px;
+    }
+
+    .ai-why-inkitch-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+      margin-bottom: {{ block.settings.heading_margin | times: 0.8 }}px;
+    }
+
+    .ai-why-inkitch-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+    }
+
+    .ai-why-inkitch-header-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.header_spacing | times: 0.8 }}px;
+    }
+
+    .ai-why-inkitch-features-{{ ai_gen_id }} {
+      gap: {{ block.settings.grid_gap | times: 0.7 }}px {{ block.settings.grid_column_gap | times: 0.7 }}px;
+      margin-top: {{ block.settings.features_spacing | times: 0.8 }}px;
+    }
+
+    .ai-why-inkitch-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.85 }}px;
+      height: {{ block.settings.icon_size | times: 0.85 }}px;
+      margin-bottom: {{ block.settings.icon_spacing | times: 0.8 }}px;
+    }
+
+    .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.feature_title_size | times: 0.9 }}px;
+    }
+
+    .ai-why-inkitch-feature-{{ ai_gen_id }} {
+      padding: {{ block.settings.feature_padding | times: 0.7 }}px;
+    }
+  }
+{% endstyle %}
+
+<why-inkitch-{{ ai_gen_id }} class="ai-why-inkitch-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-why-inkitch-container-{{ ai_gen_id }}">
+    <div class="ai-why-inkitch-header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-why-inkitch-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      
+      {% if block.settings.description != blank %}
+        <div class="ai-why-inkitch-description-{{ ai_gen_id }}">
+          {{ block.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-why-inkitch-features-{{ ai_gen_id }}">
+      {% for i in (1..6) %}
+        {% liquid
+          assign title_key = 'feature_' | append: i | append: '_title'
+          assign icon_key = 'feature_' | append: i | append: '_icon'
+          
+          assign feature_title = block.settings[title_key]
+          assign feature_icon = block.settings[icon_key]
+        %}
+
+        {% if feature_title != blank %}
+          <div class="ai-why-inkitch-feature-{{ ai_gen_id }}">
+            <div class="ai-why-inkitch-icon-{{ ai_gen_id }}">
+              {% case feature_icon %}
+                {% when 'certificate' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="6"></circle>
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                  </svg>
+                {% when 'experience' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                {% when 'factory' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
+                    <path d="M17 18h1"></path>
+                    <path d="M12 18h1"></path>
+                    <path d="M7 18h1"></path>
+                  </svg>
+                {% when 'customers' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                {% when 'range' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                {% when 'bestseller' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>
+                {% else %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+              {% endcase %}
+            </div>
+            <h3 class="ai-why-inkitch-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</why-inkitch-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WhyInkitch{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('why-inkitch-{{ ai_gen_id }}', WhyInkitch{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why inKitch",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why inKitch"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin",
+      "label": "Heading bottom margin",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Crafting premium kitchenware with precision and passion. Our commitment to quality and innovation has made us a trusted name in homes worldwide.</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "label": "Description max width",
+      "min": 400,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "select",
+      "id": "feature_1_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "certificate"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "Title",
+      "default": "ISO Certified"
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "select",
+      "id": "feature_2_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "experience"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "Title",
+      "default": "30+ Years Experience"
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "select",
+      "id": "feature_3_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "factory"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "Title",
+      "default": "Own Manufacturing"
+    },
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "select",
+      "id": "feature_4_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "customers"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_title",
+      "label": "Title",
+      "default": "Millions Satisfied Customers"
+    },
+    {
+      "type": "header",
+      "content": "Feature 5"
+    },
+    {
+      "type": "select",
+      "id": "feature_5_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "range"
+    },
+    {
+      "type": "text",
+      "id": "feature_5_title",
+      "label": "Title",
+      "default": "Wide Range"
+    },
+    {
+      "type": "header",
+      "content": "Feature 6"
+    },
+    {
+      "type": "select",
+      "id": "feature_6_icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "certificate",
+          "label": "Certificate"
+        },
+        {
+          "value": "experience",
+          "label": "Experience"
+        },
+        {
+          "value": "factory",
+          "label": "Factory"
+        },
+        {
+          "value": "customers",
+          "label": "Customers"
+        },
+        {
+          "value": "range",
+          "label": "Range"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "bestseller"
+    },
+    {
+      "type": "text",
+      "id": "feature_6_title",
+      "label": "Title",
+      "default": "Marketplace Bestsellers"
+    },
+    {
+      "type": "header",
+      "content": "Feature styling"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "label": "Icon stroke width",
+      "min": 1,
+      "max": 3,
+      "step": 0.5,
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Icon spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "label": "Feature title size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "feature_title_weight",
+      "label": "Feature title weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Feature title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width",
+      "min": 600,
+      "max": 1200,
+      "step": 100,
+      "unit": "px",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header bottom spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "features_spacing",
+      "label": "Features top spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid row gap",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_column_gap",
+      "label": "Grid column gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "feature_padding",
+      "label": "Feature padding",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why inKitch"
+    }
+  ]
+}
+{% endschema %}

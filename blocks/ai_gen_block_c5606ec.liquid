@@ -1,0 +1,286 @@
+{% doc %}
+  @prompt
+    {% if product.metafields.custom.a_plus_images != blank %}
+    
+    <section style="background:#fff;padding:50px 0;">
+      <div style="max-width:1200px;margin:auto;">
+    
+        <h2 style="
+          text-align:center;
+          font-size:42px;
+          font-weight:700;
+          margin-bottom:40px;">
+          Product Highlights
+        </h2>
+    
+        {% for image in product.metafields.custom.a_plus_images.value %}
+    
+          <div style="
+            margin-bottom:25px;
+            overflow:hidden;
+            border-radius:16px;
+            box-shadow:0 6px 25px rgba(0,0,0,.08);
+          ">
+            <img
+              src="{{ image | image_url: width: 2000 }}"
+              style="width:100%;display:block;"
+              loading="lazy"
+            >
+          </div>
+    
+        {% endfor %}
+    
+      </div>
+    </section>
+    
+    {% endif %}, {% if product.metafields.custom.a_plus_images != blank %}
+    
+    <div style="max-width:1200px;margin:40px auto;padding:0 20px;">
+    
+      <img
+        src="{{ product.metafields.custom.a_plus_images.value }}"
+        alt="{{ product.title }}"
+        loading="lazy"
+        style="
+          width:100%;
+          display:block;
+          border-radius:12px;
+          box-shadow:0 4px 20px rgba(0,0,0,0.08);
+        "
+      >
+    
+    </div>
+    
+    {% else %}
+    
+    <div style="
+      text-align:center;
+      padding:60px 20px;
+      background:#f8f8f8;
+      border-radius:12px;
+      margin:40px auto;
+      max-width:1200px;
+    ">
+      <h3>No A+ Images Found</h3>
+      <p>Add an image URL to the product metafield: custom.a_plus_images</p>
+    </div>
+    
+    {% endif %}
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-aplus-image-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-aplus-image-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: {{ block.settings.vertical_spacing }}px auto;
+    padding: 0 {{ block.settings.horizontal_padding }}px;
+  }
+
+  .ai-aplus-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    border-radius: {{ block.settings.border_radius }}px;
+    box-shadow: 0 {{ block.settings.shadow_vertical }}px {{ block.settings.shadow_blur }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+    overflow: hidden;
+  }
+
+  .ai-aplus-image-img-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+  }
+
+  .ai-aplus-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    background: {{ block.settings.empty_state_bg }};
+    border-radius: {{ block.settings.border_radius }}px;
+    margin: {{ block.settings.vertical_spacing }}px auto;
+    max-width: {{ block.settings.max_width }}px;
+  }
+
+  .ai-aplus-empty-heading-{{ ai_gen_id }} {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: {{ block.settings.empty_state_text }};
+  }
+
+  .ai-aplus-empty-text-{{ ai_gen_id }} {
+    font-size: 14px;
+    margin: 0;
+    color: {{ block.settings.empty_state_text }};
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-aplus-image-container-{{ ai_gen_id }} {
+      margin: {{ block.settings.vertical_spacing | times: 0.6 }}px auto;
+      padding: 0 {{ block.settings.horizontal_padding | times: 0.5 }}px;
+    }
+
+    .ai-aplus-empty-state-{{ ai_gen_id }} {
+      padding: 40px 15px;
+      margin: {{ block.settings.vertical_spacing | times: 0.6 }}px auto;
+    }
+
+    .ai-aplus-empty-heading-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+  }
+{% endstyle %}
+
+<aplus-image-{{ ai_gen_id }} class="ai-aplus-image-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if product.metafields.custom.a_plus_images != blank %}
+    <div class="ai-aplus-image-container-{{ ai_gen_id }}">
+      <div class="ai-aplus-image-wrapper-{{ ai_gen_id }}">
+        <img
+          src="{{ product.metafields.custom.a_plus_images.value }}"
+          alt="{{ product.title | escape }}"
+          loading="lazy"
+          class="ai-aplus-image-img-{{ ai_gen_id }}"
+        >
+      </div>
+    </div>
+  {% else %}
+    <div class="ai-aplus-empty-state-{{ ai_gen_id }}">
+      <h3 class="ai-aplus-empty-heading-{{ ai_gen_id }}">{{ block.settings.empty_heading }}</h3>
+      <p class="ai-aplus-empty-text-{{ ai_gen_id }}">{{ block.settings.empty_text }}</p>
+    </div>
+  {% endif %}
+</aplus-image-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AplusImage{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+
+    customElements.define('aplus-image-{{ ai_gen_id }}', AplusImage{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "A+ content image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 600,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "vertical_spacing",
+      "label": "Vertical spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "shadow_vertical",
+      "label": "Shadow vertical offset",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "shadow_blur",
+      "label": "Shadow blur",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Shadow opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Empty state"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "empty_heading",
+      "label": "Heading",
+      "default": "No A+ Images Found"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "empty_text",
+      "label": "Text",
+      "default": "Add an image URL to the product metafield: custom.a_plus_images"
+    },
+    {
+      "type": "color",
+      "id": "empty_state_bg",
+      "label": "Background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "empty_state_text",
+      "label": "Text color",
+      "default": "#121212"
+    }
+  ],
+  "presets": [
+    {
+      "name": "A+ content image"
+    }
+  ]
+}
+{% endschema %}

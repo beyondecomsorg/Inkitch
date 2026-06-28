@@ -1,0 +1,686 @@
+{% doc %}
+  @prompt
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Accordion</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+      body {
+        background: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        padding: 20px;
+      }
+    
+      .accordion-wrapper {
+        width: 100%;
+        max-width: 860px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    
+      .accordion-item {
+        background: #F5F5F5;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: box-shadow 0.2s ease;
+      }
+    
+      .accordion-item:hover {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      }
+    
+      .accordion-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 24px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+    
+      .accordion-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a1a;
+        letter-spacing: -0.1px;
+      }
+    
+      .accordion-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        background: #1a1a1a;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+      }
+    
+      .accordion-icon svg {
+        width: 14px;
+        height: 14px;
+        stroke: #ffffff;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        fill: none;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    
+      .accordion-item.open .accordion-icon {
+        background: #1a1a1a;
+        transform: rotate(45deg);
+      }
+    
+      .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    
+      .accordion-content {
+        padding: 0 24px 22px;
+        font-size: 14px;
+        color: #555555;
+        line-height: 1.7;
+      }
+    
+      .accordion-content ul {
+        padding-left: 18px;
+        margin-top: 6px;
+      }
+    
+      .accordion-content ul li {
+        margin-bottom: 6px;
+      }
+    
+      .accordion-content p {
+        margin-bottom: 8px;
+      }
+    
+      .accordion-divider {
+        height: 1px;
+        background: #e0e0e0;
+        margin: 0 24px;
+      }
+    </style>
+    </head>
+    <body>
+    
+    <div class="accordion-wrapper">
+    
+      <!-- Item 1 -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-title">Product Details</span>
+          <div class="accordion-icon">
+            <svg viewBox="0 0 14 14">
+              <line x1="7" y1="1" x2="7" y2="13"/>
+              <line x1="1" y1="7" x2="13" y2="7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-divider"></div>
+          <div class="accordion-content">
+            <p>Premium stainless steel water bottle designed for everyday use. Double wall vacuum insulation keeps beverages hot for 12 hours and cold for 24 hours.</p>
+            <ul>
+              <li>Capacity: 750ml / 1000ml</li>
+              <li>Double wall vacuum insulated</li>
+              <li>BPA free and food grade steel</li>
+              <li>Leak proof screw cap lid</li>
+              <li>ISI certified (IS 17526)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Item 2 -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-title">Technical Specifications</span>
+          <div class="accordion-icon">
+            <svg viewBox="0 0 14 14">
+              <line x1="7" y1="1" x2="7" y2="13"/>
+              <line x1="1" y1="7" x2="13" y2="7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-divider"></div>
+          <div class="accordion-content">
+            <ul>
+              <li>Material: Food grade 304 stainless steel</li>
+              <li>Insulation: Double wall vacuum</li>
+              <li>Hot retention: Up to 12 hours</li>
+              <li>Cold retention: Up to 24 hours</li>
+              <li>Weight: 320g (approx)</li>
+              <li>Dimensions: 27cm height x 7cm diameter</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Item 3 -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-title">Material and Care</span>
+          <div class="accordion-icon">
+            <svg viewBox="0 0 14 14">
+              <line x1="7" y1="1" x2="7" y2="13"/>
+              <line x1="1" y1="7" x2="13" y2="7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-divider"></div>
+          <div class="accordion-content">
+            <p>Made from premium 304 food grade stainless steel, completely safe for daily use.</p>
+            <ul>
+              <li>Hand wash recommended</li>
+              <li>Do not microwave</li>
+              <li>Do not put in dishwasher</li>
+              <li>Clean with warm soapy water</li>
+              <li>Dry thoroughly before storing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Item 4 -->
+      <div class="accordion-item">
+        <div class="accordion-header" onc
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_spacing }}px;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    background: {{ block.settings.item_background_color }};
+    border-radius: {{ block.settings.item_border_radius }}px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, {{ block.settings.hover_shadow_opacity }});
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: {{ block.settings.header_padding_vertical }}px {{ block.settings.header_padding_horizontal }}px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .ai-accordion-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: {{ block.settings.title_font_weight }};
+    color: {{ block.settings.title_color }};
+    letter-spacing: -0.1px;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    min-width: {{ block.settings.icon_size }}px;
+    background: {{ block.settings.icon_background_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.icon_size }}px * 0.44);
+    height: calc({{ block.settings.icon_size }}px * 0.44);
+    stroke: {{ block.settings.icon_color }};
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    fill: none;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}.open .ai-accordion-icon-{{ ai_gen_id }} {
+    transform: rotate(45deg);
+  }
+
+  .ai-accordion-body-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.header_padding_horizontal }}px {{ block.settings.content_padding_bottom }}px;
+    font-size: {{ block.settings.content_font_size }}px;
+    color: {{ block.settings.content_color }};
+    line-height: 1.7;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} ul {
+    padding-left: 18px;
+    margin-top: 6px;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} ul li {
+    margin-bottom: 6px;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} p {
+    margin-bottom: 8px;
+  }
+
+  .ai-accordion-divider-{{ ai_gen_id }} {
+    height: 1px;
+    background: {{ block.settings.divider_color }};
+    margin: 0 {{ block.settings.header_padding_horizontal }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-wrapper-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-accordion-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_font_size }}px * 0.9);
+    }
+
+    .ai-accordion-content-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.content_font_size }}px * 0.95);
+    }
+  }
+{% endstyle %}
+
+<product-accordion-{{ ai_gen_id }} class="ai-accordion-wrapper-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% for i in (1..4) %}
+    {% liquid
+      assign title_key = 'item_' | append: i | append: '_title'
+      assign content_key = 'item_' | append: i | append: '_content'
+      assign enabled_key = 'item_' | append: i | append: '_enabled'
+      
+      assign item_title = block.settings[title_key]
+      assign item_content = block.settings[content_key]
+      assign item_enabled = block.settings[enabled_key]
+    %}
+
+    {% if item_enabled %}
+      <div class="ai-accordion-item-{{ ai_gen_id }}" data-accordion-item>
+        <div class="ai-accordion-header-{{ ai_gen_id }}" role="button" aria-expanded="false" tabindex="0">
+          <span class="ai-accordion-title-{{ ai_gen_id }}">{{ item_title }}</span>
+          <div class="ai-accordion-icon-{{ ai_gen_id }}">
+            <svg viewBox="0 0 14 14">
+              <line x1="7" y1="1" x2="7" y2="13"/>
+              <line x1="1" y1="7" x2="13" y2="7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="ai-accordion-body-{{ ai_gen_id }}">
+          <div class="ai-accordion-divider-{{ ai_gen_id }}"></div>
+          <div class="ai-accordion-content-{{ ai_gen_id }}">
+            {{ item_content }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</product-accordion-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.items = [];
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-accordion-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const header = item.querySelector('.ai-accordion-header-{{ ai_gen_id }}');
+          const body = item.querySelector('.ai-accordion-body-{{ ai_gen_id }}');
+
+          header.addEventListener('click', () => this.toggleItem(item, header, body));
+          header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.toggleItem(item, header, body);
+            }
+          });
+        });
+      }
+
+      toggleItem(item, header, body) {
+        const isOpen = item.classList.contains('open');
+
+        if (isOpen) {
+          this.closeItem(item, header, body);
+        } else {
+          this.openItem(item, header, body);
+        }
+      }
+
+      openItem(item, header, body) {
+        item.classList.add('open');
+        header.setAttribute('aria-expanded', 'true');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+
+      closeItem(item, header, body) {
+        item.classList.remove('open');
+        header.setAttribute('aria-expanded', 'false');
+        body.style.maxHeight = '0';
+      }
+    }
+
+    customElements.define('product-accordion-{{ ai_gen_id }}', ProductAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Space between items",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Item style"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Background",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "hover_shadow_opacity",
+      "label": "Hover shadow opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "range",
+      "id": "header_padding_vertical",
+      "label": "Vertical padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "header_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "range",
+      "id": "content_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Color",
+      "default": "#555555"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_bottom",
+      "label": "Bottom padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Item 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_enabled",
+      "label": "Enable item 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Product details"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_content",
+      "label": "Content",
+      "default": "<p>Add your product details here.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Item 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_enabled",
+      "label": "Enable item 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "Technical specifications"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_content",
+      "label": "Content",
+      "default": "<p>Add your technical specifications here.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Item 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_enabled",
+      "label": "Enable item 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Material and care"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_content",
+      "label": "Content",
+      "default": "<p>Add your material and care instructions here.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Item 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_enabled",
+      "label": "Enable item 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Shipping and returns"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_content",
+      "label": "Content",
+      "default": "<p>Add your shipping and returns information here.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product accordion"
+    }
+  ]
+}
+{% endschema %}

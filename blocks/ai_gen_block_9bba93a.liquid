@@ -1,0 +1,651 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify liquid section called "UGC Reel Slider". It should look exactly like an Instagram reels feed embedded on the website.
+    The section has a white background with no padding on the sides so the cards go edge to edge. Display 4 portrait video cards visible at a time on desktop, arranged in a horizontal row with small gaps (8px) between each card. Each card has a 9:16 aspect ratio (tall portrait like a phone screen) with slightly rounded corners (border-radius 12px) and hidden overflow.
+    At the top of every card show a small Instagram-style profile header with: a circular brand logo/avatar on the left, and the brand username text in white bold next to it (like "houseofnamah"). This header sits on top of the video with a subtle dark gradient behind it so the text is always readable.
+    Each video should automatically start playing as soon as the section enters the user's viewport on scroll — no hover required. All videos must be muted, looping, and have playsinline attribute so they autoplay on mobile too. The video fills the full card using object-fit cover.
+    At the bottom of each card show a dark gradient overlay. On top of this overlay show optional caption text in white italic bold font (like "to the person who forces me") centered at the bottom of the card, styled like Instagram reel text captions.
+    Add a right arrow navigation button on the far right edge of the section in a white circle with a dark shadow, exactly like the image reference. Add dot indicators centered below the slider. On mobile show 1 card at a time and make it full width.
+    In the theme editor allow me to: upload up to 6 MP4 video files, set the brand username shown on each card, upload the circular brand logo/avatar image, edit the caption text for each card, and toggle caption text on or off per card. Use Intersection Observer JavaScript to trigger autoplay when the section scrolls into view. All videos should pause when the section is scrolled out of view to save performance.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ugc-reel-slider-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+
+  .ugc-reel-slider__container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding: 0;
+  }
+
+  .ugc-reel-slider__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    transition: transform 0.4s ease;
+    padding: 0;
+  }
+
+  .ugc-reel-slider__card-{{ ai_gen_id }} {
+    position: relative;
+    flex: 0 0 calc(25% - 6px);
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #000000;
+  }
+
+  .ugc-reel-slider__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ugc-reel-slider__header-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .ugc-reel-slider__avatar-{{ ai_gen_id }} {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    flex-shrink: 0;
+  }
+
+  .ugc-reel-slider__avatar-placeholder-{{ ai_gen_id }} {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #cccccc;
+    flex-shrink: 0;
+    border: 2px solid #ffffff;
+  }
+
+  .ugc-reel-slider__username-{{ ai_gen_id }} {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .ugc-reel-slider__caption-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 16px 20px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+    z-index: 2;
+  }
+
+  .ugc-reel-slider__caption-{{ ai_gen_id }} {
+    color: #ffffff;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
+
+  .ugc-reel-slider__nav-button-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ugc-reel-slider__nav-button-{{ ai_gen_id }}:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .ugc-reel-slider__nav-button-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ugc-reel-slider__nav-button-{{ ai_gen_id }}:disabled:hover {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .ugc-reel-slider__nav-button--prev-{{ ai_gen_id }} {
+    left: 16px;
+  }
+
+  .ugc-reel-slider__nav-button--next-{{ ai_gen_id }} {
+    right: 16px;
+  }
+
+  .ugc-reel-slider__nav-icon-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    stroke: #121212;
+    stroke-width: 2;
+  }
+
+  .ugc-reel-slider__dots-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+
+  .ugc-reel-slider__dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #d1d1d1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .ugc-reel-slider__dot-{{ ai_gen_id }}.active {
+    background-color: #121212;
+    transform: scale(1.2);
+  }
+
+  .ugc-reel-slider__empty-state-{{ ai_gen_id }} {
+    padding: 60px 20px;
+    text-align: center;
+    color: #666666;
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ugc-reel-slider__card-{{ ai_gen_id }} {
+      flex: 0 0 100%;
+    }
+
+    .ugc-reel-slider__nav-button-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ugc-reel-slider__dots-{{ ai_gen_id }} {
+      margin-top: 16px;
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .ugc-reel-slider__card-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 4px);
+    }
+  }
+{% endstyle %}
+
+<ugc-reel-slider-{{ ai_gen_id }}
+  class="ugc-reel-slider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% liquid
+    assign video_count = 0
+    for i in (1..6)
+      assign video_key = 'video_' | append: i
+      if block.settings[video_key] != blank
+        assign video_count = video_count | plus: 1
+      endif
+    endfor
+  %}
+
+  {% if video_count > 0 %}
+    <div class="ugc-reel-slider__container-{{ ai_gen_id }}">
+      <div class="ugc-reel-slider__track-{{ ai_gen_id }}" data-track>
+        {% for i in (1..6) %}
+          {% liquid
+            assign video_key = 'video_' | append: i
+            assign caption_key = 'caption_' | append: i
+            assign show_caption_key = 'show_caption_' | append: i
+
+            assign video = block.settings[video_key]
+            assign caption = block.settings[caption_key]
+            assign show_caption = block.settings[show_caption_key]
+          %}
+
+          {% if video != blank %}
+            <div class="ugc-reel-slider__card-{{ ai_gen_id }}" data-card>
+              <video
+                class="ugc-reel-slider__video-{{ ai_gen_id }}"
+                src="{{ video }}"
+                muted
+                loop
+                playsinline
+                data-video
+              ></video>
+
+              <div class="ugc-reel-slider__header-{{ ai_gen_id }}">
+                {% if block.settings.brand_logo != blank %}
+                  <img
+                    src="{{ block.settings.brand_logo | image_url: width: 64 }}"
+                    alt="{{ block.settings.brand_username }}"
+                    class="ugc-reel-slider__avatar-{{ ai_gen_id }}"
+                    width="32"
+                    height="32"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="ugc-reel-slider__avatar-placeholder-{{ ai_gen_id }}"></div>
+                {% endif %}
+                {% if block.settings.brand_username != blank %}
+                  <span class="ugc-reel-slider__username-{{ ai_gen_id }}">{{ block.settings.brand_username }}</span>
+                {% endif %}
+              </div>
+
+              {% if show_caption and caption != blank %}
+                <div class="ugc-reel-slider__caption-overlay-{{ ai_gen_id }}">
+                  <p class="ugc-reel-slider__caption-{{ ai_gen_id }}">{{ caption }}</p>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if video_count > 4 %}
+        <button
+          class="ugc-reel-slider__nav-button-{{ ai_gen_id }} ugc-reel-slider__nav-button--prev-{{ ai_gen_id }}"
+          aria-label="Previous"
+          data-prev
+        >
+          <svg
+            class="ugc-reel-slider__nav-icon-{{ ai_gen_id }}"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button
+          class="ugc-reel-slider__nav-button-{{ ai_gen_id }} ugc-reel-slider__nav-button--next-{{ ai_gen_id }}"
+          aria-label="Next"
+          data-next
+        >
+          <svg
+            class="ugc-reel-slider__nav-icon-{{ ai_gen_id }}"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {% endif %}
+
+      <div class="ugc-reel-slider__dots-{{ ai_gen_id }}" data-dots></div>
+    </div>
+  {% else %}
+    <div class="ugc-reel-slider__empty-state-{{ ai_gen_id }}">
+      Add videos to create your UGC reel slider
+    </div>
+  {% endif %}
+</ugc-reel-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class UGCReelSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.slidesPerView = 4;
+        this.observer = null;
+        this.isInView = false;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.cards = this.querySelectorAll('[data-card]');
+        this.videos = this.querySelectorAll('[data-video]');
+        this.prevButton = this.querySelector('[data-prev]');
+        this.nextButton = this.querySelector('[data-next]');
+        this.dotsContainer = this.querySelector('[data-dots]');
+
+        if (!this.track || this.cards.length === 0) return;
+
+        this.updateSlidesPerView();
+        this.createDots();
+        this.updateSlider();
+        this.setupEventListeners();
+        this.setupIntersectionObserver();
+
+        window.addEventListener('resize', () => this.handleResize());
+      }
+
+      disconnectedCallback() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+        window.removeEventListener('resize', () => this.handleResize());
+      }
+
+      updateSlidesPerView() {
+        const width = window.innerWidth;
+        if (width < 750) {
+          this.slidesPerView = 1;
+        } else if (width < 990) {
+          this.slidesPerView = 2;
+        } else {
+          this.slidesPerView = 4;
+        }
+      }
+
+      createDots() {
+        if (!this.dotsContainer) return;
+
+        this.dotsContainer.innerHTML = '';
+        const totalSlides = Math.ceil(this.cards.length / this.slidesPerView);
+
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement('button');
+          dot.className = 'ugc-reel-slider__dot-{{ ai_gen_id }}';
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      setupEventListeners() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.prev());
+        }
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.next());
+        }
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.5
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            this.isInView = entry.isIntersecting;
+            if (this.isInView) {
+              this.playVisibleVideos();
+            } else {
+              this.pauseAllVideos();
+            }
+          });
+        }, options);
+
+        this.observer.observe(this);
+      }
+
+      playVisibleVideos() {
+        if (!this.isInView) return;
+
+        const startIndex = this.currentIndex * this.slidesPerView;
+        const endIndex = startIndex + this.slidesPerView;
+
+        this.videos.forEach((video, index) => {
+          if (index >= startIndex && index < endIndex) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }
+
+      pauseAllVideos() {
+        this.videos.forEach(video => video.pause());
+      }
+
+      prev() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+          this.updateSlider();
+        }
+      }
+
+      next() {
+        const maxIndex = Math.ceil(this.cards.length / this.slidesPerView) - 1;
+        if (this.currentIndex < maxIndex) {
+          this.currentIndex++;
+          this.updateSlider();
+        }
+      }
+
+      goToSlide(index) {
+        this.currentIndex = index;
+        this.updateSlider();
+      }
+
+      updateSlider() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = 8;
+        const offset = -(this.currentIndex * this.slidesPerView * (cardWidth + gap));
+        this.track.style.transform = `translateX(${offset}px)`;
+
+        this.updateDots();
+        this.updateButtons();
+        this.playVisibleVideos();
+      }
+
+      updateDots() {
+        const dots = this.dotsContainer.querySelectorAll('.ugc-reel-slider__dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === this.currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      updateButtons() {
+        if (!this.prevButton || !this.nextButton) return;
+
+        const maxIndex = Math.ceil(this.cards.length / this.slidesPerView) - 1;
+
+        this.prevButton.disabled = this.currentIndex === 0;
+        this.nextButton.disabled = this.currentIndex >= maxIndex;
+      }
+
+      handleResize() {
+        const oldSlidesPerView = this.slidesPerView;
+        this.updateSlidesPerView();
+
+        if (oldSlidesPerView !== this.slidesPerView) {
+          this.currentIndex = 0;
+          this.createDots();
+          this.updateSlider();
+        }
+      }
+    }
+
+    customElements.define('ugc-reel-slider-{{ ai_gen_id }}', UGCReelSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "UGC Reel Slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand profile"
+    },
+    {
+      "type": "text",
+      "id": "brand_username",
+      "label": "Brand username",
+      "default": "houseofnamah"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "text",
+      "id": "video_1",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_1",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_1",
+      "label": "Caption",
+      "default": "to the person who forces me"
+    },
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "text",
+      "id": "video_2",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_2",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_2",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "text",
+      "id": "video_3",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_3",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_3",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Video 4"
+    },
+    {
+      "type": "text",
+      "id": "video_4",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_4",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_4",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Video 5"
+    },
+    {
+      "type": "text",
+      "id": "video_5",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_5",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_5",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Video 6"
+    },
+    {
+      "type": "text",
+      "id": "video_6",
+      "label": "Video URL",
+      "info": "Upload your MP4 file to Shopify Files and paste the URL here"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption_6",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_6",
+      "label": "Caption"
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC Reel Slider"
+    }
+  ]
+}
+{% endschema %}

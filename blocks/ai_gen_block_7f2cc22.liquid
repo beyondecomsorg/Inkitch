@@ -1,0 +1,485 @@
+{% doc %}
+  @prompt
+    Create a custom section called "Promotional Banner". It should be a full-width wide banner with a solid dark green background color. The banner is split into two halves side by side.
+    The left half contains text content aligned to the left with padding. At the top, show a small uppercase tracking-spaced label (like "BACK IN STOCK") in a light cream/off-white color. Below that, display a large bold white heading (like "Sleek & Functional Tea Kettle") in a heavy font. Under the heading, show a short paragraph description in a slightly smaller light cream color. Below the description, add a rectangular button with a white background, dark text, no border radius, and bold uppercase text (like "SHOP NOW") that links to a product or collection page.
+    The right half displays two images arranged in a collage layout — one image positioned in the top-right corner that is slightly inset from the top (like a lifestyle photo), and one larger product image overlapping and extending below it, slightly overlapping the left text area. Both images should be uploadable from the theme editor.
+    All text fields (label, heading, description, button text, button link) should be editable from the theme editor. The background color should also be a customizable color setting. On mobile, the banner should stack vertically — text on top, images below.
+    The product image on the right should have a subtle drop shadow to make it appear lifted above the background. The lifestyle photo in the top-right corner should be displayed as a rectangular crop with no border radius., optimise this for moblie friendly also 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-promo-banner-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+  }
+
+  .ai-promo-banner-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+    min-height: 500px;
+  }
+
+  .ai-promo-banner-text-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: {{ block.settings.text_padding }}px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-promo-banner-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    font-weight: 500;
+    font-family: 'Literata', serif;
+  }
+
+  .ai-promo-banner-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 20px 0;
+    font-family: 'Literata', serif;
+  }
+
+  .ai-promo-banner-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .ai-promo-banner-button-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    padding: 16px 40px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: {{ block.settings.button_text_size }}px;
+    border-radius: 0;
+    transition: opacity 0.3s ease;
+    align-self: flex-start;
+    text-align: center;
+  }
+
+  .ai-promo-banner-button-{{ ai_gen_id }}:hover {
+    opacity: 0.9;
+  }
+
+  .ai-promo-banner-images-{{ ai_gen_id }} {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 40px;
+  }
+
+  .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 45%;
+    z-index: 1;
+  }
+
+  .ai-promo-banner-lifestyle-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-promo-banner-lifestyle-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-promo-banner-lifestyle-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-promo-banner-product-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 60%;
+    margin-top: 80px;
+    z-index: 2;
+  }
+
+  .ai-promo-banner-product-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  }
+
+  .ai-promo-banner-product-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  }
+
+  .ai-promo-banner-product-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-promo-banner-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .ai-promo-banner-text-{{ ai_gen_id }} {
+      padding: 32px 24px;
+      order: 1;
+    }
+
+    .ai-promo-banner-images-{{ ai_gen_id }} {
+      order: 2;
+      padding: 24px 16px 32px;
+      min-height: 350px;
+    }
+
+    .ai-promo-banner-label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.label_size }}px * 0.85);
+      margin-bottom: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    .ai-promo-banner-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.6);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .ai-promo-banner-description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .ai-promo-banner-button-{{ ai_gen_id }} {
+      padding: 14px 32px;
+      font-size: calc({{ block.settings.button_text_size }}px * 0.9);
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
+      top: 16px;
+      right: 16px;
+      width: 50%;
+    }
+
+    .ai-promo-banner-product-wrapper-{{ ai_gen_id }} {
+      width: 65%;
+      margin-top: 50px;
+    }
+
+    .ai-promo-banner-product-{{ ai_gen_id }},
+    .ai-promo-banner-product-placeholder-{{ ai_gen_id }} {
+      filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.25));
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-promo-banner-text-{{ ai_gen_id }} {
+      padding: 28px 20px;
+    }
+
+    .ai-promo-banner-images-{{ ai_gen_id }} {
+      padding: 20px 12px 28px;
+      min-height: 320px;
+    }
+
+    .ai-promo-banner-label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.label_size }}px * 0.75);
+      margin-bottom: 10px;
+    }
+
+    .ai-promo-banner-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.5);
+      margin-bottom: 14px;
+    }
+
+    .ai-promo-banner-description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.85);
+      margin-bottom: 20px;
+    }
+
+    .ai-promo-banner-button-{{ ai_gen_id }} {
+      padding: 12px 28px;
+      font-size: calc({{ block.settings.button_text_size }}px * 0.85);
+      letter-spacing: 0.08em;
+    }
+
+    .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
+      top: 12px;
+      right: 12px;
+      width: 52%;
+    }
+
+    .ai-promo-banner-product-wrapper-{{ ai_gen_id }} {
+      width: 70%;
+      margin-top: 40px;
+    }
+  }
+{% endstyle %}
+
+<promotional-banner-{{ ai_gen_id }} class="ai-promo-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-promo-banner-container-{{ ai_gen_id }}">
+    <div class="ai-promo-banner-text-{{ ai_gen_id }}">
+      {% if block.settings.label != blank %}
+        <div class="ai-promo-banner-label-{{ ai_gen_id }}">
+          {{ block.settings.label }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-promo-banner-heading-{{ ai_gen_id }}">
+          {{ block.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if block.settings.description != blank %}
+        <div class="ai-promo-banner-description-{{ ai_gen_id }}">
+          {{ block.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.button_text != blank %}
+        <a href="{{ block.settings.button_link }}" class="ai-promo-banner-button-{{ ai_gen_id }}">
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-promo-banner-images-{{ ai_gen_id }}">
+      <div class="ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.lifestyle_image %}
+          <img
+            src="{{ block.settings.lifestyle_image | image_url: width: 800 }}"
+            alt="{{ block.settings.lifestyle_image.alt | escape }}"
+            class="ai-promo-banner-lifestyle-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ block.settings.lifestyle_image.width }}"
+            height="{{ block.settings.lifestyle_image.height }}"
+          >
+        {% else %}
+          <div class="ai-promo-banner-lifestyle-placeholder-{{ ai_gen_id }}">
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-promo-banner-product-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.product_image %}
+          <img
+            src="{{ block.settings.product_image | image_url: width: 1000 }}"
+            alt="{{ block.settings.product_image.alt | escape }}"
+            class="ai-promo-banner-product-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ block.settings.product_image.width }}"
+            height="{{ block.settings.product_image.height }}"
+          >
+        {% else %}
+          <div class="ai-promo-banner-product-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</promotional-banner-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class PromotionalBanner{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('promotional-banner-{{ ai_gen_id }}', PromotionalBanner{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Promotional banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#1a4d2e"
+    },
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "BACK IN STOCK"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#f5f5dc"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sleek & Functional Tea Kettle"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover our premium collection of handcrafted tea kettles, designed for the modern kitchen. Elegant form meets exceptional function."
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#f5f5dc"
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "label": "Text padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#1a4d2e"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "lifestyle_image",
+      "label": "Lifestyle image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promotional banner"
+    }
+  ]
+}
+{% endschema %}

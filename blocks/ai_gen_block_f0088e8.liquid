@@ -1,0 +1,221 @@
+{% doc %}
+  @prompt
+    I want a A+ Images Section. i create Metafield and Metaobjects. Product metafield definitions. Definition name:- A+ Images. Type:- URL. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-plus-images-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 0;
+  }
+
+  .ai-plus-images-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.image_spacing }}px;
+    width: 100%;
+  }
+
+  .ai-plus-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-plus-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .ai-plus-empty-state-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    color: #666;
+  }
+
+  .ai-plus-empty-state-{{ ai_gen_id }} svg {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .ai-plus-empty-message-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: #999;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-plus-images-container-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+      gap: {{ block.settings.image_spacing | times: 0.75 }}px;
+    }
+
+    .ai-plus-images-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<a-plus-images-{{ ai_gen_id }} class="ai-plus-images-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% liquid
+    assign image_urls = ''
+    assign image_count = 0
+    
+    for i in (1..10)
+      assign metafield_key = 'a_plus_image_' | append: i
+      assign image_url = product.metafields.custom[metafield_key]
+      
+      if image_url != blank
+        assign image_urls = image_urls | append: image_url | append: '||'
+        assign image_count = image_count | plus: 1
+      endif
+    endfor
+    
+    assign image_array = image_urls | split: '||'
+  %}
+
+  {% if image_count > 0 %}
+    <div class="ai-plus-images-container-{{ ai_gen_id }}">
+      {% for image_url in image_array %}
+        {% if image_url != blank %}
+          <div class="ai-plus-image-wrapper-{{ ai_gen_id }}">
+            <img
+              src="{{ image_url }}"
+              alt="{{ product.title }} - A+ Image {{ forloop.index }}"
+              class="ai-plus-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ai-plus-empty-state-{{ ai_gen_id }}">
+      {{ 'image' | placeholder_svg_tag }}
+      <div class="ai-plus-empty-message-{{ ai_gen_id }}">
+        Add A+ Images to your product metafields to display them here
+      </div>
+    </div>
+  {% endif %}
+</a-plus-images-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class APlusImages{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('a-plus-images-{{ ai_gen_id }}', APlusImages{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "A+ Images",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "image_spacing",
+      "label": "Image spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "A+ Images"
+    }
+  ]
+}
+{% endschema %}

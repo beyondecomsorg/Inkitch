@@ -1,0 +1,725 @@
+{% doc %}
+  @prompt
+    Here's the prompt to give Shopify AI:
+    
+    ---
+    
+    > Create a custom section called "Trust Badges" or "Store Features". It should have a light gray background color (hex #F5F5F5). The section displays 3 feature items in a single horizontal row, evenly spaced across the full width with generous padding on all sides.
+    >
+    > Each feature item has: a dark green outlined circular icon on the left (like a badge/seal icon, a box/returns icon, or a delivery truck icon — use SVG outline style icons, not filled), and to the right of the icon, a bold dark charcoal heading (like "Best price", "Easy Returns", "Fast shipping") with a smaller gray description paragraph below it. The icon and text should be vertically centered with each other.
+    >
+    > The background color of the section is light gray (#F5F5F5). The icon circles should have a dark green outline color (hex #1D5C3A) with the icon inside also in the same dark green. The heading text should be dark charcoal (hex #1A1A1A) and the description text should be medium gray (hex #555555).
+    >
+    > Each feature item's icon, heading text, and description text should all be editable from the theme editor. Allow up to 4 feature items and a minimum of 1. On mobile, the 3 items should stack vertically in a single column, each with the icon and text side by side.
+    
+    ---
+    
+    **Bonus tip** — add this for icon flexibility:
+    
+    > Allow me to choose the icon for each feature item from a set of common ecommerce icons (badge/seal, box, truck, lock, heart, star, clock, leaf) via a dropdown in the theme editor, so I don't need to upload custom images., Create a custom section called "Trust Badges". It should have a light gray background color (hex #F5F5F5) with top and bottom padding of 20px. Display 5 trust badge items in a single horizontal row, evenly spaced across the full width.
+    Each badge item has a dark green outlined circular icon (hex #1D5C3A) on the left and text to the right. Use these exact 5 badges in this order:
+    
+    Shield/checkmark icon — heading "Secure Payment", description "100% secure & encrypted checkout"
+    Refresh/return arrows icon — heading "Easy Returns", description "30-day hassle-free return policy"
+    Delivery truck icon — heading "Fast Shipping", description "Free shipping on orders over $50"
+    Ribbon/medal icon — heading "Best Price", description "Guaranteed unbeatable prices always"
+    Headset/support icon — heading "24/7 Support", description "Dedicated support team always available"
+    
+    The icon circles should be outlined style (not filled) in dark green (#1D5C3A). Heading text in bold dark charcoal (#1A1A1A), description in medium gray (#555555). Each item's icon, heading, and description should be editable from the theme editor. On mobile, display 2 items per row and wrap to the next line, keeping icon and text side by side within each item.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-trust-badges-section-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_vertical }}px 0;
+    width: 100%;
+  }
+
+  .ai-trust-badges-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ block.settings.padding_horizontal }}px;
+  }
+
+  .ai-trust-badges-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-trust-badge-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.item_gap }}px;
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    border: {{ block.settings.icon_border_width }}px solid {{ block.settings.icon_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.icon_size }}px * 0.5);
+    height: calc({{ block.settings.icon_size }}px * 0.5);
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ai-trust-badge-content-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-trust-badge-heading-{{ ai_gen_id }} {
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    line-height: 1.2;
+  }
+
+  .ai-trust-badge-description-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-trust-badges-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+  }
+
+  @media screen and (max-width: 989px) and (min-width: 750px) {
+    .ai-trust-badges-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-trust-badges-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-trust-badges-container-{{ ai_gen_id }}">
+    <div class="ai-trust-badges-grid-{{ ai_gen_id }}">
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case block.settings.icon_1 %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.heading_1 != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_1 }}</h3>
+          {% endif %}
+          {% if block.settings.description_1 != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_1 }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case block.settings.icon_2 %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.heading_2 != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_2 }}</h3>
+          {% endif %}
+          {% if block.settings.description_2 != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_2 }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case block.settings.icon_3 %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.heading_3 != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_3 }}</h3>
+          {% endif %}
+          {% if block.settings.description_3 != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_3 }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case block.settings.icon_4 %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.heading_4 != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_4 }}</h3>
+          {% endif %}
+          {% if block.settings.description_4 != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_4 }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case block.settings.icon_5 %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.heading_5 != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_5 }}</h3>
+          {% endif %}
+          {% if block.settings.description_5 != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_5 }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "select",
+      "id": "icon_1",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "ribbon",
+          "label": "Ribbon"
+        },
+        {
+          "value": "headset",
+          "label": "Headset"
+        }
+      ],
+      "default": "shield"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading",
+      "default": "Secure Payment"
+    },
+    {
+      "type": "text",
+      "id": "description_1",
+      "label": "Description",
+      "default": "100% secure & encrypted checkout"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "select",
+      "id": "icon_2",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "ribbon",
+          "label": "Ribbon"
+        },
+        {
+          "value": "headset",
+          "label": "Headset"
+        }
+      ],
+      "default": "refresh"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading",
+      "default": "Easy Returns"
+    },
+    {
+      "type": "text",
+      "id": "description_2",
+      "label": "Description",
+      "default": "30-day hassle-free return policy"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "select",
+      "id": "icon_3",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "ribbon",
+          "label": "Ribbon"
+        },
+        {
+          "value": "headset",
+          "label": "Headset"
+        }
+      ],
+      "default": "truck"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Heading",
+      "default": "Fast Shipping"
+    },
+    {
+      "type": "text",
+      "id": "description_3",
+      "label": "Description",
+      "default": "Free shipping on orders over $50"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4"
+    },
+    {
+      "type": "select",
+      "id": "icon_4",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "ribbon",
+          "label": "Ribbon"
+        },
+        {
+          "value": "headset",
+          "label": "Headset"
+        }
+      ],
+      "default": "ribbon"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Heading",
+      "default": "Best Price"
+    },
+    {
+      "type": "text",
+      "id": "description_4",
+      "label": "Description",
+      "default": "Guaranteed unbeatable prices always"
+    },
+    {
+      "type": "header",
+      "content": "Badge 5"
+    },
+    {
+      "type": "select",
+      "id": "icon_5",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "ribbon",
+          "label": "Ribbon"
+        },
+        {
+          "value": "headset",
+          "label": "Headset"
+        }
+      ],
+      "default": "headset"
+    },
+    {
+      "type": "text",
+      "id": "heading_5",
+      "label": "Heading",
+      "default": "24/7 Support"
+    },
+    {
+      "type": "text",
+      "id": "description_5",
+      "label": "Description",
+      "default": "Dedicated support team always available"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 600,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between badges",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile space between badges",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon to text spacing",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#1D5C3A"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "icon_border_width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon border width",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Heading weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading bottom spacing",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges"
+    }
+  ]
+}
+{% endschema %}
