@@ -6,28 +6,356 @@
 {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  .footer {
-    margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
+  .footer-wrapper-custom-glow {
+    background: linear-gradient(180deg, #1a1a1a 0%, #111111 100%) !important;
+    border-top: 4px solid #E30613 !important;
+    box-shadow: 0 -4px 30px rgba(227,6,19,0.15) inset !important;
+    padding: 60px 40px 30px 40px !important;
+    position: relative !important;
+    box-sizing: border-box !important;
   }
 
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  .footer-wrapper-custom-glow a {
+    transition: color 0.2s ease, text-decoration 0.2s ease !important;
+    text-decoration: none !important;
   }
 
-  @media screen and (min-width: 750px) {
-    .footer {
-      margin-top: {{ section.settings.margin_top }}px;
+  .footer-wrapper-custom-glow a:hover {
+    text-decoration: underline !important;
+  }
+
+  .footer__blocks-wrapper-custom {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr 1fr !important;
+    gap: 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .footer-block-heading-custom {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .footer-block-accent-line-custom {
+    width: 30px !important;
+    height: 2px !important;
+    background-color: #E30613 !important;
+    margin: 8px 0 16px 0 !important;
+  }
+
+  /* Quick Links Column */
+  .footer-links-list-custom {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .footer-links-list-custom li {
+    margin-bottom: 4px !important;
+  }
+
+  .footer-link-custom {
+    font-size: 13px !important;
+    color: #aaaaaa !important;
+    display: block !important;
+    padding: 5px 0 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .footer-link-arrow-custom {
+    color: #E30613 !important;
+    margin-right: 6px !important;
+    display: inline-block !important;
+  }
+
+  .footer-link-custom:hover {
+    color: #ffffff !important;
+    padding-left: 4px !important;
+  }
+
+  /* Brand Column Overrides */
+  .footer-block__brand-info h2,
+  .footer-block__brand-info .footer-block__heading {
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    text-transform: none !important;
+  }
+
+  .footer-block__brand-info h2::after,
+  .footer-block__brand-info .footer-block__heading::after {
+    content: '' !important;
+    display: block !important;
+    width: 40px !important;
+    height: 3px !important;
+    background: #E30613 !important;
+    margin: 8px 0 14px 0 !important;
+  }
+
+  .footer-block__brand-info .rte,
+  .footer-block__brand-info div {
+    font-size: 13px !important;
+    color: #aaaaaa !important;
+    line-height: 1.8 !important;
+    max-width: 260px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .footer-block__brand-info .footer__list-social,
+  .footer-block__brand-info .list-social {
+    display: flex !important;
+    gap: 10px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .footer-block__brand-info .list-social__item {
+    margin: 0 !important;
+  }
+
+  .footer-block__brand-info .list-social__link {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    color: #ffffff !important;
+    padding: 0 !important;
+  }
+
+  .footer-block__brand-info .list-social__link:hover {
+    background: #E30613 !important;
+    border-color: #E30613 !important;
+    color: #ffffff !important;
+  }
+
+  .footer-block__brand-info .list-social__link svg {
+    width: 16px !important;
+    height: 16px !important;
+    fill: currentColor !important;
+  }
+
+  /* Contact Us Column */
+  .footer-contact-details-custom {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .footer-contact-item-custom {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    transition: color 0.2s ease !important;
+    text-decoration: none !important;
+  }
+
+  .footer-contact-icon-custom {
+    font-size: 14px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .footer-contact-text-custom {
+    font-size: 13px !important;
+    color: #aaaaaa !important;
+    line-height: 1.6 !important;
+    transition: color 0.2s ease !important;
+  }
+
+  .footer-contact-value-custom {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    transition: color 0.2s ease !important;
+  }
+
+  .footer-contact-item-custom:hover .footer-contact-text-custom,
+  .footer-contact-item-custom:hover .footer-contact-value-custom {
+    color: #E30613 !important;
+  }
+
+  /* Heading style for blocks */
+  .footer-block h2.footer-block__heading {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .footer-block h2.footer-block__heading::after {
+    content: '' !important;
+    display: block !important;
+    width: 30px !important;
+    height: 2px !important;
+    background-color: #E30613 !important;
+    margin: 8px 0 16px 0 !important;
+  }
+
+  /* Newsletter Column */
+  .footer-newsletter-subtitle-custom {
+    font-size: 12px !important;
+    color: #aaaaaa !important;
+    margin-bottom: 16px !important;
+    line-height: 1.6 !important;
+  }
+
+  .footer-newsletter-field-custom {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .footer-newsletter-input-custom {
+    width: 100% !important;
+    padding: 11px 14px !important;
+    background: rgba(255,255,255,0.07) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease !important;
+  }
+
+  .footer-newsletter-input-custom::placeholder {
+    color: #666666 !important;
+  }
+
+  .footer-newsletter-input-custom:focus {
+    border-color: #E30613 !important;
+    outline: none !important;
+  }
+
+  .footer-newsletter-button-custom {
+    width: 100% !important;
+    padding: 11px !important;
+    background: #E30613 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    border: none !important;
+    cursor: pointer !important;
+    margin-top: 8px !important;
+    transition: background 0.3s ease !important;
+    text-align: center !important;
+  }
+
+  .footer-newsletter-button-custom:hover {
+    background: #c0000f !important;
+  }
+
+  /* Hide default newsletter wrapper */
+  .footer-block--newsletter {
+    display: none !important;
+  }
+
+  .footer__content-bottom {
+    display: none !important;
+  }
+
+  /* Bottom Bar custom styling */
+  .footer-divider-custom {
+    border: none !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    margin: 30px 0 20px 0 !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .footer-bottom-bar-custom {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 0 20px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .footer-bottom-left-custom,
+  .footer-bottom-right-custom {
+    font-size: 12px !important;
+    color: #666666 !important;
+  }
+
+  .footer-bottom-center-custom .list-payment {
+    display: flex !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+  }
+
+  .footer-bottom-center-custom .list-payment__item {
+    background: #ffffff !important;
+    border-radius: 4px !important;
+    padding: 3px 6px !important;
+    height: 22px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: content-box !important;
+  }
+
+  .footer-bottom-center-custom .list-payment__item svg {
+    height: 22px !important;
+    width: auto !important;
+    max-height: 22px !important;
+  }
+
+  @media screen and (max-width: 990px) {
+    .footer__blocks-wrapper-custom {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 30px !important;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .footer-wrapper-custom-glow {
+      padding: 40px 20px 20px 20px !important;
     }
 
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
+    .footer__blocks-wrapper-custom {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important;
+    }
+
+    .footer-column-custom {
+      margin-top: 28px !important;
+      width: 100% !important;
+    }
+
+    .footer-column-custom:first-child {
+      margin-top: 0 !important;
+    }
+
+    .footer-block__brand-info .list-social {
+      justify-content: center !important;
+    }
+
+    .footer-bottom-bar-custom {
+      flex-direction: column !important;
+      text-align: center !important;
+      gap: 12px !important;
     }
   }
 {%- endstyle -%}
 
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+<footer class="footer footer-wrapper-custom-glow color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   {%- liquid
     assign has_social_icons = true
     if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -51,29 +379,16 @@
     {%- unless only_empty_brand -%}
       <div class="footer__content-top page-width">
         {%- if section.blocks.size > 0 -%}
-          {%- liquid
-            if section.blocks.size == 9
-              assign footer_grid_class = 'grid--3-col-tablet'
-            elsif section.blocks.size > 6
-              assign footer_grid_class = 'grid--4-col-desktop'
-            elsif section.blocks.size > 4
-              assign footer_grid_class = 'grid--3-col-tablet'
-            endif
-          -%}
           <div
-            class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet {{ footer_grid_class }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            class="footer__blocks-wrapper-custom {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
             {% if settings.animations_reveal_on_scroll %}
               data-cascade
             {% endif %}
           >
             {%- for block in section.blocks -%}
               <div
-                class="footer-block grid__item{% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                class="footer-block footer-column-custom {% if block.type == 'brand_information' %}footer-block__brand-info-wrapper{% endif %}"
                 {{ block.shopify_attributes }}
-                {% if settings.animations_reveal_on_scroll %}
-                  data-cascade
-                  style="--animation-order: {{ forloop.index }};"
-                {% endif %}
               >
                 {%- if block.settings.heading != blank -%}
                   <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
@@ -83,9 +398,41 @@
                   {%- when '@app' -%}
                     {% render block %}
                   {%- when 'text' -%}
-                    <div class="footer-block__details-content rte">
-                      {{ block.settings.subtext }}
-                    </div>
+                    {%- if block.settings.heading contains 'Contact' or block.settings.heading contains 'contact' -%}
+                      <div class="footer-block__details-content footer-contact-details-custom">
+                        {%- assign contact_text_clean = block.settings.subtext | replace: '</p>', '' | replace: '<p>', '' | replace: '<br />', '|' | replace: '<br>', '|' -%}
+                        {%- assign lines = contact_text_clean | split: '|' -%}
+                        {%- for line in lines -%}
+                          {%- assign line_trimmed = line | strip -%}
+                          {%- if line_trimmed != blank -%}
+                            {%- liquid
+                              assign icon = "📞"
+                              if line_trimmed contains "WhatsApp"
+                                assign icon = "💬"
+                              elsif line_trimmed contains "Support"
+                                assign icon = "🕐"
+                              elsif line_trimmed contains "Email"
+                                assign icon = "✉"
+                              endif
+                              
+                              assign parts = line_trimmed | split: ':'
+                              assign label = parts[0] | strip
+                              assign val = parts[1] | strip
+                            -%}
+                            <div class="footer-contact-item-custom">
+                              <span class="footer-contact-icon-custom">{{ icon }}</span>
+                              <span class="footer-contact-text-custom">
+                                {{ label }}: <span class="footer-contact-value-custom">{{ val }}</span>
+                              </span>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    {%- else -%}
+                      <div class="footer-block__details-content rte">
+                        {{ block.settings.subtext }}
+                      </div>
+                    {%- endif -%}
                   {%- when 'link_list' -%}
                     {%- if block.settings.menu != blank -%}
                       <ul class="footer-block__details-content list-unstyled">
@@ -155,168 +502,84 @@
                     </div>
                 {%- endcase -%}
               </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
 
-        <div
-          class="footer-block--newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-          {% endif %}
-        >
-          {%- if section.settings.newsletter_enable -%}
-            <div class="footer-block__newsletter">
-              {%- if section.settings.newsletter_heading != blank -%}
-                <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
-              {%- endif -%}
-              {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form__field-wrapper">
-                  <div class="field">
-                    <input
-                      id="NewsletterForm--{{ section.id }}"
-                      type="email"
-                      name="contact[email]"
-                      class="field__input"
-                      value="{{ form.email }}"
-                      aria-required="true"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="ContactFooter-error"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="ContactFooter-success"
-                      {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
-                      required
-                    >
-                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
-                    </label>
-                    <button
-                      type="submit"
-                      class="newsletter-form__button field__button"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
-                  </div>
-                  {%- if form.errors -%}
-                    <small class="newsletter-form__message form__message" id="ContactFooter-error">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- form.errors.translated_fields.email | capitalize }}
-                      {{ form.errors.messages.email -}}
-                    </small>
-                  {%- endif -%}
+              {%- if block.type == 'brand_information' or forloop.first -%}
+                <!-- Column 2 — Quick Links (Custom) -->
+                <div class="footer-block footer-column-custom quick-links-column-custom">
+                  <h2 class="footer-block-heading-custom">Quick Links</h2>
+                  <div class="footer-block-accent-line-custom"></div>
+                  <ul class="footer-links-list-custom">
+                    {%- assign quick_links = linklists.main-menu.links -%}
+                    {%- if quick_links.size > 0 -%}
+                      {%- for link in quick_links -%}
+                        <li>
+                          <a href="{{ link.url }}" class="footer-link-custom">
+                            <span class="footer-link-arrow-custom">&rarr;</span>{{ link.title | escape }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    {%- else -%}
+                      <li><a href="{{ routes.root_url }}" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Home</a></li>
+                      <li><a href="{{ routes.all_products_collection_url }}" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Shop</a></li>
+                      <li><a href="/pages/about-us" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>About Us</a></li>
+                      <li><a href="/blogs/news" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Blog</a></li>
+                      <li><a href="/pages/contact" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Contact</a></li>
+                    {%- endif -%}
+                  </ul>
                 </div>
-                {%- if form.posted_successfully? -%}
-                  <h3
-                    class="newsletter-form__message newsletter-form__message--success form__message"
-                    id="ContactFooter-success"
-                    tabindex="-1"
-                    autofocus
+              {%- endif -%}
+            {%- endfor -%}
+
+            <!-- Column 4 — Newsletter (Custom) -->
+            <div class="footer-block footer-column-custom newsletter-column-custom">
+              <h2 class="footer-block-heading-custom">Stay Updated</h2>
+              <div class="footer-block-accent-line-custom"></div>
+              <p class="footer-newsletter-subtitle-custom">Get exclusive deals & kitchen tips in your inbox</p>
+              {%- form 'customer', id: 'ContactFooterCustom', class: 'footer__newsletter-custom' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="footer-newsletter-field-custom">
+                  <input
+                    id="NewsletterFormCustom"
+                    type="email"
+                    name="contact[email]"
+                    class="footer-newsletter-input-custom"
+                    value="{{ form.email }}"
+                    placeholder="Enter your email"
+                    required
                   >
-                    <span class="svg-wrapper">
-                      {{- 'icon-success.svg' | inline_asset_content -}}
-                    </span>
-                    {{- 'newsletter.success' | t }}
-                  </h3>
-                {%- endif -%}
+                  <button type="submit" class="footer-newsletter-button-custom">
+                    Subscribe &rarr;
+                  </button>
+                </div>
               {%- endform -%}
             </div>
-          {%- endif -%}
-
-          {%- if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop -%}
-            <div class="footer__follow-on-shop">
-              {{ shop | login_button: action: 'follow' }}
-            </div>
-          {%- endif -%}
-
-          {%- if section.settings.show_social and has_social_icons -%}
-            {%- render 'social-icons', class: 'footer__list-social' -%}
-          {%- endif -%}
-        </div>
+          </div>
+        {%- endif -%}
       </div>
     {%- endunless -%}
   {%- endif -%}
 
-  <div
-    class="footer__content-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-    {% if settings.animations_reveal_on_scroll %}
-      data-cascade
-    {% endif %}
-  >
-    <div class="footer__content-bottom-wrapper page-width">
-      <div class="footer__column footer__localization isolate">
-        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-          <localization-form>
-            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="caption-large text-body" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
-        {%- endif -%}
-
-        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
-          <localization-form>
-            {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="caption-large text-body" id="FooterLanguageLabel">
-                  {{ 'localization.language_label' | t }}
-                </h2>
-                {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
-        {%- endif -%}
-      </div>
-      <div class="footer__column footer__column--info">
-        {%- if section.settings.payment_enable -%}
-          <div class="footer__payment">
-            <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
-            <ul class="list list-payment" role="list">
-              {%- for type in shop.enabled_payment_types -%}
-                <li class="list-payment__item">
-                  {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-                </li>
-              {%- endfor -%}
-            </ul>
-          </div>
-        {%- endif -%}
-      </div>
+  <!-- Bottom Bar & Divider Custom -->
+  <div class="footer-divider-custom"></div>
+  <div class="footer-bottom-bar-custom page-width">
+    <div class="footer-bottom-left-custom">
+      &copy; {{ 'now' | date: '%Y' }} inKitch. All rights reserved.
     </div>
-    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
-      <div class="footer__copyright caption">
-        <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
-        </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
-        {%- if section.settings.show_policy -%}
-          <ul class="policies list-unstyled">
-            {%- for policy in shop.policies -%}
-              {%- if policy != blank -%}
-                <li>
-                  <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
-                  >
-                </li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
+    
+    {%- if section.settings.payment_enable -%}
+      <div class="footer-bottom-center-custom">
+        <ul class="list list-payment" role="list">
+          {%- for type in shop.enabled_payment_types -%}
+            <li class="list-payment__item">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+          {%- endfor -%}
+        </ul>
       </div>
+    {%- endif -%}
+
+    <div class="footer-bottom-right-custom">
+      Made with ❤️ in India
     </div>
   </div>
 </footer>

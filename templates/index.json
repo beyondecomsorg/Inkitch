@@ -9,19 +9,41 @@
  */
 {
   "sections": {
-    "177927702621cc9c83": {
-      "type": "_blocks",
-      "settings": {}
-    },
-    "image_banner": {
-      "type": "image-banner",
-      "custom_css": [],
+    "slideshow_XzH4mh": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_rQW8kB": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.webp",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_rQW8kB"
+      ],
+      "name": "t:sections.slideshow.presets.name",
       "settings": {
-        "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.png",
-        "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.png",
-        "heading": "",
-        "button_label": "",
-        "button_link": ""
+        "layout": "full_bleed",
+        "slide_height": "medium",
+        "slider_visual": "counter",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Slideshow about our brand"
       }
     },
     "177687342526c3aeca": {
@@ -156,6 +178,7 @@
             "button_text_size": 20,
             "button_bg_color": "#ffffff",
             "button_text_color": "#ff0000",
+            "lifestyle_image": "shopify://shop_images/458bbdaf-bf0b-45a7-890b-a2a53de6bee0.png",
             "product_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_55_52_PM.png"
           },
           "blocks": {}
@@ -523,8 +546,7 @@
     }
   },
   "order": [
-    "177927702621cc9c83",
-    "image_banner",
+    "slideshow_XzH4mh",
     "177687342526c3aeca",
     "1776874214582f2fe1",
     "center_carousel_AHm6fg",

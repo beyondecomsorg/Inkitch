@@ -12,15 +12,34 @@
   .ai-promo-banner-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    background-color: {{ block.settings.background_color }};
+    background: linear-gradient(135deg, #c0000f 0%, #E30613 50%, #ff1a1a 100%);
+    background-image: repeating-linear-gradient(
+      45deg, rgba(255,255,255,0.03) 0px, 
+      rgba(255,255,255,0.03) 1px, transparent 1px, transparent 12px
+    ), linear-gradient(135deg, #c0000f 0%, #E30613 50%, #ff1a1a 100%);
     overflow: hidden;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+  }
+
+  .ai-promo-banner-circle-decor-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
   }
 
   .ai-promo-banner-container-{{ ai_gen_id }} {
     display: grid;
     grid-template-columns: 1fr 1fr;
     max-width: 100%;
-    min-height: 500px;
+    min-height: 520px;
   }
 
   .ai-promo-banner-text-{{ ai_gen_id }} {
@@ -32,58 +51,142 @@
     z-index: 2;
   }
 
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .ai-promo-banner-label-{{ ai_gen_id }} {
-    font-size: {{ block.settings.label_size }}px;
-    color: {{ block.settings.label_color }};
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 16px;
-    font-weight: 500;
-    font-family: 'Literata', serif;
+    display: inline-block;
+    background-color: rgba(255,255,255,0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    align-self: flex-start;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    font-family: var(--font-body), sans-serif;
   }
 
   .ai-promo-banner-heading-{{ ai_gen_id }} {
-    font-size: {{ block.settings.heading_size }}px;
-    color: {{ block.settings.heading_color }};
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 48px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
     margin: 0 0 20px 0;
-    font-family: 'Literata', serif;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.1s forwards;
+    font-family: var(--font-heading), serif;
   }
 
   .ai-promo-banner-description-{{ ai_gen_id }} {
-    font-size: {{ block.settings.description_size }}px;
-    color: {{ block.settings.description_color }};
-    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 420px;
     margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s forwards;
+    font-family: var(--font-body), sans-serif;
   }
 
   .ai-promo-banner-button-{{ ai_gen_id }} {
-    display: inline-block;
-    background-color: {{ block.settings.button_bg_color }};
-    color: {{ block.settings.button_text_color }};
-    padding: 16px 40px;
-    text-decoration: none;
-    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ffffff;
+    color: #E30613;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    font-size: {{ block.settings.button_text_size }}px;
-    border-radius: 0;
-    transition: opacity 0.3s ease;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    padding: 14px 36px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    text-decoration: none;
+    transition: all 0.3s ease;
     align-self: flex-start;
-    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.3s forwards;
   }
 
   .ai-promo-banner-button-{{ ai_gen_id }}:hover {
-    opacity: 0.9;
+    background-color: #111111;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+
+  .ai-promo-banner-button-{{ ai_gen_id }} span {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-promo-banner-button-{{ ai_gen_id }}:hover span {
+    transform: translateX(4px);
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(0.95);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
 
   .ai-promo-banner-images-{{ ai_gen_id }} {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 40px;
+    overflow: hidden;
+  }
+
+  .ai-promo-banner-glow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 360px;
+    height: 360px;
+    margin-top: -180px;
+    margin-left: -180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite alternate;
+    z-index: 1;
+    pointer-events: none;
   }
 
   .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
@@ -92,6 +195,7 @@
     right: 40px;
     width: 45%;
     z-index: 1;
+    opacity: 0.8;
   }
 
   .ai-promo-banner-lifestyle-{{ ai_gen_id }} {
@@ -126,7 +230,14 @@
     width: 100%;
     height: auto;
     display: block;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+    opacity: 0;
+    animation: fadeInRight 0.9s ease 0.2s forwards;
+    transition: transform 0.4s ease;
+  }
+
+  .ai-promo-banner-product-{{ ai_gen_id }}:hover {
+    transform: scale(1.03) rotate(1deg);
   }
 
   .ai-promo-banner-product-placeholder-{{ ai_gen_id }} {
@@ -136,7 +247,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+    opacity: 0;
+    animation: fadeInRight 0.9s ease 0.2s forwards;
   }
 
   .ai-promo-banner-product-placeholder-{{ ai_gen_id }} svg {
@@ -145,110 +258,102 @@
     opacity: 0.4;
   }
 
-  @media screen and (max-width: 749px) {
+  .ai-promo-banner-badge-1-{{ ai_gen_id }},
+  .ai-promo-banner-badge-2-{{ ai_gen_id }} {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    font-weight: 700;
+    font-size: 13px;
+    color: #111111;
+    z-index: 3;
+    white-space: nowrap;
+  }
+
+  .ai-promo-banner-badge-1-{{ ai_gen_id }} {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .ai-promo-banner-badge-2-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 30px;
+    left: 10px;
+    animation: float 3s ease-in-out 1s infinite;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-promo-banner-{{ ai_gen_id }} {
+      clip-path: none;
+    }
+
     .ai-promo-banner-container-{{ ai_gen_id }} {
       grid-template-columns: 1fr;
       min-height: auto;
     }
 
     .ai-promo-banner-text-{{ ai_gen_id }} {
-      padding: 32px 24px;
-      order: 1;
-    }
-
-    .ai-promo-banner-images-{{ ai_gen_id }} {
+      padding: 40px 20px;
       order: 2;
-      padding: 24px 16px 32px;
-      min-height: 350px;
-    }
-
-    .ai-promo-banner-label-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.label_size }}px * 0.85);
-      margin-bottom: 12px;
-      letter-spacing: 0.12em;
+      text-align: center;
+      align-items: center;
     }
 
     .ai-promo-banner-heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.heading_size }}px * 0.6);
-      margin-bottom: 16px;
-      line-height: 1.15;
+      font-size: 26px;
+      text-align: center;
     }
 
     .ai-promo-banner-description-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.description_size }}px * 0.9);
-      margin-bottom: 24px;
-      line-height: 1.5;
+      font-size: 14px;
+      margin: 0 auto 20px;
+      text-align: center;
     }
 
     .ai-promo-banner-button-{{ ai_gen_id }} {
-      padding: 14px 32px;
-      font-size: calc({{ block.settings.button_text_size }}px * 0.9);
-      width: 100%;
-      max-width: 280px;
+      align-self: center;
+      width: auto;
+    }
+
+    .ai-promo-banner-images-{{ ai_gen_id }} {
+      order: 1;
+      padding: 40px 20px;
+      min-height: auto;
+      height: 280px;
     }
 
     .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
-      top: 16px;
-      right: 16px;
-      width: 50%;
+      display: none;
     }
 
     .ai-promo-banner-product-wrapper-{{ ai_gen_id }} {
-      width: 65%;
-      margin-top: 50px;
+      width: auto;
+      height: 100%;
+      margin-top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .ai-promo-banner-product-{{ ai_gen_id }},
     .ai-promo-banner-product-placeholder-{{ ai_gen_id }} {
+      max-height: 280px;
+      width: auto;
       filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.25));
     }
-  }
 
-  @media screen and (max-width: 480px) {
-    .ai-promo-banner-text-{{ ai_gen_id }} {
-      padding: 28px 20px;
-    }
-
-    .ai-promo-banner-images-{{ ai_gen_id }} {
-      padding: 20px 12px 28px;
-      min-height: 320px;
-    }
-
-    .ai-promo-banner-label-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.label_size }}px * 0.75);
-      margin-bottom: 10px;
-    }
-
-    .ai-promo-banner-heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.heading_size }}px * 0.5);
-      margin-bottom: 14px;
-    }
-
-    .ai-promo-banner-description-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.description_size }}px * 0.85);
-      margin-bottom: 20px;
-    }
-
-    .ai-promo-banner-button-{{ ai_gen_id }} {
-      padding: 12px 28px;
-      font-size: calc({{ block.settings.button_text_size }}px * 0.85);
-      letter-spacing: 0.08em;
-    }
-
-    .ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }} {
-      top: 12px;
-      right: 12px;
-      width: 52%;
-    }
-
-    .ai-promo-banner-product-wrapper-{{ ai_gen_id }} {
-      width: 70%;
-      margin-top: 40px;
+    .ai-promo-banner-badge-1-{{ ai_gen_id }},
+    .ai-promo-banner-badge-2-{{ ai_gen_id }} {
+      display: none !important;
     }
   }
 {% endstyle %}
 
 <promotional-banner-{{ ai_gen_id }} class="ai-promo-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-promo-banner-circle-decor-{{ ai_gen_id }}"></div>
   <div class="ai-promo-banner-container-{{ ai_gen_id }}">
     <div class="ai-promo-banner-text-{{ ai_gen_id }}">
       {% if block.settings.label != blank %}
@@ -271,12 +376,14 @@
 
       {% if block.settings.button_text != blank %}
         <a href="{{ block.settings.button_link }}" class="ai-promo-banner-button-{{ ai_gen_id }}">
-          {{ block.settings.button_text }}
+          {{ block.settings.button_text }} <span>&rarr;</span>
         </a>
       {% endif %}
     </div>
 
     <div class="ai-promo-banner-images-{{ ai_gen_id }}">
+      <div class="ai-promo-banner-glow-{{ ai_gen_id }}"></div>
+
       <div class="ai-promo-banner-lifestyle-wrapper-{{ ai_gen_id }}">
         {% if block.settings.lifestyle_image %}
           <img
@@ -309,6 +416,13 @@
             {{ 'product-1' | placeholder_svg_tag }}
           </div>
         {% endif %}
+      </div>
+
+      <div class="ai-promo-banner-badge-1-{{ ai_gen_id }}">
+        🔥 Best Seller
+      </div>
+      <div class="ai-promo-banner-badge-2-{{ ai_gen_id }}">
+        ✅ ISI Certified
       </div>
     </div>
   </div>

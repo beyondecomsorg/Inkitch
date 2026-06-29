@@ -11,11 +11,16 @@
     max-width: 100%;
     position: relative;
     overflow: hidden;
+    background-color: #fafafa;
+    padding: 60px 20px;
+    border-top: 4px solid #E30613;
   }
 
   .ai-product-carousel-container-{{ ai_gen_id }} {
     position: relative;
     padding: 0 50px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .ai-product-carousel-track-{{ ai_gen_id }} {
@@ -25,6 +30,7 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    padding: 15px 5px;
   }
 
   .ai-product-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -38,30 +44,44 @@
 
   .ai-product-card-wrapper-{{ ai_gen_id }} {
     position: relative;
-    background-color: {{ block.settings.card_background }};
-    border-radius: {{ block.settings.border_radius }}px;
+    background-color: #ffffff;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: {{ block.settings.shadow_horizontal }}px {{ block.settings.shadow_vertical }}px {{ block.settings.shadow_blur }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #f0f0f0;
   }
 
   .ai-product-card-wrapper-{{ ai_gen_id }}:hover {
-    transform: translateY(-4px);
-    box-shadow: {{ block.settings.shadow_horizontal }}px {{ block.settings.shadow_vertical | plus: 4 }}px {{ block.settings.shadow_blur | plus: 5 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity | plus: 0.1 }});
+    transform: translateY(-6px);
+    border-color: #E30613;
+    box-shadow: 0 8px 28px rgba(227,6,19,0.12);
   }
 
   .ai-product-card-image-container-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
     overflow: hidden;
-    background-color: #f4f4f4;
+    background-color: #f8f8f8;
+    height: auto;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
   }
 
   .ai-product-card-image-{{ ai_gen_id }} {
     width: 100%;
-    height: auto;
+    max-height: 300px;
+    object-fit: contain;
     display: block;
+    border-radius: 10px;
+    transition: transform 0.4s ease;
   }
 
   .ai-product-card-placeholder-{{ ai_gen_id }} {
@@ -79,6 +99,22 @@
     height: 100%;
     max-width: 200px;
     max-height: 200px;
+  }
+
+  .ai-product-card-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #E30613;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    z-index: 3;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(227,6,19,0.3);
   }
 
   .ai-product-card-shimmer-{{ ai_gen_id }} {
@@ -107,6 +143,10 @@
     animation: ai-shimmer-{{ ai_gen_id }} {{ block.settings.shimmer_speed }}s infinite;
   }
 
+  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-image-{{ ai_gen_id }} {
+    transform: scale(1.04);
+  }
+
   @keyframes ai-shimmer-{{ ai_gen_id }} {
     0% {
       left: -100%;
@@ -119,27 +159,87 @@
   .ai-product-card-content-{{ ai_gen_id }} {
     padding: {{ block.settings.content_padding }}px;
     text-align: {{ block.settings.text_alignment }};
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
   .ai-product-card-title-{{ ai_gen_id }} {
-    font-size: {{ block.settings.title_size }}px;
+    font-size: 14px;
     font-weight: 600;
-    color: {{ block.settings.title_color }};
+    color: #1a1a1a;
     margin: 0 0 8px 0;
-    line-height: 1.3;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.8em;
   }
 
   .ai-product-card-price-{{ ai_gen_id }} {
-    font-size: {{ block.settings.price_size }}px;
-    color: {{ block.settings.price_color }};
-    font-weight: 500;
-    margin: 0;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: {% if block.settings.text_alignment == 'center' %}center{% elsif block.settings.text_alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+    flex-wrap: wrap;
+  }
+
+  .ai-product-card-regular-price-{{ ai_gen_id }} {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  .ai-product-card-sale-price-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 700;
+    color: #E30613;
   }
 
   .ai-product-card-compare-price-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: #aaa;
     text-decoration: line-through;
-    opacity: 0.6;
-    margin-right: 8px;
+    font-weight: 400;
+  }
+
+  .ai-product-card-savings-badge-{{ ai_gen_id }} {
+    background-color: #fff0f0;
+    color: #E30613;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .ai-product-card-button-wrap-{{ ai_gen_id }} {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .ai-product-card-btn-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid #E30613;
+    color: #E30613;
+    background-color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-btn-{{ ai_gen_id }} {
+    background-color: #E30613;
+    color: #ffffff;
   }
 
   .ai-product-card-link-{{ ai_gen_id }} {
@@ -155,21 +255,21 @@
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    background-color: {{ block.settings.nav_button_color }};
+    background-color: #E30613;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    opacity: 0.9;
+    z-index: 5;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(227,6,19,0.3);
   }
 
   .ai-carousel-nav-{{ ai_gen_id }}:hover {
-    opacity: 1;
-    background-color: {{ block.settings.nav_button_hover_color }};
+    background-color: #c0000f;
+    transform: translateY(-50%) scale(1.1);
   }
 
   .ai-carousel-nav-{{ ai_gen_id }}:disabled {
@@ -178,17 +278,17 @@
   }
 
   .ai-carousel-nav-prev-{{ ai_gen_id }} {
-    left: 0;
+    left: 10px;
   }
 
   .ai-carousel-nav-next-{{ ai_gen_id }} {
-    right: 0;
+    right: 10px;
   }
 
   .ai-carousel-nav-{{ ai_gen_id }} svg {
     width: 20px;
     height: 20px;
-    stroke: {{ block.settings.nav_icon_color }};
+    stroke: #ffffff;
   }
 
   .ai-product-card-empty-state-{{ ai_gen_id }} {
@@ -203,27 +303,76 @@
     pointer-events: none;
   }
 
+  /* Style custom heading wrapper for Top Picks */
+  [class*="ai-text-title-heading-"] {
+    position: relative !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    color: #111 !important;
+    font-size: 30px !important;
+    display: inline-block !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 40px !important;
+    text-align: center !important;
+  }
+
+  [class*="ai-text-title-heading-"]::before {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 60px !important;
+    height: 3px !important;
+    background-color: #E30613 !important;
+    border-radius: 2px !important;
+  }
+
+  [class*="ai-text-title-heading-"]::after {
+    content: 'Our most loved products, just for you' !important;
+    display: block !important;
+    color: #888 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    font-family: var(--font-body), sans-serif !important;
+    margin-top: 10px !important;
+    line-height: 1.4 !important;
+    text-transform: none !important;
+  }
+
   @media screen and (max-width: 749px) {
     .ai-product-carousel-{{ ai_gen_id }} {
       width: 100%;
-    }
-
-    .ai-product-carousel-slide-{{ ai_gen_id }} {
-      flex: 0 0 calc((100% - {{ block.settings.slide_gap }}px) / {{ block.settings.slides_per_view_mobile }});
+      padding: 40px 0;
     }
 
     .ai-product-carousel-container-{{ ai_gen_id }} {
-      padding: 0 40px;
+      padding: 0 20px;
+    }
+
+    .ai-product-carousel-track-{{ ai_gen_id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 16px;
+      padding: 10px 0 20px;
+    }
+
+    .ai-product-carousel-slide-{{ ai_gen_id }} {
+      flex: 0 0 85vw;
+      scroll-snap-align: start;
+    }
+
+    .ai-product-card-image-container-{{ ai_gen_id }} {
+      min-height: 240px;
+      padding: 12px;
     }
 
     .ai-carousel-nav-{{ ai_gen_id }} {
-      width: 32px;
-      height: 32px;
-    }
-
-    .ai-carousel-nav-{{ ai_gen_id }} svg {
-      width: 16px;
-      height: 16px;
+      display: none !important;
     }
   }
 {% endstyle %}
@@ -262,6 +411,9 @@
                       {{ 'product-1' | placeholder_svg_tag }}
                     </div>
                   {% endif %}
+                  {% if product.compare_at_price > product.price %}
+                    <span class="ai-product-card-badge-{{ ai_gen_id }}">SALE</span>
+                  {% endif %}
                   <div class="ai-product-card-shimmer-{{ ai_gen_id }}"></div>
                 </div>
 
@@ -270,10 +422,19 @@
                   <div class="ai-product-card-price-{{ ai_gen_id }}">
                     {% if product.compare_at_price > product.price %}
                       <span class="ai-product-card-compare-price-{{ ai_gen_id }}">
-                        {{ product.compare_at_price | money }}
+                        {{ product.compare_at_price | money | remove: ".00" }}
+                      </span>
+                      <span class="ai-product-card-sale-price-{{ ai_gen_id }}">
+                        {{ product.price | money | remove: ".00" }}
+                      </span>
+                    {% else %}
+                      <span class="ai-product-card-regular-price-{{ ai_gen_id }}">
+                        {{ product.price | money | remove: ".00" }}
                       </span>
                     {% endif %}
-                    <span>{{ product.price | money }}</span>
+                  </div>
+                  <div class="ai-product-card-button-wrap-{{ ai_gen_id }}">
+                    <span class="ai-product-card-btn-{{ ai_gen_id }}">View Product</span>
                   </div>
                 </div>
               </div>
@@ -295,7 +456,10 @@
               <div class="ai-product-card-content-{{ ai_gen_id }}">
                 <h3 class="ai-product-card-title-{{ ai_gen_id }}">Product {{ i }}</h3>
                 <div class="ai-product-card-price-{{ ai_gen_id }}">
-                  <span>₹0.00</span>
+                  <span class="ai-product-card-regular-price-{{ ai_gen_id }}">₹0.00</span>
+                </div>
+                <div class="ai-product-card-button-wrap-{{ ai_gen_id }}">
+                  <span class="ai-product-card-btn-{{ ai_gen_id }}">View Product</span>
                 </div>
               </div>
             </div>

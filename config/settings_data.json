@@ -11,9 +11,9 @@
   "current": {
     "logo": "shopify://shop_images/InKitch_Logo_Video_-_InKitch_Tag_Logo_1_1.png",
     "logo_width": 120,
-    "type_header_font": "poppins_n7",
+    "type_header_font": "sans_serif_n7",
     "heading_scale": 120,
-    "type_body_font": "inter_n4",
+    "type_body_font": "sans_serif_n4",
     "body_scale": 110,
     "page_width": 1200,
     "spacing_sections": 0,
@@ -147,14 +147,14 @@
         "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
         "disabled": false,
         "settings": {
+          "greeting_message": "",
           "button_color": "#000000",
           "secondary_color": "#FFFFFF",
           "ternary_color": "#6A6A6A",
           "button_icon": "chat_bubble",
           "button_text": "chat_with_us",
           "button_horizontal_position": "bottom_right",
-          "button_vertical_position": "higher",
-          "greeting_message": ""
+          "button_vertical_position": "higher"
         }
       },
       "14060646107696862457": {

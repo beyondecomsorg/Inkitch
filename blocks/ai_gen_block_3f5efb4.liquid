@@ -26,119 +26,192 @@
   .ai-why-inkitch-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
-    background-color: {{ block.settings.background_color }};
+    padding: 70px 24px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%) !important;
+    border-top: 4px solid #E30613 !important;
+    box-sizing: border-box;
   }
 
   .ai-why-inkitch-container-{{ ai_gen_id }} {
-    max-width: {{ block.settings.container_width }}px;
+    max-width: 1200px !important;
     margin: 0 auto;
   }
 
   .ai-why-inkitch-header-{{ ai_gen_id }} {
     text-align: center;
-    margin-bottom: {{ block.settings.header_spacing }}px;
+    margin-bottom: 40px;
   }
 
   .ai-why-inkitch-heading-{{ ai_gen_id }} {
-    font-size: {{ block.settings.heading_size }}px;
-    color: {{ block.settings.heading_color }};
-    margin: 0 0 {{ block.settings.heading_margin }}px;
-    font-weight: {{ block.settings.heading_weight }};
-    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    font-size: 36px !important;
+    font-weight: 800 !important;
+    color: #111111 !important;
+    text-align: center !important;
+    margin: 0;
     line-height: 1.2;
     font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
-    font-weight: {{ block.settings.heading_font.weight }};
-    font-family: 'Literata', serif;
+  }
+
+  .ai-why-inkitch-heading-accent-{{ ai_gen_id }} {
+    width: 70px;
+    height: 3px;
+    background-color: #E30613;
+    margin: 10px auto 0;
   }
 
   .ai-why-inkitch-description-{{ ai_gen_id }} {
-    font-size: {{ block.settings.description_size }}px;
-    color: {{ block.settings.description_color }};
-    line-height: 1.6;
-    max-width: {{ block.settings.description_max_width }}px;
-    margin: 0 auto;
+    font-size: 15px !important;
+    color: #666666 !important;
+    max-width: 560px !important;
+    margin: 16px auto 0 !important;
+    line-height: 1.8 !important;
+    text-align: center !important;
     font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
-    font-weight: {{ block.settings.body_font.weight }};
   }
 
   .ai-why-inkitch-features-{{ ai_gen_id }} {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: {{ block.settings.grid_gap }}px {{ block.settings.grid_column_gap }}px;
-    margin-top: {{ block.settings.features_spacing }}px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }} {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    padding: 32px 24px !important;
+    border: 1px solid #f0f0f0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+    text-align: center !important;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding: {{ block.settings.feature_padding }}px;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    cursor: default;
+    
+    /* Animation start state */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease !important;
   }
 
-  .ai-why-inkitch-icon-{{ ai_gen_id }} {
-    width: {{ block.settings.icon_size }}px;
-    height: {{ block.settings.icon_size }}px;
+  .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(227,6,19,0.12) !important;
+    border-color: #E30613 !important;
+  }
+
+  .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #fff0f0;
+    border: 1.5px solid rgba(227,6,19,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: {{ block.settings.icon_spacing }}px;
+    margin: 0 auto 20px auto;
+    transition: all 0.3s ease;
   }
 
-  .ai-why-inkitch-icon-{{ ai_gen_id }} svg {
-    width: 100%;
-    height: 100%;
-    stroke: {{ block.settings.icon_color }};
+  .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
+    width: 32px;
+    height: 32px;
+    stroke: #E30613;
     fill: none;
-    stroke-width: {{ block.settings.icon_stroke_width }};
+    stroke-width: 1.5;
+    transition: all 0.3s ease;
+  }
+
+  .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
+    background: #E30613;
+    border-color: #E30613;
+  }
+
+  .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
+    stroke: #ffffff;
   }
 
   .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
-    font-size: {{ block.settings.feature_title_size }}px;
-    color: {{ block.settings.feature_title_color }};
-    margin: 0;
-    font-weight: {{ block.settings.feature_title_weight }};
-    line-height: 1.4;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    margin-top: 4px;
+    margin-bottom: 0;
+    transition: color 0.3s ease;
     font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
-    font-weight: {{ block.settings.body_font.weight }};
+    line-height: 1.4;
+  }
+
+  .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
+    color: #E30613 !important;
+  }
+
+  .ai-why-inkitch-feature-desc-{{ ai_gen_id }} {
+    font-size: 13px;
+    color: #888;
+    margin-top: 6px;
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+  }
+
+  .ai-why-inkitch-counter-{{ ai_gen_id }} {
+    font-size: 32px;
+    font-weight: 800;
+    color: #E30613;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+  }
+
+  .ai-why-inkitch-cta-wrap-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .ai-why-inkitch-cta-{{ ai_gen_id }} {
+    display: inline-block;
+    color: #E30613;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-why-inkitch-cta-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 990px) {
+    .ai-why-inkitch-features-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media screen and (max-width: 749px) {
     .ai-why-inkitch-{{ ai_gen_id }} {
-      padding: {{ block.settings.section_padding_top | times: 0.7 }}px 16px {{ block.settings.section_padding_bottom | times: 0.7 }}px;
+      padding: 50px 16px !important;
     }
-
     .ai-why-inkitch-heading-{{ ai_gen_id }} {
-      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
-      margin-bottom: {{ block.settings.heading_margin | times: 0.8 }}px;
+      font-size: 28px !important;
     }
-
     .ai-why-inkitch-description-{{ ai_gen_id }} {
-      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+      font-size: 14px !important;
     }
+  }
 
-    .ai-why-inkitch-header-{{ ai_gen_id }} {
-      margin-bottom: {{ block.settings.header_spacing | times: 0.8 }}px;
-    }
-
+  @media screen and (max-width: 576px) {
     .ai-why-inkitch-features-{{ ai_gen_id }} {
-      gap: {{ block.settings.grid_gap | times: 0.7 }}px {{ block.settings.grid_column_gap | times: 0.7 }}px;
-      margin-top: {{ block.settings.features_spacing | times: 0.8 }}px;
-    }
-
-    .ai-why-inkitch-icon-{{ ai_gen_id }} {
-      width: {{ block.settings.icon_size | times: 0.85 }}px;
-      height: {{ block.settings.icon_size | times: 0.85 }}px;
-      margin-bottom: {{ block.settings.icon_spacing | times: 0.8 }}px;
-    }
-
-    .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.feature_title_size | times: 0.9 }}px;
-    }
-
-    .ai-why-inkitch-feature-{{ ai_gen_id }} {
-      padding: {{ block.settings.feature_padding | times: 0.7 }}px;
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
   }
 {% endstyle %}
@@ -148,6 +221,7 @@
     <div class="ai-why-inkitch-header-{{ ai_gen_id }}">
       {% if block.settings.heading != blank %}
         <h2 class="ai-why-inkitch-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        <div class="ai-why-inkitch-heading-accent-{{ ai_gen_id }}"></div>
       {% endif %}
       
       {% if block.settings.description != blank %}
@@ -165,11 +239,27 @@
           
           assign feature_title = block.settings[title_key]
           assign feature_icon = block.settings[icon_key]
+          
+          assign feature_desc = ""
+          case feature_icon
+            when 'certificate'
+              assign feature_desc = "Internationally certified quality standards"
+            when 'experience'
+              assign feature_desc = "Trusted expertise in global export markets"
+            when 'factory'
+              assign feature_desc = "In-house production for consistent quality"
+            when 'customers'
+              assign feature_desc = "Loved by customers across India"
+            when 'range'
+              assign feature_desc = "Products for every kitchen need"
+            when 'bestseller'
+              assign feature_desc = "Top-rated across Amazon, Flipkart & more"
+          endcase
         %}
 
         {% if feature_title != blank %}
-          <div class="ai-why-inkitch-feature-{{ ai_gen_id }}">
-            <div class="ai-why-inkitch-icon-{{ ai_gen_id }}">
+          <div class="ai-why-inkitch-feature-{{ ai_gen_id }}" data-index="{{ forloop.index0 }}">
+            <div class="ai-why-inkitch-icon-wrap-{{ ai_gen_id }}">
               {% case feature_icon %}
                 {% when 'certificate' %}
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -212,10 +302,25 @@
                   </svg>
               {% endcase %}
             </div>
+
+            {% if feature_icon == 'experience' %}
+              <div class="ai-why-inkitch-counter-{{ ai_gen_id }}" data-target="30" data-suffix="+">0+</div>
+            {% elsif feature_icon == 'customers' %}
+              <div class="ai-why-inkitch-counter-{{ ai_gen_id }}" data-target="1" data-suffix="M+">0M+</div>
+            {% endif %}
+
             <h3 class="ai-why-inkitch-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
+
+            {% if feature_desc != blank %}
+              <p class="ai-why-inkitch-feature-desc-{{ ai_gen_id }}">{{ feature_desc }}</p>
+            {% endif %}
           </div>
         {% endif %}
       {% endfor %}
+    </div>
+
+    <div class="ai-why-inkitch-cta-wrap-{{ ai_gen_id }}">
+      <a href="/pages/about" class="ai-why-inkitch-cta-{{ ai_gen_id }}">Experience the inKitch difference &rarr;</a>
     </div>
   </div>
 </why-inkitch-{{ ai_gen_id }}>
@@ -228,10 +333,81 @@
       }
 
       connectedCallback() {
+        this.initAnimations();
+      }
+
+      initAnimations() {
+        const component = this;
+        const cards = component.querySelectorAll('.ai-why-inkitch-feature-{{ ai_gen_id }}');
+        const counters = component.querySelectorAll('.ai-why-inkitch-counter-{{ ai_gen_id }}');
+
+        function animateCounter(el) {
+          const target = parseFloat(el.getAttribute('data-target'));
+          const suffix = el.getAttribute('data-suffix') || '';
+          const duration = 1500; // 1.5s
+          const startTime = performance.now();
+
+          function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // easeOutQuad timing: f(t) = t*(2-t)
+            const easeProgress = progress * (2 - progress);
+            const currentValue = Math.floor(easeProgress * target);
+            
+            el.textContent = currentValue + suffix;
+
+            if (progress < 1) {
+              requestAnimationFrame(update);
+            } else {
+              el.textContent = target + suffix;
+            }
+          }
+          
+          requestAnimationFrame(update);
+        }
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                // Animate counters
+                counters.forEach(counter => {
+                  if (!counter.classList.contains('animated')) {
+                    counter.classList.add('animated');
+                    animateCounter(counter);
+                  }
+                });
+
+                // Animate cards staggered
+                cards.forEach((card) => {
+                  const index = parseInt(card.getAttribute('data-index')) || 0;
+                  setTimeout(() => {
+                    card.classList.add('is-visible');
+                  }, index * 100);
+                });
+
+                // Stop observing once animated
+                observer.unobserve(component);
+              }
+            });
+          }, { threshold: 0.1 });
+
+          observer.observe(component);
+        } else {
+          // Fallback if IntersectionObserver is not supported
+          cards.forEach(card => card.classList.add('is-visible'));
+          counters.forEach(counter => {
+            counter.classList.add('animated');
+            animateCounter(counter);
+          });
+        }
       }
     }
 
-    customElements.define('why-inkitch-{{ ai_gen_id }}', WhyInkitch{{ ai_gen_id }});
+    if (!customElements.get('why-inkitch-{{ ai_gen_id }}')) {
+      customElements.define('why-inkitch-{{ ai_gen_id }}', WhyInkitch{{ ai_gen_id }});
+    }
   })();
 </script>
 

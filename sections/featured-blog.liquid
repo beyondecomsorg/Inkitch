@@ -3,6 +3,13 @@
 {{ 'component-article-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-featured-blog.css' | asset_url | stylesheet_tag }}
 
+{%- liquid
+  assign posts_displayed = section.settings.blog.articles_count
+  if section.settings.post_limit <= section.settings.blog.articles_count or section.settings.post_limit <= 4
+    assign posts_displayed = section.settings.post_limit
+  endif
+-%}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -15,29 +22,345 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Custom overrides for premium layout */
+  .blog-section-wrapper-{{ section.id }} {
+    background: #f7f7f7 !important;
+    padding: 64px 24px !important;
+    border-top: 4px solid #E30613 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .page-width-desktop {
+    max-width: 1200px !important;
+    margin: 0 auto;
+  }
+
+  .title-wrapper-with-link-custom-{{ section.id }} {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    margin-bottom: 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .title-text-group-{{ section.id }} {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .blog__title {
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    color: #111111 !important;
+    text-align: left !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .heading-accent-line-{{ section.id }} {
+    width: 55px !important;
+    height: 3px !important;
+    background-color: #E30613 !important;
+    margin-top: 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .blog__subtitle-custom-{{ section.id }} {
+    font-size: 13px !important;
+    color: #999999 !important;
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+    text-align: left !important;
+  }
+
+  .view-all-link-custom-{{ section.id }} {
+    color: #E30613 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .view-all-link-custom-{{ section.id }}:hover {
+    text-decoration: underline !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .blog__posts {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 28px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .blog__post {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .article-card-custom-wrapper-{{ section.id }} {
+    position: relative;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease !important;
+  }
+
+  .article-card-custom-wrapper-{{ section.id }}.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .article-category-badge-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    background: #E30613 !important;
+    color: #ffffff !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase !important;
+    pointer-events: none !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: 100% !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: 1px solid #eeeeee !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12) !important;
+    border-color: #E30613 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card__inner {
+    width: 100% !important;
+    height: 210px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+    background: #f0f0f0 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__image-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__image {
+    height: 100% !important;
+    width: 100% !important;
+    position: static !important;
+    padding: 0 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__image img,
+  .blog-section-wrapper-{{ section.id }} .article-card__image svg {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    position: static !important;
+    transition: transform 0.4s ease !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card:hover .article-card__image img,
+  .blog-section-wrapper-{{ section.id }} .article-card:hover .article-card__image svg {
+    transform: scale(1.05) !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card__inner .card__content {
+    display: none !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card > .card__content {
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    position: static !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card__information {
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__info span {
+    font-size: 11px !important;
+    color: #bbbbbb !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-weight: 500 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__info .circle-divider {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__info .circle-divider::after {
+    content: "\2022" !important;
+    background: transparent !important;
+    border: none !important;
+    width: auto !important;
+    height: auto !important;
+    margin-left: 6px !important;
+    color: #E30613 !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card__heading {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    margin: 10px 0 8px 0 !important;
+    line-height: 1.4 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .card__heading a {
+    color: #111111 !important;
+    text-decoration: none !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card:hover .card__heading a {
+    color: #E30613 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card__excerpt {
+    font-size: 13px !important;
+    color: #777777 !important;
+    line-height: 1.7 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+    flex: 1 !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card-readmore {
+    margin-top: 16px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid #f0f0f0 !important;
+    color: #E30613 !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: gap 0.2s ease !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .article-card:hover .article-card-readmore {
+    gap: 10px !important;
+  }
+
+  @media screen and (max-width: 900px) {
+    .blog-section-wrapper-{{ section.id }} .blog__posts {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 24px !important;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .blog-section-wrapper-{{ section.id }} {
+      padding: 40px 16px !important;
+    }
+
+    .title-wrapper-with-link-custom-{{ section.id }} {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 16px !important;
+    }
+
+    .view-all-link-custom-{{ section.id }} {
+      margin-top: 8px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .blog-section-wrapper-{{ section.id }} .blog__posts {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+
+    .blog-section-wrapper-{{ section.id }} .card__inner {
+      height: 180px !important;
+    }
+  }
 {%- endstyle -%}
 
-{%- liquid
-  assign posts_displayed = section.settings.blog.articles_count
-  if section.settings.post_limit <= section.settings.blog.articles_count or section.settings.post_limit <= 4
-    assign posts_exceed_limit = true
-    assign posts_displayed = section.settings.post_limit
-  endif
--%}
-<div class="blog color-{{ section.settings.color_scheme }} gradient{% if section.settings.heading == blank %} no-heading{% endif %}">
-  <div class="page-width-desktop isolate{% if posts_displayed < 3 %} page-width-tablet{% endif %} section-{{ section.id }}-padding">
+<div class="blog blog-section-wrapper-{{ section.id }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.heading == blank %} no-heading{% endif %}">
+  <div class="page-width-desktop isolate section-{{ section.id }}-padding">
     {%- unless section.settings.heading == blank -%}
-      <div class="title-wrapper-with-link{% if posts_displayed > 2 %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
-        <h2
-          id="SectionHeading-{{ section.id }}"
-          class="blog__title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-          {% endif %}
-          
-        >
-          {{ section.settings.heading }}
-        </h2>
+      <div class="title-wrapper-with-link-custom-{{ section.id }}">
+        <div class="title-text-group-{{ section.id }}">
+          <h2
+            id="SectionHeading-{{ section.id }}"
+            class="blog__title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+            {% endif %}
+          >
+            {{ section.settings.heading }}
+          </h2>
+          <div class="heading-accent-line-{{ section.id }}"></div>
+          <p class="blog__subtitle-custom-{{ section.id }}">Tips, stories & kitchen inspiration</p>
+        </div>
 
         {%- if section.settings.blog != blank
           and section.settings.show_view_all
@@ -45,92 +368,125 @@
         -%}
           <a
             href="{{ section.settings.blog.url }}"
-            class="link underlined-link large-up-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            class="view-all-link-custom-{{ section.id }}"
           >
-            {{ 'sections.featured_blog.view_all' | t }}
+            View All Posts &rarr;
           </a>
         {%- endif -%}
       </div>
     {%- endunless -%}
 
-    <slider-component class="slider-mobile-gutter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+    <slider-component class="slider-mobile-gutter">
       <ul
         id="Slider-{{ section.id }}"
-        class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.blog_card_style == 'standard' %} contains-card--standard{% endif %} grid grid--peek grid--2-col-tablet grid--{{ section.settings.columns_desktop }}-col-desktop slider {% if posts_displayed > 2 %}slider--tablet{% else %}slider--mobile{% endif %}"
+        class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.blog_card_style == 'standard' %} contains-card--standard{% endif %} grid grid--peek slider slider--tablet"
         role="list"
       >
         {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
           {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
             <li
               id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-              {% if settings.animations_reveal_on_scroll %}
-                data-cascade
-                style="--animation-order: {{ forloop.index }};"
-              {% endif %}
+              class="blog__post grid__item article slider__slide slider__slide--full-width"
             >
-              {% render 'article-card',
-                blog: section.settings.blog,
-                article: article,
-                media_aspect_ratio: 1.66,
-                show_image: section.settings.show_image,
-                show_date: section.settings.show_date,
-                show_author: section.settings.show_author,
-                show_excerpt: true
-              %}
+              <div class="article-card-custom-wrapper-{{ section.id }}">
+                {%- liquid
+                  assign badge_text = "Lifestyle"
+                  if article.tags.size > 0
+                    assign badge_text = article.tags | first
+                  endif
+                -%}
+                <span class="article-category-badge-{{ section.id }}">{{ badge_text }}</span>
+                {% render 'article-card',
+                  blog: section.settings.blog,
+                  article: article,
+                  media_aspect_ratio: 1.66,
+                  show_image: section.settings.show_image,
+                  show_date: section.settings.show_date,
+                  show_author: section.settings.show_author,
+                  show_excerpt: true
+                %}
+              </div>
             </li>
           {%- endfor -%}
+
+          {%- liquid
+            assign rendered_count = section.settings.blog.articles_count
+            if rendered_count > section.settings.post_limit
+              assign rendered_count = section.settings.post_limit
+            endif
+          -%}
+          {%- if rendered_count < 3 -%}
+            {%- for i in (rendered_count..2) -%}
+              {%- assign placeholder_image_index = forloop.index | modulo: 3 | plus: 1 -%}
+              {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
+              <li
+                id="Slide-{{ section.id }}-placeholder-{{ i }}"
+                class="blog__post grid__item article slider__slide slider__slide--full-width"
+              >
+                <div class="article-card-custom-wrapper-{{ section.id }}">
+                  <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
+                  <div class="article-card-wrapper card-wrapper">
+                    <div class="card article-card card--standard">
+                      <div class="article-card__image-wrapper card__media">
+                        <div class="article-card__image media">
+                          {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
+                        </div>
+                      </div>
+                      <div class="card__content">
+                        <div class="card__information">
+                          <div class="article-card__info caption-with-letter-spacing h5">
+                            <span class="circle-divider">June 28, 2026</span>
+                            <span>inKitch Editorial</span>
+                          </div>
+                          <h3 class="card__heading h2">
+                            <a href="#" class="full-unstyled-link">
+                              Discover Premium Cookware Inspiration
+                            </a>
+                          </h3>
+                          <p class="article-card__excerpt rte-width">
+                            Explore our latest collections designed to elevate your everyday cooking experience with stylish, durable kitchen essentials.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
+
         {%- else -%}
           {% for i in (1..section.settings.post_limit) -%}
             {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
             {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
             <li
               id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-              {% if settings.animations_reveal_on_scroll %}
-                data-cascade
-                style="--animation-order: {{ forloop.index }};"
-              {% endif %}
+              class="blog__post grid__item article slider__slide slider__slide--full-width"
             >
-              <div class="article-card-wrapper card-wrapper{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-                <div
-                  class="
-                    card article-card card--{{ settings.blog_card_style }}
-                    {% if settings.blog_card_style == 'card' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %}
-                    {% if section.settings.show_image %} card--media{% else %} card--text{% endif %}
-                  "
-                  style=" {% if settings.blog_card_style == 'standard' %} --ratio-percent: 100%;{% elsif settings.blog_card_style == 'card' %} --ratio-percent: 0%;{% endif %}"
-                >
-                  <div
-                    class="card__inner{% if settings.blog_card_style == 'standard' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %} ratio"
-                    style="--ratio-percent: 80%;"
-                  >
-                    {%- if section.settings.show_image == true -%}
-                      <div class="article-card__image-wrapper card__media">
-                        <div class="article-card__image media">
-                          {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
-                        </div>
+              <div class="article-card-custom-wrapper-{{ section.id }}">
+                <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
+                <div class="article-card-wrapper card-wrapper">
+                  <div class="card article-card card--standard">
+                    <div class="article-card__image-wrapper card__media">
+                      <div class="article-card__image media">
+                        {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
                       </div>
-                    {%- endif -%}
+                    </div>
                     <div class="card__content">
                       <div class="card__information">
+                        <div class="article-card__info caption-with-letter-spacing h5">
+                          <span class="circle-divider">June 28, 2026</span>
+                          <span>inKitch Editorial</span>
+                        </div>
                         <h3 class="card__heading h2">
-                          {{ 'sections.featured_blog.onboarding_title' | t }}
+                          <a href="#" class="full-unstyled-link">
+                            {{ 'sections.featured_blog.onboarding_title' | t }}
+                          </a>
                         </h3>
                         <p class="article-card__excerpt rte-width">
                           {{ 'sections.featured_blog.onboarding_content' | t }}
                         </p>
                       </div>
-                    </div>
-                  </div>
-                  <div class="card__content">
-                    <div class="card__information">
-                      <h3 class="card__heading h2">
-                        {{ 'sections.featured_blog.onboarding_title' | t }}
-                      </h3>
-                      <p class="article-card__excerpt rte-width">
-                        {{ 'sections.featured_blog.onboarding_content' | t }}
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -139,57 +495,61 @@
           {%- endfor -%}
         {%- endif -%}
       </ul>
-      {%- if posts_exceed_limit -%}
-        <div class="slider-buttons{% if section.settings.post_limit < 3 %} medium-hide{% endif %}{% if section.settings.post_limit < 2 %} small-hide{% endif %}">
-          <button
-            type="button"
-            class="slider-button slider-button--prev"
-            name="previous"
-            aria-label="{{ 'general.slider.previous_slide' | t }}"
-          >
-            <span class="svg-wrapper">
-              {{- 'icon-caret.svg' | inline_asset_content -}}
-            </span>
-          </button>
-          <div class="slider-counter caption">
-            <span class="slider-counter--current">1</span>
-            <span aria-hidden="true"> / </span>
-            <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-            <span class="slider-counter--total">{{ section.settings.post_limit }}</span>
-          </div>
-          <button
-            type="button"
-            class="slider-button slider-button--next"
-            name="next"
-            aria-label="{{ 'general.slider.next_slide' | t }}"
-          >
-            <span class="svg-wrapper">
-              {{- 'icon-caret.svg' | inline_asset_content -}}
-            </span>
-          </button>
-        </div>
-      {%- endif -%}
     </slider-component>
-
-    {%- if section.settings.show_view_all and section.settings.post_limit < section.settings.blog.articles_count -%}
-      <div
-        class="blog__view-all center small-hide medium-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-        {% if settings.animations_reveal_on_scroll %}
-          data-cascade
-        {% endif %}
-      >
-        <a
-          href="{{ section.settings.blog.url }}"
-          id="ViewAll-{{ section.id }}"
-          class="blog__button button"
-          aria-labelledby="ViewAll-{{ section.id }} SectionHeading-{{ section.id }}"
-        >
-          {{ 'sections.featured_blog.view_all' | t }}
-        </a>
-      </div>
-    {%- endif -%}
   </div>
 </div>
+
+<script>
+  (function() {
+    function initBlogSection() {
+      const section = document.querySelector('.blog-section-wrapper-{{ section.id }}');
+      if (!section) return;
+
+      // 1. Append Read More buttons
+      section.querySelectorAll('.article-card').forEach(card => {
+        const info = card.querySelector('.card__content .card__information');
+        if (info && !info.querySelector('.article-card-readmore')) {
+          const readMore = document.createElement('div');
+          readMore.className = 'article-card-readmore';
+          readMore.innerHTML = 'Read More &rarr;';
+          info.appendChild(readMore);
+        }
+      });
+
+      // 2. Setup scroll animation
+      const cards = section.querySelectorAll('.article-card-custom-wrapper-{{ section.id }}');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              cards.forEach((card, index) => {
+                setTimeout(() => {
+                  card.classList.add('is-visible');
+                }, index * 150);
+              });
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        observer.observe(section);
+      } else {
+        cards.forEach(card => card.classList.add('is-visible'));
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBlogSection);
+    } else {
+      initBlogSection();
+    }
+
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.detail.sectionId === '{{ section.id }}') {
+        initBlogSection();
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {
