@@ -193,8 +193,21 @@
                 </p>
               {%- when 'description' -%}
                 {%- if product.description != blank -%}
-                  <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                    {{ product.description }}
+                  <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
+                    <details id="Details-Description-{{ section.id }}">
+                      <summary style="padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
+                        <div class="summary__title">
+                          {% render 'icon-accordion', icon: 'none' %}
+                          <h2 class="h4 accordion__title inline-richtext" style="font-weight: 700 !important; font-size: 1.6rem !important;">
+                            Product Details
+                          </h2>
+                        </div>
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </summary>
+                      <div class="accordion__content rte" id="ProductDescription-{{ section.id }}" style="padding-top: 1rem !important; padding-bottom: 2rem !important; font-size: 1.4rem !important; line-height: 1.6 !important; color: #555555 !important;">
+                        {{ product.description }}
+                      </div>
+                    </details>
                   </div>
                 {%- endif -%}
               {%- when 'sku' -%}

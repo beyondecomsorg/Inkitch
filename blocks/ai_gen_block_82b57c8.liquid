@@ -57,7 +57,7 @@
     display: flex;
     justify-content: center;
     gap: 32px;
-    margin-bottom: 40px;
+
     border-bottom: 1px solid #eee;
   }
 
@@ -366,7 +366,7 @@
       scrollbar-width: none;
       gap: 16px;
       padding: 10px 24px 20px;
-      margin: 0 -24px;
+      margin: 0 ;
     }
 
     .ai-new-popular-grid-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -389,7 +389,79 @@
       font-size: 12px;
       padding: 8px 0;
     }
+
+    /* Scoped Carousel Wrapper & Clickable Cards */
+    .ai-new-popular-carousel-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      width: 100%;
+    }
+
+    .ai-new-popular-card-link-wrapper-{{ ai_gen_id }} {
+      text-decoration: none !important;
+      color: inherit !important;
+      display: block !important;
+      outline: none !important;
+      cursor: pointer !important;
+    }
+
+    .ai-new-popular-card-link-wrapper-{{ ai_gen_id }}:hover .ai-new-popular-card-title-{{ ai_gen_id }} {
+      color: #E30613 !important;
+    }
+
+    .ai-new-popular-nav-btn-{{ ai_gen_id }} {
+      display: none !important;
+    }
+
+    @media screen and (max-width: 749px) {
+      .ai-new-popular-carousel-wrapper-{{ ai_gen_id }} {
+        position: relative;
+        width: 100%;
+      }
+
+      .ai-new-popular-nav-btn-{{ ai_gen_id }} {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 9rem; /* Centered vertically on the 180px card image wrapper */
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.95);
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        z-index: 10;
+        color: #333333;
+        transition: all 0.2s ease;
+        padding: 0;
+        opacity: 1;
+      }
+
+      .ai-new-popular-nav-btn-{{ ai_gen_id }}:active {
+        transform: translateY(-50%) scale(0.95);
+        background-color: #ffffff;
+      }
+
+      .ai-new-popular-nav-btn-{{ ai_gen_id }}.prev-btn {
+        left: 4px;
+      }
+
+      .ai-new-popular-nav-btn-{{ ai_gen_id }}.next-btn {
+        right: 4px;
+      }
+
+      .ai-new-popular-nav-btn-{{ ai_gen_id }} svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        stroke-width: 2.5;
+        fill: none;
+      }
+    }
   }
+
 {% endstyle %}
 
 <new-popular-tabs-{{ ai_gen_id }} class="ai-new-popular-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
@@ -433,71 +505,75 @@
       role="tabpanel"
     >
       {% if block.settings.collection_1 != blank %}
-        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
-          {% for product in block.settings.collection_1.products limit: block.settings.products_per_tab %}
-            <div class="ai-new-popular-card-{{ ai_gen_id }}">
-              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
-                {% if product.featured_image %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 400 }}"
-                    alt="{{ product.featured_image.alt | escape }}"
-                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="400"
-                    height="500"
-                  >
-                {% else %}
-                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
-                    {{ 'product-1' | placeholder_svg_tag }}
+        <div class="ai-new-popular-carousel-wrapper-{{ ai_gen_id }}">
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} prev-btn" aria-label="Previous page">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+          </button>
+
+          <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+            {% for product in block.settings.collection_1.products limit: block.settings.products_per_tab %}
+              <a href="{{ product.url }}" style="text-decoration: none;" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
+                <div class="ai-new-popular-card-{{ ai_gen_id }}">
+                  <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                    {% if product.featured_image %}
+                      <img
+                        src="{{ product.featured_image | image_url: width: 400 }}"
+                        alt="{{ product.featured_image.alt | escape }}"
+                        class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                        loading="lazy"
+                        width="400"
+                        height="500"
+                      >
+                    {% else %}
+                      <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                        {{ 'product-1' | placeholder_svg_tag }}
+                      </div>
+                    {% endif %}
+
+                    {% if product.available %}
+                      <div
+                        class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                      >
+                        Shop Now
+                      </div>
+                    {% else %}
+                      <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                    {% endif %}
+                    <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-new">NEW</span>
                   </div>
-                {% endif %}
 
-                {% if product.available %}
-                <a href="{{ product.url }}">
-
-                  <button
-                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
-                    data-product-id="{{ product.id }}"
-                    aria-label="Quick add {{ product.title }}"
-                  >
-              Shop Now
-                  </button>
-                  </a>
-                {% else %}
-                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
-                {% endif %}
-                <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-new">NEW</span>
-              </div>
-
-              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
-                <a
-                  href="{{ product.url }}"
-                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
-                >
-                  {{ product.title }}
-                </a>
-                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
-                      {{ product.compare_at_price | money | remove: ".00" }}
+                  <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                    <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
+                      {{ product.title }}
                     </span>
-                    <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                    {% liquid
-                      assign savings_amt = product.compare_at_price | minus: product.price
-                      assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
-                    %}
-                    <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
-                  {% else %}
-                    <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                  {% endif %}
+                    <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                      {% if product.compare_at_price > product.price %}
+                        <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
+                          {{ product.compare_at_price | money | remove: ".00" }}
+                        </span>
+                        <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                        {% liquid
+                          assign savings_amt = product.compare_at_price | minus: product.price
+                          assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
+                        %}
+                        <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
+                      {% else %}
+                        <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          {% endfor %}
+              </a>
+            {% endfor %}
+          </div>
+
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} next-btn" aria-label="Next page">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+          </button>
         </div>
       {% else %}
         <div class="ai-new-popular-empty-{{ ai_gen_id }}">
@@ -512,70 +588,75 @@
       role="tabpanel"
     >
       {% if block.settings.collection_2 != blank %}
-        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
-          {% for product in block.settings.collection_2.products limit: block.settings.products_per_tab %}
-            <div class="ai-new-popular-card-{{ ai_gen_id }}">
-              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
-                {% if product.featured_image %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 400 }}"
-                    alt="{{ product.featured_image.alt | escape }}"
-                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="400"
-                    height="500"
-                  >
-                {% else %}
-                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
-                    {{ 'product-1' | placeholder_svg_tag }}
+        <div class="ai-new-popular-carousel-wrapper-{{ ai_gen_id }}">
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} prev-btn" aria-label="Previous page">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+          </button>
+
+          <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+            {% for product in block.settings.collection_2.products limit: block.settings.products_per_tab %}
+              <a href="{{ product.url }}" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
+                <div class="ai-new-popular-card-{{ ai_gen_id }}">
+                  <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                    {% if product.featured_image %}
+                      <img
+                        src="{{ product.featured_image | image_url: width: 400 }}"
+                        alt="{{ product.featured_image.alt | escape }}"
+                        class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                        loading="lazy"
+                        width="400"
+                        height="500"
+                      >
+                    {% else %}
+                      <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                        {{ 'product-1' | placeholder_svg_tag }}
+                      </div>
+                    {% endif %}
+
+                    {% if product.available %}
+                      <div
+                        class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                      >
+                        Shop Now
+                      </div>
+                    {% else %}
+                      <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                    {% endif %}
+                    <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-top">🔥 TOP</span>
                   </div>
-                {% endif %}
 
-                {% if product.available %}
-                <a href="{{ product.url }}">
-                  <button
-                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
-                    data-product-id="{{ product.id }}"
-                    aria-label="Quick add {{ product.title }}"
-                  >
-                   Shop Now
-                  </button>
-                  </a>
-                {% else %}
-                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
-                {% endif %}
-                <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-top">🔥 TOP</span>
-              </div>
-
-              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
-                <a
-                  href="{{ product.url }}"
-                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
-                >
-                  {{ product.title }}
-                </a>
-                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
-                      {{ product.compare_at_price | money | remove: ".00" }}
+                  <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                    <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
+                      {{ product.title }}
                     </span>
-                    <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                    {% liquid
-                      assign savings_amt = product.compare_at_price | minus: product.price
-                      assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
-                    %}
-                    <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
-                  {% else %}
-                    <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                  {% endif %}
+                    <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                      {% if product.compare_at_price > product.price %}
+                        <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
+                          {{ product.compare_at_price | money | remove: ".00" }}
+                        </span>
+                        <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                        {% liquid
+                          assign savings_amt = product.compare_at_price | minus: product.price
+                          assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
+                        %}
+                        <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
+                      {% else %}
+                        <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          {% endfor %}
+              </a>
+            {% endfor %}
+          </div>
+
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} next-btn" aria-label="Next page">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+          </button>
         </div>
       {% else %}
         <div class="ai-new-popular-empty-{{ ai_gen_id }}">
@@ -590,70 +671,75 @@
       role="tabpanel"
     >
       {% if block.settings.collection_3 != blank %}
-        <div class="ai-new-popular-grid-{{ ai_gen_id }}">
-          {% for product in block.settings.collection_3.products limit: block.settings.products_per_tab %}
-            <div class="ai-new-popular-card-{{ ai_gen_id }}">
-              <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
-                {% if product.featured_image %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 400 }}"
-                    alt="{{ product.featured_image.alt | escape }}"
-                    class="ai-new-popular-card-image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="400"
-                    height="500"
-                  >
-                {% else %}
-                  <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
-                    {{ 'product-1' | placeholder_svg_tag }}
+        <div class="ai-new-popular-carousel-wrapper-{{ ai_gen_id }}">
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} prev-btn" aria-label="Previous page">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+          </button>
+
+          <div class="ai-new-popular-grid-{{ ai_gen_id }}">
+            {% for product in block.settings.collection_3.products limit: block.settings.products_per_tab %}
+              <a href="{{ product.url }}" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
+                <div class="ai-new-popular-card-{{ ai_gen_id }}">
+                  <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
+                    {% if product.featured_image %}
+                      <img
+                        src="{{ product.featured_image | image_url: width: 400 }}"
+                        alt="{{ product.featured_image.alt | escape }}"
+                        class="ai-new-popular-card-image-{{ ai_gen_id }}"
+                        loading="lazy"
+                        width="400"
+                        height="500"
+                      >
+                    {% else %}
+                      <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
+                        {{ 'product-1' | placeholder_svg_tag }}
+                      </div>
+                    {% endif %}
+
+                    {% if product.available %}
+                      <div
+                        class="ai-new-popular-quick-add-{{ ai_gen_id }}"
+                      >
+                        Shop Now
+                      </div>
+                    {% else %}
+                      <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
+                    {% endif %}
+                    <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-barista">SELECTED</span>
                   </div>
-                {% endif %}
 
-                {% if product.available %}
-                <a href="{{ product.url }}">
-                  <button
-                    class="ai-new-popular-quick-add-{{ ai_gen_id }}"
-                    data-product-id="{{ product.id }}"
-                    aria-label="Quick add {{ product.title }}"
-                  >
-                Shop Now
-                  </button>
-                  </a>
-                {% else %}
-                  <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
-                {% endif %}
-                <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-barista">SELECTED</span>
-              </div>
-
-              <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
-                <a
-                  href="{{ product.url }}"
-                  class="ai-new-popular-card-title-{{ ai_gen_id }}"
-                >
-                  {{ product.title }}
-                </a>
-                <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
-                      {{ product.compare_at_price | money | remove: ".00" }}
+                  <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
+                    <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
+                      {{ product.title }}
                     </span>
-                    <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                    {% liquid
-                      assign savings_amt = product.compare_at_price | minus: product.price
-                      assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
-                    %}
-                    <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
-                  {% else %}
-                    <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
-                      {{ product.price | money | remove: ".00" }}
-                    </span>
-                  {% endif %}
+                    <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
+                      {% if product.compare_at_price > product.price %}
+                        <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
+                          {{ product.compare_at_price | money | remove: ".00" }}
+                        </span>
+                        <span class="ai-new-popular-sale-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                        {% liquid
+                          assign savings_amt = product.compare_at_price | minus: product.price
+                          assign savings_percent = savings_amt | times: 100 | divided_by: product.compare_at_price
+                        %}
+                        <span class="ai-new-popular-savings-badge-{{ ai_gen_id }}">{{ savings_percent }}% off</span>
+                      {% else %}
+                        <span class="ai-new-popular-regular-price-{{ ai_gen_id }}">
+                          {{ product.price | money | remove: ".00" }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          {% endfor %}
+              </a>
+            {% endfor %}
+          </div>
+
+          <button class="ai-new-popular-nav-btn-{{ ai_gen_id }} next-btn" aria-label="Next page">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+          </button>
         </div>
       {% else %}
         <div class="ai-new-popular-empty-{{ ai_gen_id }}">
@@ -681,7 +767,14 @@
         this.contents = this.querySelectorAll('.ai-new-popular-content-{{ ai_gen_id }}');
 
         this.setupTabs();
-        this.setupQuickAdd();
+        this.setupCarouselArrows();
+      }
+
+      connected() {
+        // Safe fallback triggers for resize/scroll adjustments
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 300);
       }
 
       setupTabs() {
@@ -706,35 +799,67 @@
             );
             if (targetContent) {
               targetContent.classList.add('active');
+              // Trigger a scroll update to ensure arrows are configured for the newly active panel
+              const grid = targetContent.querySelector('.ai-new-popular-grid-{{ ai_gen_id }}');
+              if (grid) {
+                grid.dispatchEvent(new Event('scroll'));
+              }
             }
           });
         });
       }
 
-      setupQuickAdd() {
-        this.quickAddButtons.forEach((button) => {
-          button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const productId = button.getAttribute('data-product-id');
+      setupCarouselArrows() {
+        const wrappers = this.querySelectorAll('.ai-new-popular-carousel-wrapper-{{ ai_gen_id }}');
+        wrappers.forEach((wrapper) => {
+          const grid = wrapper.querySelector('.ai-new-popular-grid-{{ ai_gen_id }}');
+          const prevBtn = wrapper.querySelector('.prev-btn');
+          const nextBtn = wrapper.querySelector('.next-btn');
 
-            fetch('/cart/add.js', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                id: productId,
-                quantity: 1,
-              }),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                window.location.href = '/cart';
-              })
-              .catch((error) => {
-                console.error('Error adding to cart:', error);
-              });
+          if (!grid || !prevBtn || !nextBtn) return;
+
+          const getScrollAmount = () => {
+            const card = grid.querySelector('.ai-new-popular-card-{{ ai_gen_id }}');
+            if (card) {
+              return card.clientWidth + 16; // Card width + gap
+            }
+            return grid.clientWidth * 0.7; // Fallback
+          };
+
+          prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            grid.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
           });
+
+          nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            grid.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+          });
+
+          const toggleButtons = () => {
+            const scrollLeft = grid.scrollLeft;
+            const maxScrollLeft = grid.scrollWidth - grid.clientWidth;
+            
+            if (maxScrollLeft <= 5) {
+              prevBtn.style.opacity = '0';
+              prevBtn.style.pointerEvents = 'none';
+              nextBtn.style.opacity = '0';
+              nextBtn.style.pointerEvents = 'none';
+              return;
+            }
+
+            prevBtn.style.opacity = scrollLeft <= 5 ? '0.3' : '1';
+            prevBtn.style.pointerEvents = scrollLeft <= 5 ? 'none' : 'auto';
+            
+            nextBtn.style.opacity = scrollLeft >= maxScrollLeft - 5 ? '0.3' : '1';
+            nextBtn.style.pointerEvents = scrollLeft >= maxScrollLeft - 5 ? 'none' : 'auto';
+          };
+
+          grid.addEventListener('scroll', toggleButtons);
+          window.addEventListener('resize', toggleButtons);
+          setTimeout(toggleButtons, 100);
         });
       }
     }

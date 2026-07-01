@@ -91,19 +91,124 @@
     text-decoration: underline !important;
   }
 
+  .blog-carousel-container-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+
+  .blog-carousel-wrapper-{{ section.id }} {
+    position: relative;
+    width: 100%;
+  }
+
   .blog-section-wrapper-{{ section.id }} .blog__posts {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
     gap: 28px !important;
-    padding: 0 !important;
+    padding: 10px 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    list-style: none !important;
+  }
+
+  .blog-section-wrapper-{{ section.id }} .blog__posts::-webkit-scrollbar {
+    display: none !important;
   }
 
   .blog-section-wrapper-{{ section.id }} .blog__post {
-    width: 100% !important;
-    max-width: 100% !important;
+    flex: 0 0 calc((100% - (2 * 28px)) / 3) !important;
+    min-width: calc((100% - (2 * 28px)) / 3) !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
     padding: 0 !important;
     margin: 0 !important;
+    height: auto !important;
+  }
+
+  /* Nav Buttons (Desktop Arrow Styling) */
+  .blog-carousel-nav-btn-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: calc(50% - 30px); /* Positioned relative to the slide contents */
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    z-index: 10;
+    color: #333333;
+    transition: all 0.25s ease;
+    padding: 0;
+  }
+
+  .blog-carousel-nav-btn-{{ section.id }}:hover {
+    background-color: #ffffff;
+    color: #E30613;
+    box-shadow: 0 4px 14px rgba(227, 6, 19, 0.2);
+    border-color: rgba(227, 6, 19, 0.3);
+  }
+
+  .blog-carousel-nav-btn-{{ section.id }}:active {
+    transform: translateY(-50%) scale(0.92);
+  }
+
+  .blog-carousel-nav-btn-{{ section.id }}.prev-btn {
+    left: -22px;
+  }
+
+  .blog-carousel-nav-btn-{{ section.id }}.next-btn {
+    right: -22px;
+  }
+
+  @media screen and (max-width: 1240px) {
+    .blog-carousel-nav-btn-{{ section.id }}.prev-btn {
+      left: 10px;
+    }
+    .blog-carousel-nav-btn-{{ section.id }}.next-btn {
+      right: 10px;
+    }
+  }
+
+  .blog-carousel-nav-btn-{{ section.id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* Dots/pagination indicators */
+  .blog-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .blog-carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dddddd;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 0;
+  }
+
+  .blog-carousel-dot.active {
+    background-color: #E30613;
+    transform: scale(1.2);
+    box-shadow: 0 0 5px rgba(227, 6, 19, 0.4);
   }
 
   .article-card-custom-wrapper-{{ section.id }} {
@@ -145,32 +250,34 @@
 
   .blog-section-wrapper-{{ section.id }} .article-card {
     background: #ffffff !important;
-    border-radius: 16px !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
-    border: 1px solid #eeeeee !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+    border: 1px solid #EDEDED !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
     position: relative !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.2s ease !important;
     box-sizing: border-box !important;
   }
 
   .blog-section-wrapper-{{ section.id }} .article-card:hover {
-    transform: translateY(-8px) !important;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12) !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
     border-color: #E30613 !important;
   }
 
   .blog-section-wrapper-{{ section.id }} .card__inner {
     width: 100% !important;
-    height: 210px !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
     position: relative !important;
     overflow: hidden !important;
     display: block !important;
     flex-shrink: 0 !important;
     background: #f0f0f0 !important;
+    border-radius: 12px 12px 0 0 !important;
   }
 
   .blog-section-wrapper-{{ section.id }} .article-card__image-wrapper {
@@ -310,14 +417,14 @@
     gap: 10px !important;
   }
 
-  @media screen and (max-width: 900px) {
-    .blog-section-wrapper-{{ section.id }} .blog__posts {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 24px !important;
+  @media screen and (max-width: 989px) {
+    .blog-section-wrapper-{{ section.id }} .blog__post {
+      flex: 0 0 calc((100% - 24px) / 2) !important;
+      min-width: calc((100% - 24px) / 2) !important;
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 749px) {
     .blog-section-wrapper-{{ section.id }} {
       padding: 40px 16px !important;
     }
@@ -333,13 +440,9 @@
       margin-bottom: 0 !important;
     }
 
-    .blog-section-wrapper-{{ section.id }} .blog__posts {
-      grid-template-columns: 1fr !important;
-      gap: 20px !important;
-    }
-
-    .blog-section-wrapper-{{ section.id }} .card__inner {
-      height: 180px !important;
+    .blog-section-wrapper-{{ section.id }} .blog__post {
+      flex: 0 0 100% !important;
+      min-width: 100% !important;
     }
   }
 {%- endstyle -%}
@@ -376,52 +479,99 @@
       </div>
     {%- endunless -%}
 
-    <slider-component class="slider-mobile-gutter">
-      <ul
-        id="Slider-{{ section.id }}"
-        class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.blog_card_style == 'standard' %} contains-card--standard{% endif %} grid grid--peek slider slider--tablet"
-        role="list"
-      >
-        {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
-          {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
-            <li
-              id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width"
-            >
-              <div class="article-card-custom-wrapper-{{ section.id }}">
-                {%- liquid
-                  assign badge_text = "Lifestyle"
-                  if article.tags.size > 0
-                    assign badge_text = article.tags | first
-                  endif
-                -%}
-                <span class="article-category-badge-{{ section.id }}">{{ badge_text }}</span>
-                {% render 'article-card',
-                  blog: section.settings.blog,
-                  article: article,
-                  media_aspect_ratio: 1.66,
-                  show_image: section.settings.show_image,
-                  show_date: section.settings.show_date,
-                  show_author: section.settings.show_author,
-                  show_excerpt: true
-                %}
-              </div>
-            </li>
-          {%- endfor -%}
+    <blog-carousel class="blog-carousel-container-{{ section.id }}">
+      <div class="blog-carousel-wrapper-{{ section.id }}">
+        
+        <!-- Prev Button -->
+        <button class="blog-carousel-nav-btn-{{ section.id }} prev-btn" aria-label="Previous page" type="button">
+          <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+        </button>
 
-          {%- liquid
-            assign rendered_count = section.settings.blog.articles_count
-            if rendered_count > section.settings.post_limit
-              assign rendered_count = section.settings.post_limit
-            endif
-          -%}
-          {%- if rendered_count < 3 -%}
-            {%- for i in (rendered_count..2) -%}
-              {%- assign placeholder_image_index = forloop.index | modulo: 3 | plus: 1 -%}
+        <ul
+          id="Slider-{{ section.id }}"
+          class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.blog_card_style == 'standard' %} contains-card--standard{% endif %}"
+          role="list"
+        >
+          {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
+            {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
+              <li
+                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                class="blog__post grid__item article"
+              >
+                <div class="article-card-custom-wrapper-{{ section.id }}">
+                  {%- liquid
+                    assign badge_text = "Lifestyle"
+                    if article.tags.size > 0
+                      assign badge_text = article.tags | first
+                    endif
+                  -%}
+                  <span class="article-category-badge-{{ section.id }}">{{ badge_text }}</span>
+                  {% render 'article-card',
+                    blog: section.settings.blog,
+                    article: article,
+                    media_aspect_ratio: 1.777,
+                    show_image: section.settings.show_image,
+                    show_date: section.settings.show_date,
+                    show_author: section.settings.show_author,
+                    show_excerpt: true
+                  %}
+                </div>
+              </li>
+            {%- endfor -%}
+
+            {%- liquid
+              assign rendered_count = section.settings.blog.articles_count
+              if rendered_count > section.settings.post_limit
+                assign rendered_count = section.settings.post_limit
+              endif
+            -%}
+            {%- if rendered_count < 3 -%}
+              {%- for i in (rendered_count..2) -%}
+                {%- assign placeholder_image_index = forloop.index | modulo: 3 | plus: 1 -%}
+                {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
+                <li
+                  id="Slide-{{ section.id }}-placeholder-{{ i }}"
+                  class="blog__post grid__item article"
+                >
+                  <div class="article-card-custom-wrapper-{{ section.id }}">
+                    <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
+                    <div class="article-card-wrapper card-wrapper">
+                      <div class="card article-card card--standard">
+                        <div class="article-card__image-wrapper card__media">
+                          <div class="article-card__image media">
+                            {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
+                          </div>
+                        </div>
+                        <div class="card__content">
+                          <div class="card__information">
+                            <div class="article-card__info caption-with-letter-spacing h5">
+                              <span class="circle-divider">June 28, 2026</span>
+                              <span>inKitch Editorial</span>
+                            </div>
+                            <h3 class="card__heading h2">
+                              <a href="#" class="full-unstyled-link">
+                                Discover Premium Cookware Inspiration
+                              </a>
+                            </h3>
+                            <p class="article-card__excerpt rte-width">
+                              Explore our latest collections designed to elevate your everyday cooking experience with stylish, durable kitchen essentials.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              {%- endfor -%}
+            {%- endif -%}
+
+          {%- else -%}
+            {% for i in (1..section.settings.post_limit) -%}
+              {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
               {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
               <li
-                id="Slide-{{ section.id }}-placeholder-{{ i }}"
-                class="blog__post grid__item article slider__slide slider__slide--full-width"
+                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                class="blog__post grid__item article"
               >
                 <div class="article-card-custom-wrapper-{{ section.id }}">
                   <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
@@ -440,11 +590,11 @@
                           </div>
                           <h3 class="card__heading h2">
                             <a href="#" class="full-unstyled-link">
-                              Discover Premium Cookware Inspiration
+                              {{ 'sections.featured_blog.onboarding_title' | t }}
                             </a>
                           </h3>
                           <p class="article-card__excerpt rte-width">
-                            Explore our latest collections designed to elevate your everyday cooking experience with stylish, durable kitchen essentials.
+                            {{ 'sections.featured_blog.onboarding_content' | t }}
                           </p>
                         </div>
                       </div>
@@ -454,48 +604,17 @@
               </li>
             {%- endfor -%}
           {%- endif -%}
+        </ul>
 
-        {%- else -%}
-          {% for i in (1..section.settings.post_limit) -%}
-            {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
-            {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
-            <li
-              id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width"
-            >
-              <div class="article-card-custom-wrapper-{{ section.id }}">
-                <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
-                <div class="article-card-wrapper card-wrapper">
-                  <div class="card article-card card--standard">
-                    <div class="article-card__image-wrapper card__media">
-                      <div class="article-card__image media">
-                        {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
-                      </div>
-                    </div>
-                    <div class="card__content">
-                      <div class="card__information">
-                        <div class="article-card__info caption-with-letter-spacing h5">
-                          <span class="circle-divider">June 28, 2026</span>
-                          <span>inKitch Editorial</span>
-                        </div>
-                        <h3 class="card__heading h2">
-                          <a href="#" class="full-unstyled-link">
-                            {{ 'sections.featured_blog.onboarding_title' | t }}
-                          </a>
-                        </h3>
-                        <p class="article-card__excerpt rte-width">
-                          {{ 'sections.featured_blog.onboarding_content' | t }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          {%- endfor -%}
-        {%- endif -%}
-      </ul>
-    </slider-component>
+        <!-- Next Button -->
+        <button class="blog-carousel-nav-btn-{{ section.id }} next-btn" aria-label="Next page" type="button">
+          <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+        </button>
+
+      </div>
+
+      <div class="blog-carousel-dots"></div>
+    </blog-carousel>
   </div>
 </div>
 
@@ -548,6 +667,126 @@
         initBlogSection();
       }
     });
+
+    // Custom element definition for the Carousel slider
+    class BlogCarousel extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.grid = this.querySelector('.blog__posts');
+        this.prevBtn = this.querySelector('.prev-btn');
+        this.nextBtn = this.querySelector('.next-btn');
+        this.dotsContainer = this.querySelector('.blog-carousel-dots');
+
+        if (!this.grid || !this.prevBtn || !this.nextBtn) return;
+
+        this.setupNavigation();
+        this.setupDots();
+      }
+
+      getScrollAmount() {
+        const slides = this.grid.querySelectorAll('.blog__post');
+        if (slides.length > 1) {
+          return slides[1].offsetLeft - slides[0].offsetLeft;
+        }
+        const slide = this.grid.querySelector('.blog__post');
+        if (slide) {
+          return slide.clientWidth;
+        }
+        return this.grid.clientWidth;
+      }
+
+      setupNavigation() {
+        this.prevBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.grid.scrollBy({ left: -this.getScrollAmount(), behavior: 'smooth' });
+        });
+
+        this.nextBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.grid.scrollBy({ left: this.getScrollAmount(), behavior: 'smooth' });
+        });
+
+        const onScroll = () => {
+          const scrollLeft = this.grid.scrollLeft;
+          const maxScrollLeft = this.grid.scrollWidth - this.grid.clientWidth;
+
+          this.prevBtn.style.opacity = scrollLeft <= 5 ? '0.3' : '1';
+          this.prevBtn.style.pointerEvents = scrollLeft <= 5 ? 'none' : 'auto';
+
+          this.nextBtn.style.opacity = scrollLeft >= maxScrollLeft - 5 ? '0.3' : '1';
+          this.nextBtn.style.pointerEvents = scrollLeft >= maxScrollLeft - 5 ? 'none' : 'auto';
+
+          this.updateActiveDot();
+        };
+
+        this.grid.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', () => {
+          this.setupDots();
+          onScroll();
+        });
+
+        setTimeout(onScroll, 100);
+      }
+
+      setupDots() {
+        if (!this.dotsContainer) return;
+        this.dotsContainer.innerHTML = '';
+
+        const slides = this.grid.querySelectorAll('.blog__post');
+        const visibleCount = this.getVisibleCount();
+        const dotCount = Math.max(1, slides.length - visibleCount + 1);
+
+        if (slides.length <= visibleCount) {
+          this.dotsContainer.style.display = 'none';
+          return;
+        } else {
+          this.dotsContainer.style.display = 'flex';
+        }
+
+        for (let i = 0; i < dotCount; i++) {
+          const dot = document.createElement('button');
+          dot.className = 'blog-carousel-dot';
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetX = i * this.getScrollAmount();
+            this.grid.scrollTo({ left: targetX, behavior: 'smooth' });
+          });
+          this.dotsContainer.appendChild(dot);
+        }
+
+        this.updateActiveDot();
+      }
+
+      getVisibleCount() {
+        if (window.innerWidth >= 990) return 3;
+        if (window.innerWidth >= 750) return 2;
+        return 1;
+      }
+
+      updateActiveDot() {
+        if (!this.dotsContainer) return;
+        const scrollLeft = this.grid.scrollLeft;
+        const scrollAmount = this.getScrollAmount();
+        const activeIndex = Math.round(scrollLeft / scrollAmount);
+
+        const dots = this.dotsContainer.querySelectorAll('.blog-carousel-dot');
+        dots.forEach((dot, index) => {
+          if (index === activeIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    if (!customElements.get('blog-carousel')) {
+      customElements.define('blog-carousel', BlogCarousel);
+    }
   })();
 </script>
 

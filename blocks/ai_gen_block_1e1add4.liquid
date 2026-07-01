@@ -95,6 +95,13 @@
     overflow: hidden;
   }
 
+  @media screen and (max-width: 749px){
+      .ai-latest-deals__image-wrapper-{{ ai_gen_id }} {
+    height: 250px;
+  }
+
+  }
+
   .ai-latest-deals__badge-{{ ai_gen_id }} {
     position: absolute;
     top: 12px;
@@ -182,6 +189,19 @@
     color: #E30613;
     line-height: 1.1;
     margin-left: 2px;
+  }
+
+  @media only screen and (max-width: 749px){
+ .ai-latest-deals__discount-off-{{ ai_gen_id }} {
+    font-size: 16px;
+ }
+   .ai-latest-deals__discount-symbol-{{ ai_gen_id }} {
+    font-size: 14px;
+   }
+     .ai-latest-deals__discount-number-{{ ai_gen_id }} {
+    font-size: 24px;
+     }
+ 
   }
 
   .ai-latest-deals__description-{{ ai_gen_id }} {

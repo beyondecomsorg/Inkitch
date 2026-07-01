@@ -1,0 +1,208 @@
+{% doc %}
+  @prompt
+    Create a new Shopify OS 2.0 section named "Responsive Banner".
+    
+    Requirements:
+    
+    Add separate image picker settings for:
+    Desktop Banner Image
+    Mobile Banner Image
+    Display the desktop image on screens larger than 749px.
+    Display the mobile image on screens 749px and below.
+    If the mobile image is not uploaded, automatically use the desktop image on mobile.
+    The banner image should be full width (100%).
+    Images should use image_url and image_tag for optimized loading.
+    Add a setting for Banner Link (URL). If provided, the entire banner should be clickable.
+    Add Alt Text setting for accessibility.
+    Add an option to enable/disable lazy loading.
+    The section should have no external dependencies and use only Liquid, HTML, and CSS.
+    Ensure the images are responsive without distortion (object-fit: cover where appropriate).
+    Include proper Shopify schema with all settings and a preset named "Responsive Banner".
+    Follow Shopify Theme Store coding standards and write clean, well-commented code.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-responsive-banner-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+  }
+
+  .ai-responsive-banner-link-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .ai-responsive-banner-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .ai-responsive-banner-desktop-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-responsive-banner-mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-responsive-banner-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-responsive-banner-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+{% endstyle %}
+
+<responsive-banner-{{ ai_gen_id }} class="ai-responsive-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.banner_link != blank %}
+    <a href="{{ block.settings.banner_link }}" class="ai-responsive-banner-link-{{ ai_gen_id }}">
+  {% endif %}
+
+  {% if block.settings.desktop_image != blank %}
+    <div class="ai-responsive-banner-desktop-{{ ai_gen_id }}">
+      {% if block.settings.enable_lazy_loading %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          loading="lazy"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if block.settings.mobile_image != blank %}
+    <div class="ai-responsive-banner-mobile-{{ ai_gen_id }}">
+      {% if block.settings.enable_lazy_loading %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          loading="lazy"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+    </div>
+  {% elsif block.settings.desktop_image != blank %}
+    <div class="ai-responsive-banner-mobile-{{ ai_gen_id }}">
+      {% if block.settings.enable_lazy_loading %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          loading="lazy"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.alt_text | escape }}"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          class="ai-responsive-banner-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if block.settings.banner_link != blank %}
+    </a>
+  {% endif %}
+</responsive-banner-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ResponsiveBanner{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('responsive-banner-{{ ai_gen_id }}', ResponsiveBanner{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Responsive banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop banner image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile banner image"
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Alt text",
+      "default": "Banner image"
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "url",
+      "id": "banner_link",
+      "label": "Banner link"
+    },
+    {
+      "type": "header",
+      "content": "Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lazy_loading",
+      "label": "Enable lazy loading",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Responsive banner"
+    }
+  ]
+}
+{% endschema %}

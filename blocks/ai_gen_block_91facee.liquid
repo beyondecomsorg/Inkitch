@@ -156,60 +156,26 @@
   .ai-marketplace-carousel-wrapper-{{ ai_gen_id }} {
     position: relative !important;
     width: 100% !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
     padding: 10px 0 !important;
+    box-sizing: border-box !important;
   }
 
-  /* Fade out edges on wrapper */
-  .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    width: 80px !important;
-    background: linear-gradient(to right, #fafafa, transparent) !important;
-    z-index: 2 !important;
-    pointer-events: none !important;
-  }
-
+  /* Remove edge fades */
+  .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}::before,
   .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}::after {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 80px !important;
-    background: linear-gradient(to left, #fafafa, transparent) !important;
-    z-index: 2 !important;
-    pointer-events: none !important;
-  }
-
-  /* Hide old separate fade divs */
-  .ai-marketplace-fade-left-{{ ai_gen_id }},
-  .ai-marketplace-fade-right-{{ ai_gen_id }} {
+    content: none !important;
     display: none !important;
   }
 
+  /* Center track and row spacing */
   .ai-marketplace-carousel-track-{{ ai_gen_id }} {
-    display: inline-flex !important;
-    gap: 24px !important;
-    animation: marquee-{{ ai_gen_id }} 20s linear infinite !important;
-    width: max-content !important;
-  }
-
-  .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}:hover .ai-marketplace-carousel-track-{{ ai_gen_id }} {
-    animation-play-state: paused !important;
-  }
-
-  @keyframes marquee-{{ ai_gen_id }} {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 32px !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .ai-marketplace-card-{{ ai_gen_id }} {
@@ -292,6 +258,14 @@
     color: #E30613 !important;
   }
 
+  @media screen and (max-width: 768px) {
+    .ai-marketplace-carousel-track-{{ ai_gen_id }} {
+      flex-wrap: wrap !important;
+      gap: 16px !important;
+      justify-content: center !important;
+    }
+  }
+
   @media screen and (max-width: 600px) {
     .ai-marketplace-showcase-{{ ai_gen_id }} {
       padding: 40px 16px !important;
@@ -312,11 +286,6 @@
     .ai-marketplace-name-{{ ai_gen_id }} {
       font-size: 11px !important;
     }
-
-    .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}::before,
-    .ai-marketplace-carousel-wrapper-{{ ai_gen_id }}::after {
-      width: 40px !important;
-    }
   }
 {% endstyle %}
 
@@ -333,53 +302,6 @@
 
   <div class="ai-marketplace-carousel-wrapper-{{ ai_gen_id }}">
     <div class="ai-marketplace-carousel-track-{{ ai_gen_id }}">
-      {% for i in (1..8) %}
-        {% liquid
-          assign name_key = 'marketplace_' | append: i | append: '_name'
-          assign logo_key = 'marketplace_' | append: i | append: '_logo'
-          assign url_key = 'marketplace_' | append: i | append: '_url'
-          assign enabled_key = 'marketplace_' | append: i | append: '_enabled'
-
-          assign marketplace_name = block.settings[name_key]
-          assign marketplace_logo = block.settings[logo_key]
-          assign marketplace_url = block.settings[url_key]
-          assign marketplace_enabled = block.settings[enabled_key]
-        %}
-
-        {% if marketplace_enabled %}
-          <a
-            href="{{ marketplace_url }}"
-            class="ai-marketplace-card-{{ ai_gen_id }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Shop on {{ marketplace_name | escape }}"
-            {% if marketplace_name != blank %}
-              aria-label="{{ marketplace_name }}"
-            {% endif %}
-          >
-            <div class="ai-marketplace-logo-wrapper-{{ ai_gen_id }}">
-              {% if marketplace_logo %}
-                <img
-                  src="{{ marketplace_logo | image_url: width: 160 }}"
-                  alt="{{ marketplace_name | escape }}"
-                  class="ai-marketplace-logo-{{ ai_gen_id }}"
-                  loading="lazy"
-                  width="80"
-                  height="80"
-                >
-              {% else %}
-                <div class="ai-marketplace-logo-placeholder-{{ ai_gen_id }}">
-                  {{ 'image' | placeholder_svg_tag }}
-                </div>
-              {% endif %}
-            </div>
-            {% if marketplace_name != blank %}
-              <p class="ai-marketplace-name-{{ ai_gen_id }}">{{ marketplace_name }}</p>
-            {% endif %}
-          </a>
-        {% endif %}
-      {% endfor %}
-
       {% for i in (1..8) %}
         {% liquid
           assign name_key = 'marketplace_' | append: i | append: '_name'

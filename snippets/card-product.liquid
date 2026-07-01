@@ -160,11 +160,13 @@
               {{ card_product.title | escape }}
             </a>
           </h3>
+          {% comment %}
           {% if card_product.metafields.custom.subtitle != blank %}
   <div class="card-product__subtitle" style="font-size:0.8rem !important; line-height:1.35 !important; color:#6b6b6b !important; font-weight:400 !important; margin-top:4px; text-transform:none !important;">
     {{ card_product.metafields.custom.subtitle }}
   </div>
 {% endif %}
+{% endcomment %}
 <!-- Start of Judge.me code -->
 <div class='jdgm-widget jdgm-preview-badge' data-id='{{ card_product.id }}'>
   {{ card_product.metafields.judgeme.badge }}

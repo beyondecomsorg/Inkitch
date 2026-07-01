@@ -3720,8 +3720,8 @@ details-disclosure > details {
   flex: none !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 52px !important;
-  padding: 14px 16px !important;
+  min-height: 40px;
+  padding: 14px 16px;
   font-size: 1rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.03em !important;
@@ -3742,10 +3742,24 @@ details-disclosure > details {
   background: #C8102E !important;
   color: #ffffff !important;
 }
+.shopify-payment-button__button--unbranded,
+button#checkout{
+    background: #f60000 !important;
+  color: #ffffff !important;
+  border: none;
+}
+.shopify-payment-button__button--unbranded:after,
+button#checkout {
+  box-shadow: none;
+}
+.product__title h1{
+ font-size: 34px;
+}
+
 /* Align card content full-width, left-edge to right-edge of image */
 .card-wrapper .card__content {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-left: 5px ;
+  padding-right: 5px;
 }
 .card-wrapper .card__information {
   padding-left: 0 !important;
@@ -3783,7 +3797,27 @@ details-disclosure > details {
   margin-right: 0 !important;
   box-sizing: border-box !important;
 }
-.card-wrapper .card__content {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+a.full-unstyled-link {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    min-height: 3em;
+    max-height: 3em;
+    text-transform: uppercase;
+    min-height: 40px !important;
+}
+body a.cart-btn.choose-btn,
+.custom-product-buttons .button.cart-btn{
+  padding: 0 !important;
+  min-height: 40px !important;
+}
+.card--card .quick-add{
+  margin: 0 !important;
+}
+li.grid__item.scroll-trigger.animate--slide-in {
+    border: 0.5px solid #e0e0e0;
+
 }

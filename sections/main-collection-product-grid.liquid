@@ -23,708 +23,87 @@
 {%- endif -%}
 
 {%- style -%}
-  /* Hide Dawn's default collection hero banner completely */
-  .collection-hero {
-    display: none !important;
-  }
-
-  .collection-page-wrapper-custom {
-    background-color: #fafafa !important;
-    padding: 32px 24px 60px 24px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Breadcrumb */
-  .collection-breadcrumb-custom {
-    font-size: 12px !important;
-    color: #aaaaaa !important;
-    margin-bottom: 12px !important;
-    text-transform: none !important;
-    text-align: left !important;
-  }
-
-  .collection-breadcrumb-custom a {
-    color: #aaaaaa !important;
-    text-decoration: none !important;
-  }
-
-  .collection-breadcrumb-custom a:hover {
-    text-decoration: underline !important;
-    color: #333333 !important;
-  }
-
-  .breadcrumb-separator-custom {
-    color: #E30613 !important;
-    margin: 0 4px !important;
-  }
-
-  .breadcrumb-current-custom {
-    color: #333333 !important;
-    font-weight: 600 !important;
-  }
-
-  /* Collection Header */
-  .collection-header-custom {
-    margin-bottom: 28px !important;
-    text-align: left !important;
-  }
-
-  .collection-title-custom {
-    font-size: 32px !important;
-    font-weight: 800 !important;
-    color: #111111 !important;
-    margin: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    line-height: 1.2 !important;
-  }
-
-  .collection-count-badge-custom {
-    background: #f0f0f0 !important;
-    color: #555555 !important;
-    border-radius: 20px !important;
-    padding: 4px 12px !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    margin-left: 12px !important;
-    vertical-align: middle !important;
-    line-height: 1 !important;
-    display: inline-block !important;
-  }
-
-  .collection-title-accent-custom {
-    width: 60px !important;
-    height: 3px !important;
-    background-color: #E30613 !important;
-    margin-top: 10px !important;
-  }
-
-  /* Filter & Sort Bar Wrapper styling */
-  .facets-horizontal-custom,
-  .facets-vertical,
-  .facets-wrapper {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .facets-vertical .facets-wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .facets-vertical #ProductGridContainer {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-  }
-
-  /* Filter container background and border styling */
-  .facets-container,
-  .facets {
-    background: #ffffff !important;
-    border: 1px solid #eeeeee !important;
-    border-radius: 10px !important;
-    padding: 12px 20px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    margin-bottom: 28px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
-  }
-
-  .facets__form {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    gap: 20px !important;
-  }
-
-  .facets__wrapper {
-    display: flex !important;
-    align-items: center !important;
-    gap: 16px !important;
-    flex-wrap: wrap !important;
-  }
-
-  .facets__label {
-    font-weight: 700 !important;
-    color: #111111 !important;
-    font-size: 13px !important;
-    margin: 0 !important;
-    text-transform: none !important;
-  }
-
-  /* Filter summary dropdowns */
-  .facets__disclosure {
-    margin: 0 !important;
-  }
-
-  .facets__summary {
-    border: 1.5px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    padding: 8px 14px !important;
-    font-size: 13px !important;
-    color: #333333 !important;
-    background: #ffffff !important;
-    cursor: pointer !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    transition: border-color 0.2s ease !important;
-    box-shadow: none !important;
-  }
-
-  .facets__summary:focus,
-  .facets__summary:hover,
-  .facets__disclosure[open] .facets__summary {
-    border-color: #E30613 !important;
-    outline: none !important;
-  }
-
-  /* Sort field styling */
-  .facet-filters__field {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  .facet-filters__label {
-    font-weight: 700 !important;
-    color: #111111 !important;
-    font-size: 13px !important;
-    margin: 0 !important;
-  }
-
-  .facet-filters__sort {
-    border: 1.5px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    padding: 8px 14px !important;
-    font-size: 13px !important;
-    color: #333333 !important;
-    background: #ffffff !important;
-    cursor: pointer !important;
-    transition: border-color 0.2s ease !important;
-    outline: none !important;
-  }
-
-  .facet-filters__sort:focus,
-  .facet-filters__sort:hover {
-    border-color: #E30613 !important;
-  }
-
-  /* Active Filter Pills */
-  .active-facets {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    margin-bottom: 20px !important;
-  }
-
-  .active-facets__button {
-    background: #fff0f0 !important;
-    color: #E30613 !important;
-    border: 1px solid #E30613 !important;
-    border-radius: 20px !important;
-    padding: 4px 12px !important;
-    font-size: 12px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .active-facets__button:hover {
-    background: #E30613 !important;
-    color: #ffffff !important;
-  }
-
-  .active-facets__button svg {
-    width: 8px !important;
-    height: 8px !important;
-    fill: currentColor !important;
-  }
-
-  /* Product Grid Layout overrides */
-  #product-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 28px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    list-style: none !important;
-  }
-
-  /* Custom Card Styles */
-  .template-collection .card-wrapper {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    height: 100% !important;
-  }
-
-  .template-collection .card {
-    background: #ffffff !important;
-    border-radius: 16px !important;
-    border: 1px solid #f0f0f0 !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    transition: all 0.3s ease !important;
-    position: relative !important;
-  }
-
-  .template-collection .card-wrapper:hover .card {
-    transform: translateY(-8px) !important;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12) !important;
-    border-color: #E30613 !important;
-  }
-
-  /* Product Image Area */
-  .template-collection .card__inner {
-    background: #f8f8f8 !important;
-    height: 260px !important;
-    width: 100% !important;
-    position: relative !important;
-    overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-  }
-
-  .template-collection .card__media {
-    background: transparent !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .template-collection .media {
-    background: transparent !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .template-collection .media img {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    width: auto !important;
-    height: auto !important;
-    object-fit: contain !important;
-    position: static !important;
-    transition: transform 0.4s ease !important;
-  }
-
-  .template-collection .card-wrapper:hover .media img {
-    transform: scale(1.05) !important;
-  }
-
-  /* Custom Badges */
-  .custom-sale-badge {
-    position: absolute !important;
-    top: 12px !important;
-    left: 12px !important;
-    z-index: 5 !important;
-    background: #E30613 !important;
-    color: #ffffff !important;
-    border-radius: 6px !important;
-    padding: 4px 10px !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    box-shadow: 0 2px 6px rgba(227,6,19,0.3) !important;
-    text-transform: uppercase !important;
-    pointer-events: none !important;
-    line-height: 1.2 !important;
-  }
-
-  .custom-savings-badge {
-    position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    z-index: 5 !important;
-    background: #fff0f0 !important;
-    color: #E30613 !important;
-    border-radius: 6px !important;
-    padding: 4px 8px !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    pointer-events: none !important;
-    line-height: 1.2 !important;
-  }
-
-  /* Quick View Button */
-  .custom-quick-view-btn {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 5 !important;
-    background: rgba(0,0,0,0.75) !important;
-    color: #ffffff !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    text-align: center !important;
-    padding: 10px 0 !important;
-    border: none !important;
-    cursor: pointer !important;
-    transform: translateY(100%) !important;
-    transition: transform 0.3s ease !important;
-  }
-
-  .card-wrapper:hover .custom-quick-view-btn {
-    transform: translateY(0) !important;
-  }
-
-  /* Card Body styling */
-  .template-collection .card__content {
-    padding: 16px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    box-sizing: border-box !important;
-    flex-grow: 1 !important;
-  }
-
-  .template-collection .card__information {
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    margin: 0 !important;
-  }
-
-  /* Title */
-  .template-collection .card__heading {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    margin-bottom: 6px !important;
-    line-height: 1.4 !important;
-  }
-
-  .template-collection .card__heading a {
-    color: #1a1a1a !important;
-    transition: color 0.3s ease !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: normal !important;
-  }
-
-  .card-wrapper:hover .card__heading a {
-    color: #E30613 !important;
-  }
-
-  /* Subtitle */
-  .template-collection .card-product__subtitle {
-    font-size: 12px !important;
-    color: #999999 !important;
-    line-height: 1.5 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 1 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    margin-bottom: 10px !important;
-  }
-
-  /* Price */
-  .template-collection .price {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    flex-wrap: wrap !important;
-    font-size: 16px !important;
-    margin: 0 !important;
-  }
-
-  .template-collection .price .price-item--regular {
-    color: #bbbbbb !important;
-    text-decoration: line-through !important;
-    font-size: 13px !important;
-  }
-
-  .template-collection .price .price-item--sale {
-    color: #E30613 !important;
-    font-weight: 700 !important;
-    font-size: 16px !important;
-  }
-
-  .custom-savings-pill {
-    background: #fff0f0 !important;
-    color: #E30613 !important;
-    border-radius: 12px !important;
-    padding: 2px 8px !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    display: inline-block !important;
-  }
-
-  /* Hide standard badge elements */
-  .template-collection .card__badge {
-    display: none !important;
-  }
-
-  /* Add to Cart Button override */
-  .template-collection .quick-add {
-    margin-top: auto !important;
-    width: 100% !important;
-    display: block !important;
-  }
-
-  .template-collection .quick-add button,
-  .template-collection .quick-add a {
-    width: 100% !important;
-    padding: 10px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    border: 2px solid #E30613 !important;
-    color: #E30613 !important;
-    background: #ffffff !important;
-    border-radius: 8px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    box-shadow: none !important;
-    margin-top: 12px !important;
-  }
-
-  .template-collection .quick-add button::before {
-    content: "🛒" !important;
-    font-size: 14px !important;
-  }
-
-  .template-collection .quick-add button:hover,
-  .template-collection .quick-add a:hover {
-    background: #E30613 !important;
-    color: #ffffff !important;
-  }
-
-  /* Empty State illustration */
-  .collection-empty-wrapper-custom {
-    text-align: center !important;
-    padding: 60px 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .collection-empty-icon-custom {
-    width: 64px !important;
-    height: 64px !important;
-    margin-bottom: 20px !important;
-    border: 3px solid #E30613 !important;
-    border-radius: 8px !important;
-    position: relative !important;
-  }
-
-  .collection-empty-icon-custom::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 10% !important;
-    right: 10% !important;
-    height: 3px !important;
-    background: #E30613 !important;
-    transform: translateY(-50%) !important;
-  }
-
-  .collection-empty-title-custom {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #111111 !important;
-    margin: 0 0 8px 0 !important;
-  }
-
-  .collection-empty-subtitle-custom {
-    font-size: 14px !important;
-    color: #666666 !important;
-    margin: 0 0 20px 0 !important;
-  }
-
-  .collection-empty-button-custom {
-    border: 2px solid #E30613 !important;
-    color: #E30613 !important;
-    background: #ffffff !important;
-    border-radius: 8px !important;
-    padding: 10px 24px !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-    display: inline-block !important;
-  }
-
-  .collection-empty-button-custom:hover {
-    background: #E30613 !important;
-    color: #ffffff !important;
-  }
-
-  /* Pagination styles */
-  .pagination__list {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 40px 0 0 0 !important;
-  }
-
-  .pagination__list li {
-    margin: 0 !important;
-  }
-
-  .pagination__list a,
-  .pagination__list span {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 8px !important;
-    border: 1px solid #e0e0e0 !important;
-    color: #555555 !important;
-    font-size: 14px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease !important;
-    background: #ffffff !important;
-    box-sizing: border-box !important;
-    padding: 0 !important;
-  }
-
-  .pagination__list .pagination__item--current {
-    background: #E30613 !important;
-    color: #ffffff !important;
-    border-color: #E30613 !important;
-  }
-
-  .pagination__list a:hover {
-    border-color: #E30613 !important;
-    color: #E30613 !important;
-  }
-
-  /* Entrance Animation reveals */
-  .template-collection #product-grid .grid__item {
-    width: 100% !important;
-    max-width: 100% !important;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.4s ease, transform 0.4s ease !important;
-  }
-
-  .template-collection #product-grid .grid__item.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media screen and (max-width: 990px) {
-    #product-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 20px !important;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    .collection-page-wrapper-custom {
-      padding: 24px 16px 40px 16px !important;
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    #product-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 12px !important;
-    }
-
-    .template-collection .card__inner {
-      height: 180px !important;
-      padding: 12px !important;
-    }
-
-    .custom-quick-view-btn {
-      display: none !important;
-    }
-
-    .template-collection .card__heading {
-      font-size: 13px !important;
-    }
-
-    .template-collection .price .price-item--sale {
-      font-size: 14px !important;
-    }
-
-    .template-collection .quick-add button,
-    .template-collection .quick-add a {
-      font-size: 12px !important;
-      padding: 8px !important;
-    }
-
-    .custom-sale-badge,
-    .custom-savings-badge {
-      font-size: 9px !important;
-      padding: 3px 6px !important;
-      top: 8px !important;
-    }
-    
-    .custom-sale-badge {
-      left: 8px !important;
-    }
-    
-    .custom-savings-badge {
-      right: 8px !important;
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
 
-<div class="collection-page-wrapper-custom section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
-  <div class="collection-breadcrumb-custom page-width">
-    <a href="{{ routes.root_url }}">Home</a>
-    <span class="breadcrumb-separator-custom"> &gt; </span>
-    <a href="/collections">Collections</a>
-    <span class="breadcrumb-separator-custom"> &gt; </span>
-    <span class="breadcrumb-current-custom">{{ collection.title }}</span>
-  </div>
-
-  <div class="collection-header-custom page-width">
-    <h1 class="collection-title-custom">
-      {{ collection.title }}
-      <span class="collection-count-badge-custom">
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'Product', 'Products' }}
-      </span>
-    </h1>
-    <div class="collection-title-accent-custom"></div>
-  </div>
-
+<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
-    <div class="facets-horizontal-custom page-width">
+    {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
+    {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
+      <facet-filters-form class="facets facets-vertical-sort page-width small-hide">
+        <form class="facets-vertical-form" id="FacetSortForm">
+          <div class="facet-filters sorting caption">
+            <div class="facet-filters__field">
+              <h2 class="facet-filters__label caption-large text-body">
+                <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+              </h2>
+              <div class="select">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <select
+                  name="sort_by"
+                  class="facet-filters__sort select__select caption-large"
+                  id="SortBy"
+                  aria-describedby="a11y-refresh-page-message"
+                >
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value | escape }}"
+                      {% if option.value == sort_by %}
+                        selected="selected"
+                      {% endif %}
+                    >
+                      {{ option.name | escape }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <span class="svg-wrapper">
+                  {{- 'icon-caret.svg' | inline_asset_content -}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-count-vertical light" role="status">
+            <h2 class="product-count__text text-body">
+              <span id="ProductCountDesktop">
+                {%- if collection.results_count -%}
+                  {{
+                    'templates.search.results_with_count'
+                    | t: terms: collection.terms, count: collection.results_count
+                  }}
+                {%- elsif collection.products_count == collection.all_products_count -%}
+                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+                {%- else -%}
+                  {{
+                    'products.facets.product_count'
+                    | t: product_count: collection.products_count, count: collection.all_products_count
+                  }}
+                {%- endif -%}
+              </span>
+            </h2>
+            {%- render 'loading-spinner' -%}
+          </div>
+        </form>
+      </facet-filters-form>
+    {%- endif -%}
+
+    <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
         <aside
           aria-labelledby="verticalTitle"
-          class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %} page-width"
+          class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
           id="main-collection-filters"
           data-id="{{ section.id }}"
         >
@@ -732,7 +111,7 @@
             results: collection,
             enable_filtering: section.settings.enable_filtering,
             enable_sorting: section.settings.enable_sorting,
-            filter_type: 'horizontal',
+            filter_type: section.settings.filter_type,
             paginate: paginate
           %}
         </aside>
@@ -748,20 +127,20 @@
         {%- if collection.products.size == 0 -%}
           <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
             <div class="loading-overlay gradient"></div>
-            <div class="title-wrapper center collection-empty-wrapper-custom">
-              <div class="collection-empty-icon-custom"></div>
-              <h2 class="title title--primary collection-empty-title-custom">
-                No products found
+            <div class="title-wrapper center">
+              <h2 class="title title--primary">
+                {{ 'sections.collection_template.empty' | t -}}
+                <br>
+                {{
+                  'sections.collection_template.use_fewer_filters_html'
+                  | t: link: collection.url, class: 'underlined-link link'
+                }}
               </h2>
-              <p class="collection-empty-subtitle-custom">Try adjusting your filters</p>
-              <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="collection-empty-button-custom">
-                Clear Filters
-              </a>
             </div>
           </div>
         {%- else -%}
           <div
-            class="collection page-width"
+            class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
           >
             <div class="loading-overlay gradient"></div>
             <ul
@@ -815,113 +194,6 @@
     {{ 'mask-arch.svg' | inline_asset_content }}
   {%- endif -%}
 </div>
-
-<script>
-  (function() {
-    function initCollectionGrid() {
-      const container = document.getElementById('ProductGridContainer');
-      if (!container) return;
-
-      // 1. Stagger entrance animation
-      const items = container.querySelectorAll('#product-grid .grid__item');
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              items.forEach((item, index) => {
-                setTimeout(() => {
-                  item.classList.add('is-visible');
-                }, index * 80);
-              });
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.05 });
-        const grid = container.querySelector('#product-grid');
-        if (grid) observer.observe(grid);
-      } else {
-        items.forEach(item => item.classList.add('is-visible'));
-      }
-
-      // 2. Setup card enhancements (Sale, Savings badge, Quick View)
-      const cards = container.querySelectorAll('.card-wrapper');
-      cards.forEach(card => {
-        const comparePriceEl = card.querySelector('.price__compare .price-item--regular');
-        const salePriceEl = card.querySelector('.price__sale .price-item--sale');
-        
-        if (comparePriceEl && salePriceEl) {
-          const comparePriceText = comparePriceEl.innerText.replace(/[^0-9.]/g, '');
-          const salePriceText = salePriceEl.innerText.replace(/[^0-9.]/g, '');
-          const compareVal = parseFloat(comparePriceText);
-          const saleVal = parseFloat(salePriceText);
-          
-          if (compareVal > saleVal && compareVal > 0) {
-            const savingsPercent = Math.round(((compareVal - saleVal) / compareVal) * 100);
-            
-            // Add sale badge
-            if (!card.querySelector('.custom-sale-badge')) {
-              const saleBadge = document.createElement('div');
-              saleBadge.className = 'custom-sale-badge';
-              saleBadge.innerText = 'SALE';
-              const cardInner = card.querySelector('.card__inner');
-              if (cardInner) cardInner.appendChild(saleBadge);
-            }
-            
-            // Add savings badge
-            if (!card.querySelector('.custom-savings-badge')) {
-              const savingsBadge = document.createElement('div');
-              savingsBadge.className = 'custom-savings-badge';
-              savingsBadge.innerText = `${savingsPercent}% OFF`;
-              const cardInner = card.querySelector('.card__inner');
-              if (cardInner) cardInner.appendChild(savingsBadge);
-            }
-
-            // Add savings pill in price container
-            const priceContainer = card.querySelector('.price');
-            if (priceContainer && !card.querySelector('.custom-savings-pill')) {
-              const savingsPill = document.createElement('span');
-              savingsPill.className = 'custom-savings-pill';
-              savingsPill.innerText = `Save ${savingsPercent}%`;
-              priceContainer.appendChild(savingsPill);
-            }
-          }
-        }
-        
-        // Add Quick View button
-        if (!card.querySelector('.custom-quick-view-btn')) {
-          const quickAddBtn = card.querySelector('.quick-add button');
-          if (quickAddBtn) {
-            const quickViewBtn = document.createElement('button');
-            quickViewBtn.className = 'custom-quick-view-btn';
-            quickViewBtn.innerHTML = '👁 Quick View';
-            quickViewBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              quickAddBtn.click();
-            });
-            const cardInner = card.querySelector('.card__inner');
-            if (cardInner) cardInner.appendChild(quickViewBtn);
-          }
-        }
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCollectionGrid);
-    } else {
-      initCollectionGrid();
-    }
-
-    // Set up MutationObserver to rerun when the product grid changes (after AJAX filter)
-    const target = document.getElementById('ProductGridContainer');
-    if (target) {
-      const observer = new MutationObserver((mutations) => {
-        initCollectionGrid();
-      });
-      observer.observe(target, { childList: true, subtree: true });
-    }
-  })();
-</script>
 
 {% schema %}
 {

@@ -9,42 +9,25 @@
  */
 {
   "sections": {
-    "slideshow_XzH4mh": {
-      "type": "slideshow",
+    "178281114959f16150": {
+      "type": "_blocks",
       "blocks": {
-        "slide_rQW8kB": {
-          "type": "slide",
+        "ai_gen_block_13c08f3_FxWPLk": {
+          "type": "ai_gen_block_13c08f3",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.webp",
-            "image_overlay_opacity": 0,
-            "heading": "",
-            "heading_size": "h1",
-            "subheading": "",
-            "button_label": "",
-            "link": "",
-            "button_style_secondary": false,
-            "show_text_box": false,
-            "box_align": "middle-center",
-            "text_alignment": "center",
-            "text_alignment_mobile": "center",
-            "color_scheme": ""
-          }
+            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.webp",
+            "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
+            "alt_text": "Banner image",
+            "banner_link": "",
+            "enable_lazy_loading": true
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "slide_rQW8kB"
+        "ai_gen_block_13c08f3_FxWPLk"
       ],
-      "name": "t:sections.slideshow.presets.name",
-      "settings": {
-        "layout": "full_bleed",
-        "slide_height": "medium",
-        "slider_visual": "counter",
-        "auto_rotate": false,
-        "change_slides_speed": 5,
-        "image_behavior": "none",
-        "show_text_below": true,
-        "accessibility_info": "Slideshow about our brand"
-      }
+      "settings": {}
     },
     "177687342526c3aeca": {
       "type": "_blocks",
@@ -195,7 +178,7 @@
             "text_alignment": "center",
             "desktop_width_percent": 100,
             "padding_top": 40,
-            "padding_bottom": 40,
+            "padding_bottom": 0,
             "text_color": "#121212"
           },
           "blocks": {}
@@ -235,6 +218,7 @@
         },
         "ai_gen_block_7f0d7e5_itXRiQ": {
           "type": "ai_gen_block_7f0d7e5",
+          "disabled": true,
           "settings": {
             "heading": "Trending Products on Social Media",
             "text_alignment": "left",
@@ -306,8 +290,37 @@
         "slide_U8azpC",
         "slide_LNU43E"
       ],
+      "disabled": true,
       "name": "Center Carousel",
       "settings": {}
+    },
+    "178289953232b64777": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_t8UCJE": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "title": "Trending Products on Social Media",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "center",
+            "heading_color": "#070606",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 36,
+            "padding_bottom": 36,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_t8UCJE"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     },
     "17768748541cfee548": {
       "type": "_blocks",
@@ -481,7 +494,7 @@
       "name": "t:sections.featured-blog.presets.name",
       "settings": {
         "blog": "news",
-        "post_limit": 2,
+        "post_limit": 4,
         "heading": "Blog posts",
         "heading_size": "h1",
         "columns_desktop": 4,
@@ -546,10 +559,11 @@
     }
   },
   "order": [
-    "slideshow_XzH4mh",
+    "178281114959f16150",
     "177687342526c3aeca",
     "1776874214582f2fe1",
     "center_carousel_AHm6fg",
+    "178289953232b64777",
     "17768748541cfee548",
     "17768757305788ece8",
     "17769567983c5c5127",
