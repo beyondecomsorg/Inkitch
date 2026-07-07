@@ -1,1 +1,138 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"1780470201da0dcd2c":{"type":"_blocks","settings":{}},"17804703242f1f45b4":{"type":"_blocks","settings":{}},"1780472574d8df9ed0":{"type":"_blocks","blocks":{"ai_gen_block_91facee_GT9XWR":{"type":"ai_gen_block_91facee","settings":{"section_padding":30,"background_color":"#ffffff","title":"Available on top marketplaces","subtitle":"Shop Inkitch products across India's leading platforms.","title_size":36,"subtitle_size":18,"title_color":"#000000","subtitle_color":"#121212","header_spacing":48,"card_size":140,"card_gap":24,"card_border_radius":24,"card_background":"#9f0a0a","card_border_color":"#e5e7eb","card_text_size":14,"card_text_color":"#e0e0e0","animation_duration":20,"marketplace_1_enabled":false,"marketplace_1_name":"Meesho","marketplace_1_logo":"shopify:\/\/shop_images\/2_1f64a02a-9512-470f-85bf-8462253a8637.png","marketplace_1_url":"","marketplace_2_enabled":true,"marketplace_2_name":"Flipkart","marketplace_2_logo":"shopify:\/\/shop_images\/4_7d163720-b657-4276-a1fc-f43fd579a495.png","marketplace_2_url":"https:\/\/www.flipkart.com\/search?q=inkitch&utm_source=chatgpt.com","marketplace_3_enabled":true,"marketplace_3_name":"Amazon","marketplace_3_logo":"shopify:\/\/shop_images\/5_3b0cd8fe-0e40-4601-9928-00696c8a2cce.png","marketplace_3_url":"https:\/\/www.amazon.in\/stores\/inKitch\/page\/54D0FD8D-4C01-4CE4-A9A7-24C3FBBBA978?lp_asin=B0H227K2WC&ref_=ast_bln&store_ref=bl_ast_dp_brandlogo_sto","marketplace_4_enabled":true,"marketplace_4_name":"Snapdeal","marketplace_4_logo":"shopify:\/\/shop_images\/1_62cc3735-2160-4628-987e-4d9c9c3a780d.png","marketplace_4_url":"https:\/\/www.snapdeal.com\/search?keyword=inkitch","marketplace_5_enabled":true,"marketplace_5_name":"Myntra","marketplace_5_logo":"shopify:\/\/shop_images\/6_dc938dd1-7773-44af-9c23-fd4814362bdd.png","marketplace_5_url":"https:\/\/www.myntra.com\/inkitch","marketplace_6_enabled":false,"marketplace_6_name":"Snapdeal","marketplace_6_url":"","marketplace_7_enabled":false,"marketplace_7_name":"JioMart","marketplace_7_url":"","marketplace_8_enabled":false,"marketplace_8_name":"Shopify","marketplace_8_url":""},"blocks":{}}},"block_order":["ai_gen_block_91facee_GT9XWR"],"settings":{}},"blocks_UQ3Vcn":{"type":"_blocks","name":"Trust badges","settings":{}},"footer":{"type":"footer","blocks":{"text_VJTfYb":{"type":"text","settings":{"heading":"inKitch","subtext":"<p>Welcome to inKitch a brand by Branbilly Lifestyle LLP. At inKitch we offer high quality  home essentials that blends functionality and durability to elevate your everyday living experience.<\/p>"}},"text_36atdn":{"type":"text","settings":{"heading":"Contact Us:","subtext":"<p>Call : 9175939866<\/p><p>WhatsApp : 9175939866<\/p><p>Customer Support : 24x7<\/p><p>Email : inkitch.info@gmail.com<\/p>"}}},"block_order":["text_VJTfYb","text_36atdn"],"settings":{"color_scheme":"scheme-4","newsletter_enable":false,"newsletter_heading":"Subscribe to our emails","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":true,"margin_top":0,"padding_top":36,"padding_bottom":36}},"1779534794342502e7":{"type":"_blocks","settings":{}}},"order":["1780470201da0dcd2c","17804703242f1f45b4","1780472574d8df9ed0","blocks_UQ3Vcn","footer","1779534794342502e7"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "1780470201da0dcd2c": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "17804703242f1f45b4": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "1780472574d8df9ed0": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_91facee_GT9XWR": {
+          "type": "ai_gen_block_91facee",
+          "settings": {
+            "section_padding": 30,
+            "background_color": "#ffffff",
+            "title": "Available on top marketplaces",
+            "subtitle": "Shop Inkitch products across India's leading platforms.",
+            "title_size": 36,
+            "subtitle_size": 18,
+            "title_color": "#000000",
+            "subtitle_color": "#121212",
+            "header_spacing": 48,
+            "card_size": 140,
+            "card_gap": 24,
+            "card_border_radius": 24,
+            "card_background": "#ffffff",
+            "card_border_color": "#e5e7eb",
+            "card_text_size": 14,
+            "card_text_color": "#e0e0e0",
+            "animation_duration": 20,
+            "marketplace_1_enabled": false,
+            "marketplace_1_name": "Meesho",
+            "marketplace_1_logo": "shopify://shop_images/2_1f64a02a-9512-470f-85bf-8462253a8637.png",
+            "marketplace_1_url": "",
+            "marketplace_2_enabled": true,
+            "marketplace_2_name": "Flipkart",
+            "marketplace_2_logo": "shopify://shop_images/4_7d163720-b657-4276-a1fc-f43fd579a495.png",
+            "marketplace_2_url": "https://www.flipkart.com/search?q=inkitch&utm_source=chatgpt.com",
+            "marketplace_3_enabled": true,
+            "marketplace_3_name": "Amazon",
+            "marketplace_3_logo": "shopify://shop_images/5_3b0cd8fe-0e40-4601-9928-00696c8a2cce.png",
+            "marketplace_3_url": "https://www.amazon.in/stores/inKitch/page/54D0FD8D-4C01-4CE4-A9A7-24C3FBBBA978?lp_asin=B0H227K2WC&ref_=ast_bln&store_ref=bl_ast_dp_brandlogo_sto",
+            "marketplace_4_enabled": true,
+            "marketplace_4_name": "Snapdeal",
+            "marketplace_4_logo": "shopify://shop_images/1_62cc3735-2160-4628-987e-4d9c9c3a780d.png",
+            "marketplace_4_url": "https://www.snapdeal.com/search?keyword=inkitch",
+            "marketplace_5_enabled": true,
+            "marketplace_5_name": "Myntra",
+            "marketplace_5_logo": "shopify://shop_images/6_dc938dd1-7773-44af-9c23-fd4814362bdd.png",
+            "marketplace_5_url": "https://www.myntra.com/inkitch",
+            "marketplace_6_enabled": false,
+            "marketplace_6_name": "Snapdeal",
+            "marketplace_6_url": "",
+            "marketplace_7_enabled": false,
+            "marketplace_7_name": "JioMart",
+            "marketplace_7_url": "",
+            "marketplace_8_enabled": false,
+            "marketplace_8_name": "Shopify",
+            "marketplace_8_url": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_91facee_GT9XWR"
+      ],
+      "settings": {}
+    },
+    "blocks_UQ3Vcn": {
+      "type": "_blocks",
+      "name": "Trust badges",
+      "settings": {}
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text_VJTfYb": {
+          "type": "text",
+          "settings": {
+            "heading": "inKitch",
+            "subtext": "<p>Welcome to inKitch a brand by Branbilly Lifestyle LLP. At inKitch we offer high quality  home essentials that blends functionality and durability to elevate your everyday living experience.</p>"
+          }
+        },
+        "text_36atdn": {
+          "type": "text",
+          "settings": {
+            "heading": "Contact Us:",
+            "subtext": "<p>Call : 9175939866</p><p>WhatsApp : 9175939866</p><p>Customer Support : 24x7</p><p>Email : inkitch.info@gmail.com</p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_VJTfYb",
+        "text_36atdn"
+      ],
+      "settings": {
+        "color_scheme": "scheme-4",
+        "newsletter_enable": false,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "1779534794342502e7": {
+      "type": "_blocks",
+      "settings": {}
+    }
+  },
+  "order": [
+    "1780470201da0dcd2c",
+    "17804703242f1f45b4",
+    "1780472574d8df9ed0",
+    "blocks_UQ3Vcn",
+    "footer",
+    "1779534794342502e7"
+  ]
+}

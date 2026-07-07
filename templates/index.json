@@ -12,6 +12,15 @@
     "178281114959f16150": {
       "type": "_blocks",
       "blocks": {
+        "ai_gen_block_5cd1fe4_dFGJyf": {
+          "type": "ai_gen_block_5cd1fe4",
+          "name": "Remove red borders",
+          "settings": {
+            "target_homepage_only": true,
+            "remove_all_section_spacing": false
+          },
+          "blocks": {}
+        },
         "ai_gen_block_13c08f3_FxWPLk": {
           "type": "ai_gen_block_13c08f3",
           "settings": {
@@ -25,6 +34,7 @@
         }
       },
       "block_order": [
+        "ai_gen_block_5cd1fe4_dFGJyf",
         "ai_gen_block_13c08f3_FxWPLk"
       ],
       "settings": {}
@@ -177,7 +187,7 @@
             "text_transform": "none",
             "text_alignment": "center",
             "desktop_width_percent": 100,
-            "padding_top": 40,
+            "padding_top": 60,
             "padding_bottom": 0,
             "text_color": "#121212"
           },
@@ -223,8 +233,8 @@
             "heading": "Trending Products on Social Media",
             "text_alignment": "left",
             "desktop_width_percent": 100,
-            "padding_top": 30,
-            "padding_bottom": 15,
+            "padding_top": 60,
+            "padding_bottom": 60,
             "padding_horizontal": 20,
             "heading_size": 32,
             "font_weight": "600",
@@ -243,6 +253,32 @@
         "ai_gen_block_7f0d7e5_itXRiQ"
       ],
       "settings": {}
+    },
+    "1783318539fb3211c9": {
+      "type": "apps",
+      "blocks": {
+        "whatmore_shoppable_videos_app_block_GDEz48": {
+          "type": "shopify://apps/whatmore-shoppable-videos/blocks/app-block/20db8a72-315a-4364-8885-64219ee48303",
+          "settings": {
+            "heading": "Trending Products on Social Media",
+            "widget-identity": "wgt_default",
+            "template-type": "template-b",
+            "title-font-size": 40,
+            "title-font-size-portrait": 24,
+            "landscape-padding": 40,
+            "top-bottom-padding": 20,
+            "scroll-video-tile-size": 80,
+            "scroll-video-tile-size-portrait": 80,
+            "min-height": 380
+          }
+        }
+      },
+      "block_order": [
+        "whatmore_shoppable_videos_app_block_GDEz48"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     },
     "center_carousel_AHm6fg": {
       "type": "center-carousel",
@@ -318,6 +354,7 @@
       "block_order": [
         "reelfy_videos_reelfy_section_t8UCJE"
       ],
+      "disabled": true,
       "settings": {
         "include_margins": true
       }
@@ -465,7 +502,7 @@
             "gap": 20,
             "mobile_gap": 20,
             "item_gap": 12,
-            "background_color": "#9f0a0a",
+            "background_color": "#ffffff",
             "icon_color": "#ffffff",
             "heading_color": "#ffffff",
             "description_color": "#ffffff",
@@ -497,14 +534,14 @@
         "post_limit": 4,
         "heading": "Blog posts",
         "heading_size": "h1",
-        "columns_desktop": 4,
+        "columns_desktop": 2,
         "show_view_all": false,
         "show_image": true,
         "show_date": true,
         "show_author": true,
         "color_scheme": "scheme-2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 60,
+        "padding_bottom": 60
       }
     },
     "17804708302c7f8b07": {
@@ -524,7 +561,7 @@
             "heading": "Testimonials",
             "heading_color": "#ffffff",
             "heading_size": 28,
-            "background_color": "#9f0a0a",
+            "background_color": "#ffffff",
             "card_background": "#ffffff",
             "card_text_color": "#1a1a1a",
             "card_radius": 24,
@@ -556,12 +593,30 @@
         "ai_gen_block_036e908_RpiJed"
       ],
       "settings": {}
+    },
+    "178332104324cb3898": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_5cd1fe4_zip3Xm": {
+          "type": "ai_gen_block_5cd1fe4",
+          "settings": {
+            "target_homepage_only": true,
+            "remove_all_section_spacing": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_5cd1fe4_zip3Xm"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "178281114959f16150",
     "177687342526c3aeca",
     "1776874214582f2fe1",
+    "1783318539fb3211c9",
     "center_carousel_AHm6fg",
     "178289953232b64777",
     "17768748541cfee548",
@@ -574,6 +629,7 @@
     "featured_blog_MgEUfF",
     "17804708302c7f8b07",
     "1779278418b3f8f25d",
-    "1779279862fa4605f2"
+    "1779279862fa4605f2",
+    "178332104324cb3898"
   ]
 }

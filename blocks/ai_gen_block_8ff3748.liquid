@@ -480,7 +480,7 @@
       <div class="ai-price-row-{{ ai_gen_id }}">
         <span class="ai-current-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
         {% if product.compare_at_price > product.price %}
-          <span class="ai-original-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+          <span class="ai-original-price-{{ ai_gen_id }}">MRP {{ product.compare_at_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | strip | remove: '.00' }}</span>
           {% assign savings = product.compare_at_price | minus: product.price %}
           {% assign savings_percent = savings | times: 100 | divided_by: product.compare_at_price %}
           <span class="ai-savings-badge-{{ ai_gen_id }}">Save {{ savings_percent }}%</span>

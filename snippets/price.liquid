@@ -22,6 +22,8 @@
   endif
 
   assign compare_at_price = target.compare_at_price
+  assign clean_compare_at_money = compare_at_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | strip | remove: '.00'
+  assign clean_compare_at_money_with_currency = compare_at_price | money_with_currency | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | replace: 'INR', '' | strip | remove: '.00'
   assign price = target.price | default: 1999
   assign price_min = product.price_min
   assign price_max = product.price_max
@@ -68,9 +70,9 @@
               <span>
                 <s class="price-item price-item--regular variant-item__old-price">
                   {% if settings.currency_code_enabled %}
-                    {{ compare_at_price | money_with_currency }}
+                    MRP {{ clean_compare_at_money_with_currency }}
                   {% else %}
-                    {{ compare_at_price | money }}
+                    MRP {{ clean_compare_at_money }}
                   {% endif %}
                 </s>
               </span>
@@ -96,9 +98,9 @@
           <span>
             <s class="price-item price-item--regular">
               {% if settings.currency_code_enabled %}
-                {{ compare_at_price | money_with_currency }}
+                MRP {{ clean_compare_at_money_with_currency }}
               {% else %}
-                {{ compare_at_price | money  | remove: '.00' }}
+                MRP {{ clean_compare_at_money }}
               {% endif %}
             </s>
           </span>
@@ -109,7 +111,7 @@
         </span>
         {%- if compare_at_price > price -%}
           {%- assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round -%}
-          <span class="price-item price-item--discount" style="color: #107C41 !important; font-weight: 700 !important; font-size: 10px !important; margin-left: 8px !important; display: inline-block !important; font-family: var(--font-body-family);">
+          <span class="price-item price-item--discount">
             {{ discount_percent }}% OFF
           </span>
         {%- endif -%}

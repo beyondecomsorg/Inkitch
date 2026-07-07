@@ -198,22 +198,61 @@
 
   @media screen and (max-width: 749px) {
     .ai-why-inkitch-{{ ai_gen_id }} {
-      padding: 50px 16px !important;
+      padding: 40px 16px !important;
     }
     .ai-why-inkitch-heading-{{ ai_gen_id }} {
-      font-size: 28px !important;
+      font-size: 26px !important;
     }
     .ai-why-inkitch-description-{{ ai_gen_id }} {
       font-size: 14px !important;
     }
-  }
-
-  @media screen and (max-width: 576px) {
     .ai-why-inkitch-features-{{ ai_gen_id }} {
-      grid-template-columns: 1fr;
-      gap: 20px;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 16px;
+      -webkit-overflow-scrolling: touch;
+      gap: 16px;
+      padding: 10px 16px 20px 16px !important;
+      margin-left: -16px !important;
+      margin-right: -16px !important;
+    }
+    .ai-why-inkitch-features-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+    .ai-why-inkitch-feature-{{ ai_gen_id }} {
+      flex: 0 0 calc((100% - 32px) / 1.2);
+      min-width: calc((100% - 32px) / 1.2);
+      scroll-snap-align: start;
+      padding: 24px 16px !important;
+    }
+    .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
+      width: 56px !important;
+      height: 56px !important;
+      margin-bottom: 12px !important;
+    }
+    .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
+      width: 24px !important;
+      height: 24px !important;
+    }
+    .ai-why-inkitch-counter-{{ ai_gen_id }} {
+      font-size: 26px !important;
+      margin-bottom: 6px !important;
+    }
+    .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      line-height: 1.3 !important;
+      margin-bottom: 8px !important;
+    }
+    .ai-why-inkitch-feature-desc-{{ ai_gen_id }} {
+      font-size: 12px !important;
+      line-height: 1.4 !important;
     }
   }
+
 {% endstyle %}
 
 <why-inkitch-{{ ai_gen_id }} class="ai-why-inkitch-{{ ai_gen_id }}" {{ block.shopify_attributes }}>

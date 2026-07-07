@@ -66,7 +66,7 @@
         </dt>
         <dd>
           <s class="variant-item__old-price price price--end">
-            {{ item.compare_at_price | money }}
+            MRP {{ item.compare_at_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | strip | remove: '.00' }}
           </s>
         </dd>
         <dt class="visually-hidden">
@@ -329,7 +329,7 @@
         </dt>
         <dd>
           <s class="variant-item__old-price price price--end">
-            {{ item.compare_at_price | money }}
+            MRP {{ item.compare_at_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | strip | remove: '.00' }}
           </s>
         </dd>
         <dt class="visually-hidden">

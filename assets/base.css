@@ -6,6 +6,26 @@
   --focused-base-outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
   --focused-base-outline-offset: 0.3rem;
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+
+  /* Typography Scale Variables */
+  --font-size-h1: 32px;
+  --font-size-h2: 28px;
+  --font-size-h3: 18px;
+  --font-size-body: 15px;
+  --font-size-small: 13px;
+  --font-weight-heading: 700;
+  --font-weight-body: 400;
+  --font-weight-medium: 600;
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --font-size-h1: 24px;
+    --font-size-h2: 22px;
+    --font-size-h3: 16px;
+    --font-size-body: 14px;
+    --font-size-small: 12px;
+  }
 }
 
 .product-card-wrapper .card,
@@ -2075,8 +2095,8 @@ input[type='checkbox'] {
 
 .cart-count-bubble {
   position: absolute;
-  background-color: rgb(var(--color-button));
-  color: rgb(var(--color-button-text));
+  background-color: #f60000;
+  color: #ffffff;
   height: 1.7rem;
   width: 1.7rem;
   border-radius: 100%;
@@ -3752,8 +3772,20 @@ button#checkout{
 button#checkout {
   box-shadow: none;
 }
-.product__title h1{
- font-size: 34px;
+.product__title h1 {
+  font-size: var(--font-size-h1) !important;
+  font-weight: var(--font-weight-heading) !important;
+}
+
+.jdgm-widget-title,
+.jdgm-rev-widg__title {
+  font-size: var(--font-size-h2) !important;
+  font-weight: var(--font-weight-heading) !important;
+}
+
+.card__heading {
+  font-size: var(--font-size-h3) !important;
+  font-weight: var(--font-weight-heading) !important;
 }
 
 /* Align card content full-width, left-edge to right-edge of image */
@@ -3817,7 +3849,26 @@ body a.cart-btn.choose-btn,
 .card--card .quick-add{
   margin: 0 !important;
 }
-li.grid__item.scroll-trigger.animate--slide-in {
+/* li.grid__item.scroll-trigger.animate--slide-in {
     border: 0.5px solid #e0e0e0;
 
+} */
+.custom-card-price{
+  margin-top: 10px;
+}
+
+/* Cart Drawer Checkout Button Redesign */
+#CartDrawer-Checkout,
+.cart-drawer .cart__checkout-button {
+  background-color: #f60000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+#CartDrawer-Checkout:hover,
+.cart-drawer .cart__checkout-button:hover {
+  background-color: #d60000 !important;
+  color: #ffffff !important;
 }

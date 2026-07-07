@@ -1,0 +1,147 @@
+{% doc %}
+  @prompt
+    Add a custom CSS snippet that removes and hides all red borders and dividers between sections on the homepage. Target section dividers, hr elements, and any border styling that creates a red line between sections.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-remove-red-borders-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  {% if block.settings.target_homepage_only %}
+    .index .shopify-section,
+    .index .shopify-section *,
+    .index section,
+    .index section *,
+    .index hr,
+    .index .section-divider,
+    .index .divider {
+      border-color: transparent !important;
+    }
+
+    .index .shopify-section[style*="border"],
+    .index section[style*="border"] {
+      border: none !important;
+    }
+
+    .index hr[style*="red"],
+    .index hr[style*="#ff0000"],
+    .index hr[style*="#f00"],
+    .index hr[style*="rgb(255, 0, 0)"],
+    .index hr[style*="rgb(255,0,0)"] {
+      display: none !important;
+    }
+
+    .index .shopify-section + .shopify-section::before,
+    .index section + section::before {
+      display: none !important;
+    }
+
+    .index [class*="border"][style*="red"],
+    .index [class*="border"][style*="#ff0000"],
+    .index [class*="border"][style*="#f00"],
+    .index [class*="divider"][style*="red"],
+    .index [class*="divider"][style*="#ff0000"] {
+      border: none !important;
+      background: transparent !important;
+      display: none !important;
+    }
+  {% else %}
+    .shopify-section,
+    .shopify-section *,
+    section,
+    section *,
+    hr,
+    .section-divider,
+    .divider {
+      border-color: transparent !important;
+    }
+
+    .shopify-section[style*="border"],
+    section[style*="border"] {
+      border: none !important;
+    }
+
+    hr[style*="red"],
+    hr[style*="#ff0000"],
+    hr[style*="#f00"],
+    hr[style*="rgb(255, 0, 0)"],
+    hr[style*="rgb(255,0,0)"] {
+      display: none !important;
+    }
+
+    .shopify-section + .shopify-section::before,
+    section + section::before {
+      display: none !important;
+    }
+
+    [class*="border"][style*="red"],
+    [class*="border"][style*="#ff0000"],
+    [class*="border"][style*="#f00"],
+    [class*="divider"][style*="red"],
+    [class*="divider"][style*="#ff0000"] {
+      border: none !important;
+      background: transparent !important;
+      display: none !important;
+    }
+  {% endif %}
+
+  {% if block.settings.remove_all_section_spacing %}
+    {% if block.settings.target_homepage_only %}
+      .index .shopify-section {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+    {% else %}
+      .shopify-section {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+    {% endif %}
+  {% endif %}
+{% endstyle %}
+
+<div class="ai-remove-red-borders-{{ ai_gen_id }}" {{ block.shopify_attributes }}></div>
+
+{% schema %}
+{
+  "name": "Remove red borders",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Target settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_homepage_only",
+      "label": "Apply to homepage only",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "remove_all_section_spacing",
+      "label": "Remove all section spacing",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Information"
+    },
+    {
+      "type": "paragraph",
+      "content": "This block removes all red borders and dividers between sections. It targets section borders, hr elements, and any styling that creates red lines."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Remove red borders"
+    }
+  ]
+}
+{% endschema %}

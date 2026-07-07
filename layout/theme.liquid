@@ -253,6 +253,12 @@
           font-size: 1.6rem;
         }
       }
+
+.template-index .shopify-block.shopify-app-block{
+ padding-bottom: 60px;
+}
+
+
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
@@ -298,7 +304,7 @@
     </script>
   </head>
 
-  <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+  <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %} page-{{ page_title | handle }} template-{{ template.name | handle }}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

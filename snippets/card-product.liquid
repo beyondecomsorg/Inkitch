@@ -27,6 +27,50 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+
+  <style>
+    /* Card Border & Curved Edges Styling */
+    .product-card-wrapper .card {
+      border: 1px solid #d4d4d4 !important; /* bit darker line border */
+      border-radius: 12px !important;       /* curved edges */
+      overflow: hidden !important;          /* respect rounded corners */
+    }
+    
+    .product-card-wrapper .card__inner {
+      border-radius: 12px 12px 0 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Hover image crossfade on desktop / devices supporting hover */
+    @media (hover: hover) {
+      .card-wrapper .media.media--hover-effect > img {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        transition: opacity 0.4s ease-in-out !important;
+      }
+      .card-wrapper .media.media--hover-effect > img:first-child {
+        opacity: 1 !important;
+        z-index: 1;
+      }
+      .card-wrapper .media.media--hover-effect > img + img {
+        opacity: 0 !important;
+        z-index: 2;
+      }
+      .card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child),
+      .card:hover .media.media--hover-effect > img:first-child:not(:only-child) {
+        opacity: 0 !important;
+      }
+      .card-wrapper:hover .media.media--hover-effect > img + img,
+      .card:hover .media.media--hover-effect > img + img {
+        opacity: 1 !important;
+        z-index: 3;
+      }
+    }
+  </style>
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
@@ -83,7 +127,7 @@
               >
               {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
 
-              {%- if card_product.media[1] != null and show_secondary_image -%}
+              {%- if card_product.media[1] != null -%}
                 <img
                   srcset="
                     {%- if card_product.media[1].width >= 165 -%}{{ card_product.media[1] | image_url: width: 165 }} 165w,{%- endif -%}
@@ -216,7 +260,45 @@
               </p>
             {%- endif -%}
 
-            {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+            {%- comment -%} Custom Price Rendering (MRP / Selling Price / Discount %) {%- endcomment -%}
+            {%- liquid
+              assign compare_at_price = card_product.compare_at_price
+              assign price = card_product.price
+              assign on_sale = false
+              if compare_at_price > price
+                assign on_sale = true
+              endif
+              
+              # Format money using the money filter, and strip currency symbols for compare price
+              assign money_compare = compare_at_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | replace: ' ', '' | remove: '.00'
+              assign money_price = price | money | replace: 'Rs.', '₹' | replace: 'Rs', '₹' | replace: ' ', '' | remove: '.00'
+            -%}
+            
+            <div class="custom-card-price" style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px; margin-bottom: 4px; text-align: left; font-family: var(--font-body-family);">
+              {%- if on_sale -%}
+                <!-- Row 1: MRP Strikethrough -->
+                <div class="custom-card-price__mrp" style="font-size: 1.3rem; color: #767676; text-decoration: line-through; line-height: 1.2;">
+                  MRP {{ money_compare }}
+                </div>
+                <!-- Row 2: Price and Discount -->
+                <div class="custom-card-price__row" style="display: flex; align-items: center; gap: 8px; line-height: 1.2;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                    {{ money_price }}
+                  </span>
+                  {%- assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round -%}
+                  <span class="custom-card-price__discount" style="background-color: #E2F6EA; color: #107C41; font-size: 1.1rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block;">
+                    {{ discount_percent }}% OFF
+                  </span>
+                </div>
+              {%- else -%}
+                <!-- Regular Selling Price only -->
+                <div class="custom-card-price__row" style="display: flex; align-items: center; line-height: 1.2;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                    {{ money_price }}
+                  </span>
+                </div>
+              {%- endif -%}
+            </div>
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
                 {% liquid

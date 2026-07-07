@@ -37,7 +37,7 @@
         "auto_rotate": true,
         "change_slides_speed": 3,
         "color_scheme": "scheme-5",
-        "show_line_separator": true,
+        "show_line_separator": false,
         "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false
@@ -54,7 +54,7 @@
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "always",
-        "show_line_separator": true,
+        "show_line_separator": false,
         "color_scheme": "scheme-1",
         "menu_color_scheme": "scheme-2",
         "enable_country_selector": true,

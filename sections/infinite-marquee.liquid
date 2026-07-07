@@ -1,0 +1,112 @@
+{% schema %}
+{
+  "name": "Infinite Marquee",
+  "settings": [
+  {
+  "type": "range",
+  "id": "speed",
+  "label": "Scroll Speed (seconds)",
+  "min": 10,
+  "max": 60,
+  "step": 2,
+  "default": 24
+},
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#12345b"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Easy Exchanges"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Infinite Marquee"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="infinite-marquee" style="background:{{ section.settings.bg_color }};">
+  <div class="marquee-track">
+    {% for i in (1..2) %}
+      <div class="marquee-group">
+        {% for block in section.blocks %}
+          <div class="marquee-item" {{ block.shopify_attributes }}>
+            <span class="dot">✦</span>
+            <span>{{ block.settings.text }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+.infinite-marquee{
+  overflow:hidden;
+  width:100%;
+  padding:14px 0;
+}
+
+.marquee-track{
+  display:flex;
+  width:max-content;
+  animation: marqueeScroll {{ section.settings.speed }}s linear infinite;
+}
+
+.marquee-group{
+  display:flex;
+  align-items:center;
+}
+
+.marquee-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 40px;
+  white-space:nowrap;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  color:{{ section.settings.text_color }};
+}
+
+.marquee-item .dot{
+  color:#6CC04A;
+  font-size:10px;
+}
+
+@keyframes marqueeScroll{
+  from{
+    transform:translateX(0);
+  }
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+.infinite-marquee:hover .marquee-track{
+  animation-play-state:paused;
+}
+</style>

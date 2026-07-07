@@ -252,7 +252,7 @@
                                   </dt>
                                   <dd>
                                     <s class="variant-item__old-price">
-                                      {{ variant_price_compare | money_with_currency }}
+                                      {{ variant_price_compare | money_with_currency | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | replace: 'INR', '' | strip | remove: '.00' | prepend: 'MRP ' }}
                                     </s>
                                   </dd>
                                 </dl>
@@ -292,7 +292,7 @@
                                   </dt>
                                   <dd>
                                     <s class="variant-item__old-price">
-                                      {{ variant_price_compare | money_with_currency }}
+                                      {{ variant_price_compare | money_with_currency | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | replace: 'INR', '' | strip | remove: '.00' | prepend: 'MRP ' }}
                                     </s>
                                   </dd>
                                   <dt class="visually-hidden">

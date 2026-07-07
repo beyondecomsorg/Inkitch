@@ -122,10 +122,10 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": false,
     "currency_code_enabled": false,
-    "cart_type": "notification",
+    "cart_type": "drawer",
     "show_vendor": false,
     "show_cart_note": false,
-    "cart_drawer_collection": "",
+    "cart_drawer_collection": "best-seller",
     "cart_color_scheme": "scheme-1",
     "sections": {
       "main-password-header": {
@@ -161,6 +161,22 @@
         "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
         "disabled": false,
         "settings": {}
+      },
+      "16510219240223340300": {
+        "type": "shopify://apps/whatmore-shoppable-videos/blocks/app-embed/20db8a72-315a-4364-8885-64219ee48303",
+        "disabled": false,
+        "settings": {
+          "minimized_video_position": "right",
+          "horizontal-padding": 5,
+          "vertical-padding": 150,
+          "app-size": 50,
+          "minimized_video_position_landscape": "right",
+          "horizontal-padding-landscape": 5,
+          "vertical-padding-landscape": 150,
+          "app-size-landscape": 50,
+          "video-title": "",
+          "use-variant": "false"
+        }
       }
     },
     "color_schemes": {
