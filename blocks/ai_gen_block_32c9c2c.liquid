@@ -479,6 +479,7 @@
 <script>
 (function() {
   function initMarquee() {
+    const section = document.querySelector('.ai-trust-badges-section-{{ ai_gen_id }}');
     const grid = document.querySelector('.ai-trust-badges-grid-{{ ai_gen_id }}');
     const container = document.querySelector('.ai-trust-badges-container-{{ ai_gen_id }}');
     if (!grid || !container) return;
@@ -486,6 +487,12 @@
     // Check if marquee is enabled (either block or section setting)
     const enableMarquee = {% if block.settings.enable_marquee or section.settings.enable_marquee %}true{% else %}false{% endif %};
     if (!enableMarquee) return;
+
+    // Prevent page overflow and viewport stretching on mobile devices
+    if (section) {
+      section.style.setProperty('overflow', 'hidden', 'important');
+      section.style.setProperty('width', '100%', 'important');
+    }
 
     // Clone child nodes for seamless continuous scrolling
     const children = Array.from(grid.children);
