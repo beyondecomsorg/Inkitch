@@ -119,6 +119,103 @@
       ],
       "settings": {}
     },
+    "look_book_wGFaKU": {
+      "type": "look-book",
+      "blocks": {
+        "card_Qc6LFx": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
+            "card_label": "PREMIUM FINISH"
+          }
+        },
+        "card_B3DAyB": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
+            "card_label": "SMART DESIGN"
+          }
+        },
+        "card_ChQQtp": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
+            "card_label": "DURABLE BUILD"
+          }
+        },
+        "stat_yBexg8": {
+          "type": "stat",
+          "settings": {
+            "stat_value": "10K+",
+            "stat_label": "HAPPY CUSTOMERS"
+          }
+        },
+        "stat_CgPYMV": {
+          "type": "stat",
+          "settings": {
+            "stat_value": "4.9★",
+            "stat_label": "AVG. RATING"
+          }
+        },
+        "stat_je3tTx": {
+          "type": "stat",
+          "settings": {
+            "stat_value": "100%",
+            "stat_label": "MADE WITH LOVE"
+          }
+        }
+      },
+      "block_order": [
+        "card_Qc6LFx",
+        "card_B3DAyB",
+        "card_ChQQtp",
+        "stat_yBexg8",
+        "stat_CgPYMV",
+        "stat_je3tTx"
+      ],
+      "name": "About Us - Fan Cards",
+      "settings": {
+        "heading": "ABOUT US",
+        "body_text": "Welcome to inKitch, where we craft premium home and kitchen essentials that blend style, functionality, and durability to elevate your everyday living experience.",
+        "cta_text": "OUR STORY",
+        "cta_url": "",
+        "section_font": "sans_serif_n4",
+        "heading_color": "#ffffff",
+        "heading_size": 40,
+        "heading_size_mobile": 24,
+        "heading_weight": 700,
+        "body_color": "#ffffff",
+        "body_size": 14,
+        "body_size_mobile": 14,
+        "body_weight": 400,
+        "button_bg": "#ffffff",
+        "button_text": "#0c4168",
+        "button_hover_bg": "#0c4168",
+        "button_hover_text": "#ffffff",
+        "button_font_size": 14,
+        "button_font_size_mobile": 14,
+        "button_font_weight": 700,
+        "button_width_desktop": 150,
+        "button_height_desktop": 40,
+        "button_width_mobile": 100,
+        "button_height_mobile": 40,
+        "stats_number_color": "#21f010",
+        "stats_label_color": "#b7c1cc",
+        "stats_number_size": 20,
+        "stats_number_size_mobile": 18,
+        "stats_number_weight": 800,
+        "stats_label_size": 12,
+        "stats_label_size_mobile": 10,
+        "stats_label_weight": 400,
+        "background_color": "#0c4168",
+        "accent_color": "#21f010",
+        "blob_color": "#21f010",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "padding_top_mobile": 30,
+        "padding_bottom_mobile": 30
+      }
+    },
     "1776874214582f2fe1": {
       "type": "_blocks",
       "blocks": {
@@ -154,6 +251,7 @@
         },
         "ai_gen_block_7f2cc22_6mqtpt": {
           "type": "ai_gen_block_7f2cc22",
+          "disabled": true,
           "settings": {
             "background_color": "#9f0a0a",
             "label": "BACK IN STOCK",
@@ -481,6 +579,8 @@
         "ai_gen_block_32c9c2c_PKUUMt": {
           "type": "ai_gen_block_32c9c2c",
           "settings": {
+            "enable_marquee": true,
+            "marquee_speed": 25,
             "icon_1": "shield",
             "heading_1": "Secure Payment",
             "description_1": "100% secure & encrypted checkout",
@@ -610,108 +710,12 @@
         "ai_gen_block_5cd1fe4_zip3Xm"
       ],
       "settings": {}
-    },
-    "look_book_wGFaKU": {
-      "type": "look-book",
-      "blocks": {
-        "card_Qc6LFx": {
-          "type": "card",
-          "settings": {
-            "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
-            "card_label": "PREMIUM FINISH"
-          }
-        },
-        "card_B3DAyB": {
-          "type": "card",
-          "settings": {
-            "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
-            "card_label": "SMART DESIGN"
-          }
-        },
-        "card_ChQQtp": {
-          "type": "card",
-          "settings": {
-            "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
-            "card_label": "DURABLE BUILD"
-          }
-        },
-        "stat_yBexg8": {
-          "type": "stat",
-          "settings": {
-            "stat_value": "10K+",
-            "stat_label": "HAPPY CUSTOMERS"
-          }
-        },
-        "stat_CgPYMV": {
-          "type": "stat",
-          "settings": {
-            "stat_value": "4.9★",
-            "stat_label": "AVG. RATING"
-          }
-        },
-        "stat_je3tTx": {
-          "type": "stat",
-          "settings": {
-            "stat_value": "100%",
-            "stat_label": "MADE WITH LOVE"
-          }
-        }
-      },
-      "block_order": [
-        "card_Qc6LFx",
-        "card_B3DAyB",
-        "card_ChQQtp",
-        "stat_yBexg8",
-        "stat_CgPYMV",
-        "stat_je3tTx"
-      ],
-      "name": "About Us - Fan Cards",
-      "settings": {
-        "heading": "ABOUT US",
-        "body_text": "Welcome to inKitch, where we craft premium home and kitchen essentials that blend style, functionality, and durability to elevate your everyday living experience.",
-        "cta_text": "OUR STORY",
-        "cta_url": "",
-        "section_font": "sans_serif_n4",
-        "heading_color": "#FFFFFF",
-        "heading_size": 40,
-        "heading_size_mobile": 24,
-        "heading_weight": 700,
-        "body_color": "#FFFFFF",
-        "body_size": 14,
-        "body_size_mobile": 14,
-        "body_weight": 400,
-        "button_bg": "#FFFFFF",
-        "button_text": "#0C4168",
-        "button_hover_bg": "#0C4168",
-        "button_hover_text": "#FFFFFF",
-        "button_font_size": 14,
-        "button_font_size_mobile": 14,
-        "button_font_weight": 700,
-        "button_width_desktop": 150,
-        "button_height_desktop": 40,
-        "button_width_mobile": 100,
-        "button_height_mobile": 40,
-        "stats_number_color": "#21F010",
-        "stats_label_color": "#B7C1CC",
-        "stats_number_size": 20,
-        "stats_number_size_mobile": 18,
-        "stats_number_weight": 800,
-        "stats_label_size": 12,
-        "stats_label_size_mobile": 10,
-        "stats_label_weight": 400,
-        "background_color": "#0C4168",
-        "accent_color": "#21F010",
-        "blob_color": "#21F010",
-        "padding_top": 60,
-        "padding_bottom": 60,
-        "padding_top_mobile": 30,
-        "padding_bottom_mobile": 30
-      }
     }
   },
   "order": [
     "178281114959f16150",
     "177687342526c3aeca",
+    "look_book_wGFaKU",
     "1776874214582f2fe1",
     "1783318539fb3211c9",
     "center_carousel_AHm6fg",
@@ -727,7 +731,6 @@
     "17804708302c7f8b07",
     "1779278418b3f8f25d",
     "1779279862fa4605f2",
-    "178332104324cb3898",
-    "look_book_wGFaKU"
+    "178332104324cb3898"
   ]
 }
