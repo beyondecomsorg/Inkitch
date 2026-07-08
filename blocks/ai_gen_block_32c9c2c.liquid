@@ -30,54 +30,6 @@
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
-
-.trust-marquee-track {
-    animation: trustScroll {{ block.settings.marquee_speed }}s linear infinite;
-}
-@media (max-width: 768px) {
-    .trust-marquee-track {
-        animation-duration: 18s;
-    }
-
-    .ai-trust-badge-item-{{ ai_gen_id }} {
-        width: 180px;
-    }
-}
-.trust-marquee {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-}
-
-.trust-marquee-track {
-    display: flex;
-    width: max-content;
-    animation: trustScroll 25s linear infinite;
-}
-
-.trust-marquee:hover .trust-marquee-track {
-    animation-play-state: paused;
-}
-
-.ai-trust-badges-grid-{{ ai_gen_id }} {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.ai-trust-badge-item-{{ ai_gen_id }} {
-    width: 220px;
-    flex-shrink: 0;
-}
-
-@keyframes trustScroll {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
   .ai-trust-badges-section-{{ ai_gen_id }} {
     display: block;
     background: linear-gradient(135deg, #c0000f 0%, #E30613 60%, #ff2020 100%) !important;
@@ -476,101 +428,6 @@
   </div>
 </div>
 
-<script>
-(function() {
-  function initMarquee() {
-    const section = document.querySelector('.ai-trust-badges-section-{{ ai_gen_id }}');
-    const grid = document.querySelector('.ai-trust-badges-grid-{{ ai_gen_id }}');
-    const container = document.querySelector('.ai-trust-badges-container-{{ ai_gen_id }}');
-    if (!grid || !container) return;
-
-    // Check if marquee is enabled (either block or section setting)
-    const enableMarquee = {% if block.settings.enable_marquee or section.settings.enable_marquee %}true{% else %}false{% endif %};
-    if (!enableMarquee) return;
-
-    // Prevent page overflow and viewport stretching on mobile devices
-    if (section) {
-      section.style.setProperty('overflow', 'hidden', 'important');
-      section.style.setProperty('width', '100%', 'important');
-    }
-
-    // Clone child nodes for seamless continuous scrolling
-    const children = Array.from(grid.children);
-    children.forEach(child => {
-      const clone = child.cloneNode(true);
-      grid.appendChild(clone);
-    });
-
-    // Make the container full-width and remove padding for marquee
-    container.style.setProperty('max-width', '100%', 'important');
-    container.style.setProperty('padding-left', '0px', 'important');
-    container.style.setProperty('padding-right', '0px', 'important');
-    container.style.setProperty('overflow', 'hidden', 'important');
-    container.style.setProperty('width', '100%', 'important');
-
-    // Style elements inline to force horizontal row behavior (override stylesheet !important rules)
-    grid.style.setProperty('display', 'flex', 'important');
-    grid.style.setProperty('flex-wrap', 'nowrap', 'important');
-    grid.style.setProperty('grid-template-columns', 'none', 'important');
-    grid.style.setProperty('width', 'max-content', 'important');
-    grid.style.setProperty('gap', '0px', 'important');
-
-    // Set uniform child styles for marquee
-    const isMobile = window.innerWidth < 768;
-    Array.from(grid.children).forEach(child => {
-      child.style.setProperty('flex', '0 0 auto', 'important');
-      child.style.setProperty('width', isMobile ? '200px' : '280px', 'important');
-      child.style.setProperty('padding', isMobile ? '0 15px' : '0 30px', 'important');
-      child.style.setProperty('border-right', '1px solid rgba(255,255,255,0.2)', 'important');
-      child.style.setProperty('box-sizing', 'border-box', 'important');
-      child.style.setProperty('opacity', '1', 'important');
-      child.style.setProperty('animation', 'none', 'important');
-
-      // Override description max-width to prevent word squishing
-      const desc = child.querySelector('.ai-trust-badge-description-{{ ai_gen_id }}');
-      if (desc) {
-        desc.style.setProperty('max-width', '100%', 'important');
-        desc.style.setProperty('width', '100%', 'important');
-      }
-    });
-
-    let scrollPos = 0;
-    const speedSeconds = parseInt('{{ block.settings.marquee_speed | default: section.settings.marquee_speed | default: 25 }}') || 25;
-    let speed = 1;
-    let paused = false;
-
-    // Hover and touch state listeners to pause scrolling
-    container.addEventListener('mouseenter', () => paused = true);
-    container.addEventListener('mouseleave', () => paused = false);
-    container.addEventListener('touchstart', () => paused = true, { passive: true });
-    container.addEventListener('touchend', () => paused = false, { passive: true });
-
-    function scroll() {
-      if (!paused) {
-        const maxScroll = grid.scrollWidth / 2;
-        speed = maxScroll / (speedSeconds * 60) || 1;
-        scrollPos += speed;
-        if (scrollPos >= maxScroll) {
-          scrollPos = 0;
-        }
-        container.scrollLeft = scrollPos;
-      }
-      requestAnimationFrame(scroll);
-    }
-
-    // Delay initialization slightly to ensure all styles and fonts are loaded
-    setTimeout(scroll, 100);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMarquee);
-  } else {
-    initMarquee();
-  }
-})();
-</script>
-
-
 {% schema %}
 {
   "name": "Trust badges",
@@ -580,22 +437,6 @@
       "type": "header",
       "content": "Badge 1"
     },
-    {
-  "type": "checkbox",
-  "id": "enable_marquee",
-  "label": "Enable Marquee",
-  "default": true
-},
-{
-  "type": "range",
-  "id": "marquee_speed",
-  "min": 10,
-  "max": 60,
-  "step": 5,
-  "unit": "s",
-  "label": "Scroll Speed",
-  "default": 25
-},
     {
       "type": "select",
       "id": "icon_1",
