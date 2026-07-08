@@ -495,33 +495,35 @@
     });
 
     // Make the container full-width and remove padding for marquee
-    container.style.maxWidth = '100%';
-    container.style.paddingLeft = '0px';
-    container.style.paddingRight = '0px';
-    container.style.overflow = 'hidden';
-    container.style.width = '100%';
+    container.style.setProperty('max-width', '100%', 'important');
+    container.style.setProperty('padding-left', '0px', 'important');
+    container.style.setProperty('padding-right', '0px', 'important');
+    container.style.setProperty('overflow', 'hidden', 'important');
+    container.style.setProperty('width', '100%', 'important');
 
-    // Style elements inline to force horizontal row behavior
-    grid.style.display = 'flex';
-    grid.style.flexWrap = 'nowrap';
-    grid.style.width = 'max-content';
-    grid.style.gap = '0px';
+    // Style elements inline to force horizontal row behavior (override stylesheet !important rules)
+    grid.style.setProperty('display', 'flex', 'important');
+    grid.style.setProperty('flex-wrap', 'nowrap', 'important');
+    grid.style.setProperty('grid-template-columns', 'none', 'important');
+    grid.style.setProperty('width', 'max-content', 'important');
+    grid.style.setProperty('gap', '0px', 'important');
 
     // Set uniform child styles for marquee
+    const isMobile = window.innerWidth < 768;
     Array.from(grid.children).forEach(child => {
-      child.style.flex = '0 0 auto';
-      child.style.width = '280px'; // Wider to fit text comfortably
-      child.style.padding = '0 30px';
-      child.style.borderRight = '1px solid rgba(255,255,255,0.2)';
-      child.style.boxSizing = 'border-box';
-      child.style.opacity = '1';
-      child.style.animation = 'none';
+      child.style.setProperty('flex', '0 0 auto', 'important');
+      child.style.setProperty('width', isMobile ? '200px' : '280px', 'important');
+      child.style.setProperty('padding', isMobile ? '0 15px' : '0 30px', 'important');
+      child.style.setProperty('border-right', '1px solid rgba(255,255,255,0.2)', 'important');
+      child.style.setProperty('box-sizing', 'border-box', 'important');
+      child.style.setProperty('opacity', '1', 'important');
+      child.style.setProperty('animation', 'none', 'important');
 
       // Override description max-width to prevent word squishing
       const desc = child.querySelector('.ai-trust-badge-description-{{ ai_gen_id }}');
       if (desc) {
-        desc.style.maxWidth = '100%';
-        desc.style.width = '100%';
+        desc.style.setProperty('max-width', '100%', 'important');
+        desc.style.setProperty('width', '100%', 'important');
       }
     });
 
