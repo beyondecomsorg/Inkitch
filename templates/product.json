@@ -74,6 +74,7 @@
         },
         "description_video": {
           "type": "description_video",
+          "disabled": true,
           "settings": {}
         },
         "share": {
@@ -113,6 +114,18 @@
         "enable_video_looping": false,
         "padding_top": 36,
         "padding_bottom": 12
+      }
+    },
+    "product_description_videos_h3BLXj": {
+      "type": "product-description-videos",
+      "name": "Product videos",
+      "settings": {
+        "heading": "Product Features",
+        "section_background": "#FFFDF4",
+        "heading_color": "#1B2E2A",
+        "text_color": "#555555",
+        "card_border_radius": 20,
+        "enable_card_shadow": true
       }
     },
     "product-comparison": {
@@ -170,7 +183,8 @@
       "settings": {
         "speed": 24,
         "bg_color": "#f8f8f8",
-        "text_color": "#FF0000"
+        "text_color": "#ff0000",
+        "background_color": "#e30613"
       }
     },
     "related-products": {
@@ -258,6 +272,7 @@
   },
   "order": [
     "main",
+    "product_description_videos_h3BLXj",
     "product-comparison",
     "infinite_marquee_CEQhQJ",
     "related-products",

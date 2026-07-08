@@ -22,6 +22,12 @@
       "id": "text_color",
       "label": "Text Color",
       "default": "#12345b"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#E30613"
     }
   ],
   "blocks": [
@@ -46,7 +52,7 @@
 }
 {% endschema %}
 
-<section class="infinite-marquee" style="background:{{ section.settings.bg_color }};">
+<section class="infinite-marquee" style="--marquee-background: {{ section.settings.background_color | default: '#E30613' }};">
   <div class="marquee-track">
     {% for i in (1..2) %}
       <div class="marquee-group">
@@ -66,6 +72,7 @@
   overflow:hidden;
   width:100%;
   padding:14px 0;
+  background: var(--marquee-background) !important; /* Use color picker from Theme Editor */
 }
 
 .marquee-track{
@@ -89,12 +96,30 @@
   font-weight:600;
   letter-spacing:.5px;
   text-transform:uppercase;
-  color:{{ section.settings.text_color }};
+  color: #ffffff !important; /* Force all text to white */
 }
 
 .marquee-item .dot{
-  color:#6CC04A;
+  color: #ffffff !important; /* Color the separator dot white */
   font-size:10px;
+}
+
+/* Ensure SVG icons and all their nested paths are white */
+.marquee-item svg {
+  color: #ffffff !important;
+}
+
+.marquee-item svg path:not([fill="none"]),
+.marquee-item svg circle:not([fill="none"]),
+.marquee-item svg rect:not([fill="none"]),
+.marquee-item svg polygon:not([fill="none"]),
+.marquee-item svg ellipse:not([fill="none"]),
+.marquee-item svg polyline:not([fill="none"]) {
+  fill: #ffffff !important;
+}
+
+.marquee-item svg [stroke] {
+  stroke: #ffffff !important;
 }
 
 @keyframes marqueeScroll{

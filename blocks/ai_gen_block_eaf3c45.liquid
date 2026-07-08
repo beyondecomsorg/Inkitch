@@ -8,7 +8,9 @@
   .ai-text-title-{{ ai_gen_id }} {
     display: block;
     width: 100%;
+    {% comment %}
     padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
+    {% endcomment %}
   }
 
   .ai-text-title-container-{{ ai_gen_id }} {

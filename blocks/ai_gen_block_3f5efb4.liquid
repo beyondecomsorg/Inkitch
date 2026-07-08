@@ -26,7 +26,7 @@
   .ai-why-inkitch-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    padding: 70px 24px !important;
+    padding: 60px 24px !important;
     background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%) !important;
     border-top: 4px solid #E30613 !important;
     box-sizing: border-box;
@@ -76,12 +76,13 @@
     margin-top: 48px;
   }
 
+  /* Feature Card Base Styles with Brand Red Gradient */
   .ai-why-inkitch-feature-{{ ai_gen_id }} {
-    background: #ffffff !important;
+    background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important;
     border-radius: 16px !important;
     padding: 32px 24px !important;
-    border: 1px solid #f0f0f0 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+    border: none !important; /* Removed light gray border */
+    box-shadow: 0 12px 30px rgba(227, 6, 19, 0.18) !important; /* Added brand-colored subtle shadow */
     text-align: center !important;
     display: flex;
     flex-direction: column;
@@ -90,10 +91,10 @@
     box-sizing: border-box;
     cursor: default;
     
-    /* Animation start state */
+    /* Animation and Hover transitions */
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease !important;
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease !important;
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible {
@@ -101,18 +102,19 @@
     transform: translateY(0);
   }
 
+  /* Hover Lift & Brightened Gradient on Desktop */
   .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(227,6,19,0.12) !important;
-    border-color: #E30613 !important;
+    transform: translateY(-8px) !important;
+    background: linear-gradient(135deg, #9c0000 0%, #d10010 40%, #f60815 100%) !important; /* Brightened version of brand gradient */
+    box-shadow: 0 16px 36px rgba(227, 6, 19, 0.28) !important;
   }
 
+  /* Icon Wrapper (Removed background circle and border, placed directly on card) */
   .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: #fff0f0;
-    border: 1.5px solid rgba(227,6,19,0.2);
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    border: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -120,28 +122,32 @@
     transition: all 0.3s ease;
   }
 
+  /* Icon Style (Colored white, slightly increased size) */
   .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
-    width: 32px;
-    height: 32px;
-    stroke: #E30613;
+    width: 40px !important;
+    height: 40px !important;
+    stroke: #ffffff !important; /* Set icon outline to white */
     fill: none;
     stroke-width: 1.5;
     transition: all 0.3s ease;
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
-    background: #E30613;
-    border-color: #E30613;
+    background: transparent !important;
+    border-color: transparent !important;
   }
 
+  /* Interactive hover scale for the SVG icon */
   .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
-    stroke: #ffffff;
+    stroke: #ffffff !important;
+    transform: scale(1.08) !important;
   }
 
+  /* Card Headings (White text color) */
   .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
     font-size: 15px !important;
     font-weight: 700 !important;
-    color: #1a1a1a !important;
+    color: #ffffff !important; /* Make text white */
     margin-top: 4px;
     margin-bottom: 0;
     transition: color 0.3s ease;
@@ -150,22 +156,24 @@
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
-    color: #E30613 !important;
+    color: #ffffff !important; /* Stay white on hover */
   }
 
+  /* Card Descriptions (White text with soft opacity for readability) */
   .ai-why-inkitch-feature-desc-{{ ai_gen_id }} {
     font-size: 13px;
-    color: #888;
-    margin-top: 6px;
+    color: rgba(255, 255, 255, 0.9) !important; /* Set text to white with high visibility opacity */
+    margin-top: 8px !important;
     margin-bottom: 0;
     line-height: 1.5;
     font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
   }
 
+  /* Counter/Numbers (White text color) */
   .ai-why-inkitch-counter-{{ ai_gen_id }} {
     font-size: 32px;
     font-weight: 800;
-    color: #E30613;
+    color: #ffffff !important; /* Make numbers white */
     line-height: 1;
     margin-bottom: 8px;
     font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
@@ -196,6 +204,7 @@
     }
   }
 
+  /* Mobile Layout Overrides (< 749px) */
   @media screen and (max-width: 749px) {
     .ai-why-inkitch-{{ ai_gen_id }} {
       padding: 40px 16px !important;
@@ -223,19 +232,19 @@
       display: none;
     }
     .ai-why-inkitch-feature-{{ ai_gen_id }} {
-      flex: 0 0 calc((100% - 32px) / 1.2);
-      min-width: calc((100% - 32px) / 1.2);
-      scroll-snap-align: start;
+      flex: 0 0 calc((100% - 32px) / 1.2) !important;
+      min-width: calc((100% - 32px) / 1.2) !important;
+      scroll-snap-align: start !important;
       padding: 24px 16px !important;
     }
     .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} {
-      width: 56px !important;
-      height: 56px !important;
+      width: auto !important;
+      height: auto !important;
       margin-bottom: 12px !important;
     }
     .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
-      width: 24px !important;
-      height: 24px !important;
+      width: 32px !important;
+      height: 32px !important;
     }
     .ai-why-inkitch-counter-{{ ai_gen_id }} {
       font-size: 26px !important;

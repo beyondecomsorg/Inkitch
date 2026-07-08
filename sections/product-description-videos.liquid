@@ -1,0 +1,422 @@
+{% comment %}
+  Product Description Videos Section
+  Displays videos and corresponding description texts sourced from product metafields.
+{% endcomment %}
+
+{%- if product.metafields.custom.product_description_video.value != blank -%}
+  {%- assign videos = product.metafields.custom.product_description_video.value -%}
+  {%- assign texts = product.metafields.custom.product_description_video_text.value -%}
+
+  <div class="product-description-videos-section product-description-videos-{{ section.id }}" style="--section-bg: {{ section.settings.section_background }}; --heading-color: {{ section.settings.heading_color }}; --text-color: {{ section.settings.text_color }};">
+    <div class="section-container">
+      {%- if section.settings.heading != blank -%}
+        <div class="section-header">
+          <h2 class="section-heading">{{ section.settings.heading }}</h2>
+          <div class="heading-accent"></div>
+        </div>
+      {%- endif -%}
+
+      <div class="video-grid-wrapper">
+        <div class="video-grid video-grid-{{ section.id }}">
+          {%- for video in videos -%}
+            {%- assign video_text = texts[forloop.index0] -%}
+            <div class="video-card video-card-{{ section.id }}" data-index="{{ forloop.index0 }}">
+              <div class="video-wrapper">
+                {% comment %} Render HTML5 video with poster image. Controls are enabled via JS once clicked {% endcomment %}
+                {{ video | video_tag: controls: false, image_size: '600x', loading: 'lazy', preload: 'none', class: 'description-video-player' }}
+                <button class="custom-play-button" aria-label="Play Video">
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5V19L19 12L8 5Z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="card-content">
+                {%- if video_text != blank -%}
+                  <h3 class="card-title">{{ video_text }}</h3>
+                {%- else -%}
+                  <h3 class="card-title">Feature {{ forloop.index }}</h3>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if videos.size > 1 -%}
+        <div class="slider-dots slider-dots-{{ section.id }}">
+          {%- for video in videos -%}
+            <button class="slider-dot slider-dot-{{ section.id }}{% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <style>
+    .product-description-videos-{{ section.id }} {
+      background-color: var(--section-bg) !important;
+      padding: 60px 24px;
+      overflow: hidden;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .product-description-videos-{{ section.id }} .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .product-description-videos-{{ section.id }} .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .product-description-videos-{{ section.id }} .section-heading {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--heading-color) !important;
+      margin: 0 0 10px 0;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    /* Inkitch Brand Accent Line below heading */
+    .product-description-videos-{{ section.id }} .heading-accent {
+      width: 70px;
+      height: 4px;
+      background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important;
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+
+    .product-description-videos-{{ section.id }} .video-grid-wrapper {
+      width: 100%;
+    }
+
+    /* Horizontal scroll row by default to act as a scroller slider on desktop, tablet, and mobile */
+    .product-description-videos-{{ section.id }} .video-grid {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 24px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 10px 0 20px 0 !important;
+      scrollbar-width: none !important; /* Hide scrollbar for Firefox */
+    }
+
+    /* Hide scrollbar for Chrome/Safari/Opera */
+    .product-description-videos-{{ section.id }} .video-grid::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    /* Desktop layout: shows exactly 4 cards per row */
+    .product-description-videos-{{ section.id }} .video-card {
+      flex: 0 0 calc((100% - 72px) / 4) !important;
+      min-width: calc((100% - 72px) / 4) !important;
+      scroll-snap-align: start !important;
+      background-color: #ffffff !important;
+      border-radius: {{ section.settings.card_border_radius }}px !important;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+      {%- if section.settings.enable_card_shadow -%}
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06) !important;
+      {%- endif -%}
+      border: 1px solid #f0f0f0 !important;
+    }
+
+    /* Hover effect: lift card and highlight with brand color */
+    .product-description-videos-{{ section.id }} .video-card:hover {
+      transform: translateY(-8px);
+      border-color: #c0000f !important;
+      {%- if section.settings.enable_card_shadow -%}
+        box-shadow: 0 16px 36px rgba(227, 6, 19, 0.12) !important;
+      {%- endif -%}
+    }
+
+    .product-description-videos-{{ section.id }} .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16 !important; /* Premium vertical video aspect ratio matching screenshot */
+      background-color: #000000 !important;
+      overflow: hidden;
+    }
+
+    /* Styling internal description video players */
+    .product-description-videos-{{ section.id }} .description-video-player {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block;
+    }
+
+    /* Custom Play Button Overlay */
+    .product-description-videos-{{ section.id }} .custom-play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important; /* Brand Red Gradient */
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(227, 6, 19, 0.4) !important;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, background 0.25s ease;
+      z-index: 2;
+    }
+
+    .product-description-videos-{{ section.id }} .custom-play-button svg {
+      width: 24px;
+      height: 24px;
+      fill: #ffffff !important;
+      margin-left: 4px; /* Offset slightly to visually center triangle */
+      transition: transform 0.25s ease;
+    }
+
+    .product-description-videos-{{ section.id }} .custom-play-button:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: #E30613 !important;
+      box-shadow: 0 6px 20px rgba(227, 6, 19, 0.5) !important;
+    }
+
+    .product-description-videos-{{ section.id }} .custom-play-button:hover svg {
+      transform: scale(1.15);
+    }
+
+    /* Card Text Content Styling - matching second reference image */
+    .product-description-videos-{{ section.id }} .card-content {
+      padding: 16px 20px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: flex-start;
+      text-align: left; /* Left aligned like reference image */
+      background-color: #ffffff !important;
+    }
+
+    .product-description-videos-{{ section.id }} .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111111 !important;
+      margin: 0;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+    }
+
+    /* Slider dots pagination */
+    .product-description-videos-{{ section.id }} .slider-dots {
+      display: none;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .product-description-videos-{{ section.id }} .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #d1d1d1 !important;
+      border: none !important;
+      padding: 0;
+      cursor: pointer;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+    }
+
+    .product-description-videos-{{ section.id }} .slider-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important; /* Inkitch brand accent */
+    }
+
+    /* Tablet Responsive: 2 cards visible */
+    @media screen and (max-width: 990px) {
+      .product-description-videos-{{ section.id }} .video-grid {
+        gap: 16px !important;
+      }
+      .product-description-videos-{{ section.id }} .video-card {
+        flex: 0 0 calc((100% - 16px) / 2) !important;
+        min-width: calc((100% - 16px) / 2) !important;
+      }
+      .product-description-videos-{{ section.id }} {
+        padding: 50px 20px;
+      }
+    }
+
+    /* Mobile Responsive Slider: 1.25 cards visible */
+    @media screen and (max-width: 749px) {
+      .product-description-videos-{{ section.id }} {
+        padding: 40px 16px;
+      }
+      
+      .product-description-videos-{{ section.id }} .video-grid {
+        padding: 10px 16px 20px 16px !important;
+        margin-left: -16px !important;
+        margin-right: -16px !important;
+        scroll-padding-left: 16px !important;
+      }
+
+      .product-description-videos-{{ section.id }} .video-card {
+        flex: 0 0 calc((100% - 16px) / 1.25) !important;
+        min-width: calc((100% - 16px) / 1.25) !important;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      // Dynamic IntersectionObserver to track scroll position and update active dot indicators
+      function initVideoSection() {
+        const grid = document.querySelector('.video-grid-{{ section.id }}');
+        const dots = document.querySelectorAll('.slider-dot-{{ section.id }}');
+        const cards = document.querySelectorAll('.video-card-{{ section.id }}');
+        
+        if (!grid || dots.length === 0 || cards.length === 0) return;
+        
+        // Threshold of 0.6 updates the active dot when the card occupies at least 60% of viewport width
+        const observerOptions = {
+          root: grid,
+          threshold: 0.6
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              const activeIndex = entry.target.getAttribute('data-index');
+              dots.forEach(function(dot, idx) {
+                if (idx == activeIndex) {
+                  dot.classList.add('active');
+                } else {
+                  dot.classList.remove('active');
+                }
+              });
+            }
+          });
+        }, observerOptions);
+        
+        cards.forEach(function(card) {
+          observer.observe(card);
+        });
+
+        // Add dot click-to-scroll functionality for seamless navigation
+        dots.forEach(function(dot) {
+          dot.addEventListener('click', function() {
+            const index = this.getAttribute('data-index');
+            const targetCard = document.querySelector('.video-card-{{ section.id }}[data-index="' + index + '"]');
+            if (targetCard) {
+              targetCard.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+              });
+            }
+          });
+        });
+
+        // Setup custom play buttons click-to-play handlers
+        cards.forEach(function(card) {
+          const playBtn = card.querySelector('.custom-play-button');
+          const video = card.querySelector('video');
+          if (playBtn && video) {
+            playBtn.addEventListener('click', function() {
+              video.play();
+              video.controls = true;
+              playBtn.style.opacity = '0';
+              playBtn.style.pointerEvents = 'none';
+            });
+
+            // Toggle overlay button on state change
+            video.addEventListener('play', function() {
+              playBtn.style.opacity = '0';
+              playBtn.style.pointerEvents = 'none';
+            });
+
+            video.addEventListener('pause', function() {
+              playBtn.style.opacity = '1';
+              playBtn.style.pointerEvents = 'auto';
+            });
+          }
+        });
+      }
+
+      // Initialize on DOM ready or run immediately if ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initVideoSection);
+      } else {
+        initVideoSection();
+      }
+
+      // Re-initialize when Shopify theme editor loads/configures section
+      document.addEventListener('shopify:section:load', function(event) {
+        if (event.target.querySelector('.video-grid-{{ section.id }}')) {
+          initVideoSection();
+        }
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product videos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product Features"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Section Background",
+      "default": "#FFFDF4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1B2E2A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#555555"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card Border Radius",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_shadow",
+      "label": "Enable Card Shadow",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product videos"
+    }
+  ]
+}
+{% endschema %}

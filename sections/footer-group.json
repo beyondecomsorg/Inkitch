@@ -11,6 +11,55 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
+    "infinite_marquee_FeYdPK": {
+      "type": "infinite-marquee",
+      "blocks": {
+        "item_AGtUiK": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_TkGTHQ": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_cCaR7P": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_QTABgi": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_MzWNUi": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        }
+      },
+      "block_order": [
+        "item_AGtUiK",
+        "item_TkGTHQ",
+        "item_cCaR7P",
+        "item_QTABgi",
+        "item_MzWNUi"
+      ],
+      "name": "Infinite Marquee",
+      "settings": {
+        "speed": 24,
+        "bg_color": "#f8f8f8",
+        "text_color": "#12345b",
+        "background_color": "#E30613"
+      }
+    },
     "1780470201da0dcd2c": {
       "type": "_blocks",
       "settings": {}
@@ -131,6 +180,7 @@
     "1780470201da0dcd2c",
     "17804703242f1f45b4",
     "1780472574d8df9ed0",
+    "infinite_marquee_FeYdPK",
     "blocks_UQ3Vcn",
     "footer",
     "1779534794342502e7"

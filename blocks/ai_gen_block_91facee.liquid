@@ -176,6 +176,12 @@
     flex-wrap: nowrap !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    position: relative !important; /* Added to ensure children offsetLeft calculations are relative to the track */
+  }
+
+  /* Utility class to hide cloned cards on desktop */
+  .ai-cloned-card-{{ ai_gen_id }} {
+    display: none !important;
   }
 
   .ai-marketplace-card-{{ ai_gen_id }} {
@@ -258,59 +264,59 @@
     color: #E30613 !important;
   }
 
+  /* Mobile and Tablet styles (< 768px) */
   @media screen and (max-width: 768px) {
-    .ai-marketplace-carousel-track-{{ ai_gen_id }} {
-      flex-wrap: wrap !important;
-      gap: 16px !important;
-      justify-content: center !important;
-    }
-  }
-
-  @media screen and (max-width: 749px) {
     .ai-marketplace-carousel-track-{{ ai_gen_id }} {
       display: flex !important;
       flex-direction: row !important;
       flex-wrap: nowrap !important;
       overflow-x: auto !important;
       overflow-y: hidden !important;
-      scroll-snap-type: x mandatory !important;
-      scroll-padding-left: 16px !important;
       -webkit-overflow-scrolling: touch !important;
       gap: 16px !important;
       justify-content: flex-start !important;
       padding: 10px 16px !important;
       margin-left: -16px !important;
       margin-right: -16px !important;
+      scroll-snap-type: none !important; /* Disabled scroll-snap to guarantee smooth animation */
+      scrollbar-width: none !important; /* Hide scrollbars for Firefox */
     }
 
+    /* Hide scrollbars for Chrome, Safari, Opera */
     .ai-marketplace-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
       display: none !important;
     }
 
     .ai-marketplace-card-{{ ai_gen_id }} {
-      flex: 0 0 calc((100% - 32px) / 3.2) !important;
-      min-width: calc((100% - 32px) / 3.2) !important;
-      scroll-snap-align: start !important;
+      flex: 0 0 120px !important;
+      min-width: 120px !important;
+      scroll-snap-align: none !important;
+    }
+
+    /* Display cloned cards on mobile for the seamless infinite scroll loop */
+    .ai-cloned-card-{{ ai_gen_id }} {
+      display: flex !important;
     }
   }
 
+  /* Small Mobile styles (< 600px) */
   @media screen and (max-width: 600px) {
     .ai-marketplace-showcase-{{ ai_gen_id }} {
       padding: 40px 16px !important;
     }
 
     .ai-marketplace-card-{{ ai_gen_id }} {
-      height: 110px !important;
+      flex: 0 0 100px !important;
+      min-width: 100px !important;
+      height: 100px !important;
       padding: 12px 10px !important;
       gap: 6px !important;
     }
 
     .ai-marketplace-logo-wrapper-{{ ai_gen_id }} {
-      width: 48px !important;
-      height: 48px !important;
+      width: 44px !important;
+      height: 44px !important;
     }
-
-    /* Font size scaled dynamically via responsive CSS variable on mobile */
   }
 {% endstyle %}
 
@@ -325,7 +331,7 @@
     {% endif %}
   </div>
 
-  <div class="ai-marketplace-carousel-wrapper-{{ ai_gen_id }}">
+  <div class="ai-marketplace-carousel-wrapper-{{ ai_gen_id }}" data-duration="{{ block.settings.animation_duration | default: 20 }}">
     <div class="ai-marketplace-carousel-track-{{ ai_gen_id }}">
       {% for i in (1..8) %}
         {% liquid
@@ -376,6 +382,193 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    // Function to initialize the infinite scrolling marquee
+    function initMarquee() {
+      const wrapper = document.querySelector('.ai-marketplace-carousel-wrapper-{{ ai_gen_id }}');
+      if (!wrapper) return;
+      
+      // Prevent duplicate initializations in case of multiple load events
+      if (wrapper.dataset.marqueeInitialized) return;
+      wrapper.dataset.marqueeInitialized = 'true';
+      
+      const track = wrapper.querySelector('.ai-marketplace-carousel-track-{{ ai_gen_id }}');
+      if (!track) return;
+      
+      // Track original children cards
+      const originalCards = Array.from(track.children);
+      if (originalCards.length === 0) return;
+      
+      // Tag original cards to easily differentiate them
+      originalCards.forEach(card => card.classList.add('ai-original-card-{{ ai_gen_id }}'));
+      
+      // Duplicate all original cards and append them to create a seamless infinite loop
+      originalCards.forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.classList.add('ai-cloned-card-{{ ai_gen_id }}');
+        clone.classList.remove('ai-original-card-{{ ai_gen_id }}');
+        track.appendChild(clone);
+      });
+      
+      let animationFrameId = null;
+      let scrollPosition = 0;
+      let isTouching = false;
+      let isHovering = false;
+      let isScrolling = false;
+      let isAnimatingScroll = false;
+      let scrollTimeout = null;
+      
+      // Speed and duration configuration
+      const durationSetting = parseInt(wrapper.getAttribute('data-duration'), 10) || 20;
+      // Decreasing the multiplier decreases the loop duration, which increases the speed.
+      // E.g. setting of 20 seconds becomes a 12 second loop (20 * 600 = 12000ms).
+      const loopDuration = durationSetting * 100; 
+      
+      // Check prefers-reduced-motion media query
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let isMobile = window.innerWidth <= 768;
+      
+      // Helper to determine if the marquee should currently be auto-scrolling
+      function shouldAnimate() {
+        return isMobile && !prefersReducedMotion.matches && !isTouching && !isHovering && !isScrolling;
+      }
+      
+      // Calculate the reset boundary: difference in offsetLeft between first cloned card and first original card
+      function getResetPoint() {
+        const clonedCards = track.querySelectorAll('.ai-cloned-card-{{ ai_gen_id }}');
+        if (clonedCards.length > 0 && originalCards.length > 0) {
+          return clonedCards[0].offsetLeft - originalCards[0].offsetLeft;
+        }
+        return track.scrollWidth / 2;
+      }
+      
+      let lastTime = performance.now();
+      
+      // Frame loop step function
+      function step(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+        
+        isMobile = window.innerWidth <= 768;
+        
+        if (shouldAnimate()) {
+          const resetPoint = getResetPoint();
+          if (resetPoint > 0) {
+            const speed = resetPoint / loopDuration; // pixels per millisecond
+            
+            scrollPosition += speed * deltaTime;
+            
+            // Loop scroll position seamlessly
+            if (scrollPosition >= resetPoint) {
+              scrollPosition -= resetPoint;
+            }
+            
+            // Set scrollLeft and flag that this is programmatically driven
+            isAnimatingScroll = true;
+            track.scrollLeft = scrollPosition;
+            isAnimatingScroll = false;
+          }
+        } else {
+          // Sync internal position tracking during manual user scroll/dragging/momentum
+          scrollPosition = track.scrollLeft;
+          
+          // Seamless boundary handling during manual drag/momentum scrolling
+          const resetPoint = getResetPoint();
+          if (resetPoint > 0) {
+            if (scrollPosition >= resetPoint) {
+              scrollPosition -= resetPoint;
+              isAnimatingScroll = true;
+              track.scrollLeft = scrollPosition;
+              isAnimatingScroll = false;
+            } else if (scrollPosition < 0) {
+              scrollPosition += resetPoint;
+              isAnimatingScroll = true;
+              track.scrollLeft = scrollPosition;
+              isAnimatingScroll = false;
+            }
+          }
+        }
+        
+        animationFrameId = requestAnimationFrame(step);
+      }
+      
+      // Start the animation loop
+      animationFrameId = requestAnimationFrame(step);
+      
+      // Touch/Interaction handlers to pause animation when touching or swiping
+      track.addEventListener('touchstart', function() {
+        isTouching = true;
+      }, { passive: true });
+      
+      track.addEventListener('touchend', function() {
+        // Delay to allow ease-out/inertia to start registering in scroll events
+        setTimeout(function() {
+          isTouching = false;
+        }, 150);
+      }, { passive: true });
+      
+      track.addEventListener('touchcancel', function() {
+        isTouching = false;
+      }, { passive: true });
+      
+      // Hover handlers (primarily for desktop or pointer debugging)
+      track.addEventListener('mouseenter', function() {
+        isHovering = true;
+      });
+      
+      track.addEventListener('mouseleave', function() {
+        isHovering = false;
+      });
+      
+      // Scroll listener to detect when user drags manually or momentum scroll is active
+      track.addEventListener('scroll', function() {
+        if (isAnimatingScroll) return; // Skip scroll events triggered programmatically by the step loop
+        
+        isScrolling = true;
+        scrollPosition = track.scrollLeft;
+        
+        // Debounce mechanism: only resume auto-scroll 150ms after the last scroll event occurs
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+          isScrolling = false;
+        }, 150);
+      });
+      
+      // Reset scroll position on window resize if transitioned to desktop view
+      window.addEventListener('resize', function() {
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth <= 768;
+        if (wasMobile && !isMobile) {
+          track.scrollLeft = 0;
+          scrollPosition = 0;
+        }
+      });
+    }
+
+    // Initialize once DOM is ready or run immediately if already loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMarquee);
+    } else {
+      initMarquee();
+    }
+    
+    // Listen for Shopify Section/Block Editor events to keep it functional while editing
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.target.querySelector('.ai-marketplace-carousel-wrapper-{{ ai_gen_id }}')) {
+        initMarquee();
+      }
+    });
+    
+    document.addEventListener('shopify:block:select', function(event) {
+      if (event.target.querySelector('.ai-marketplace-carousel-wrapper-{{ ai_gen_id }}')) {
+        initMarquee();
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {
