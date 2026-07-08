@@ -117,7 +117,61 @@
     },
     "product-comparison": {
       "type": "product-comparison-table",
-      "settings": {}
+      "settings": {
+        "eyebrow": "THE COMPARISON",
+        "heading": "Mesmerize vs. everything else.",
+        "subheading": "Most stone bracelets look similar at first. What separates them is what you can't see, until something breaks.",
+        "brand_name": "Brand",
+        "other_brand_name": "Others"
+      }
+    },
+    "infinite_marquee_CEQhQJ": {
+      "type": "infinite-marquee",
+      "blocks": {
+        "item_QkDRpw": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_hxtTgC": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_mefbhp": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_7zwpKe": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        },
+        "item_TPUaMH": {
+          "type": "item",
+          "settings": {
+            "text": "Easy Exchanges"
+          }
+        }
+      },
+      "block_order": [
+        "item_QkDRpw",
+        "item_hxtTgC",
+        "item_mefbhp",
+        "item_7zwpKe",
+        "item_TPUaMH"
+      ],
+      "name": "Infinite Marquee",
+      "settings": {
+        "speed": 24,
+        "bg_color": "#f8f8f8",
+        "text_color": "#FF0000"
+      }
     },
     "related-products": {
       "type": "related-products",
@@ -205,6 +259,7 @@
   "order": [
     "main",
     "product-comparison",
+    "infinite_marquee_CEQhQJ",
     "related-products",
     "17820441034226e7a6",
     "1782284828efc73605"
