@@ -27,60 +27,13 @@
     
     The icon circles should be outlined style (not filled) in dark green (#1D5C3A). Heading text in bold dark charcoal (#1A1A1A), description in medium gray (#555555). Each item's icon, heading, and description should be editable from the theme editor. On mobile, display 2 items per row and wrap to the next line, keeping icon and text side by side within each item.
 {% enddoc %}
-{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign ai_gen_id = section.id | replace: '_', '' | downcase %}
 
 {% style %}
-
-.trust-marquee-track {
-    animation: trustScroll {{ block.settings.marquee_speed }}s linear infinite;
-}
-@media (max-width: 768px) {
-    .trust-marquee-track {
-        animation-duration: 18s;
-    }
-
-    .ai-trust-badge-item-{{ ai_gen_id }} {
-        width: 180px;
-    }
-}
-.trust-marquee {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-}
-
-.trust-marquee-track {
-    display: flex;
-    width: max-content;
-    animation: trustScroll 25s linear infinite;
-}
-
-.trust-marquee:hover .trust-marquee-track {
-    animation-play-state: paused;
-}
-
-.ai-trust-badges-grid-{{ ai_gen_id }} {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.ai-trust-badge-item-{{ ai_gen_id }} {
-    width: 220px;
-    flex-shrink: 0;
-}
-
-@keyframes trustScroll {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
+  /* General structure */
   .ai-trust-badges-section-{{ ai_gen_id }} {
     display: block;
-    background: linear-gradient(135deg, #c0000f 0%, #E30613 60%, #ff2020 100%) !important;
+    background: {{ section.settings.background_color | default: 'linear-gradient(135deg, #c0000f 0%, #E30613 60%, #ff2020 100%)' }} !important;
     position: relative;
     border-top: 2px solid rgba(255,255,255,0.3) !important;
     border-bottom: 2px solid rgba(255,255,255,0.3) !important;
@@ -104,23 +57,19 @@
   }
 
   .ai-trust-badges-container-{{ ai_gen_id }} {
-    max-width: 1200px !important;
+    max-width: {{ section.settings.max_width | default: 1200 }}px !important;
     margin: 0 auto;
-    padding: 28px 40px !important;
+    padding: {{ section.settings.padding_vertical | default: 20 }}px {{ section.settings.padding_horizontal | default: 20 }}px !important;
     position: relative;
     z-index: 2;
   }
 
+  /* Static Grid style */
   .ai-trust-badges-grid-{{ ai_gen_id }} {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 0;
-  }
-
-  @keyframes fadeUp-{{ ai_gen_id }} { 
-    from { opacity: 0; transform: translateY(16px); } 
-    to { opacity: 1; transform: translateY(0); } 
+    gap: {{ section.settings.gap | default: 20 }}px;
   }
 
   .ai-trust-badge-item-{{ ai_gen_id }} {
@@ -134,47 +83,37 @@
     border-right: 1px solid rgba(255,255,255,0.2);
     cursor: default;
     transition: transform 0.3s ease;
-    
-    /* Animation settings */
-    opacity: 0;
-    animation: fadeUp-{{ ai_gen_id }} 0.5s ease forwards;
   }
 
   .ai-trust-badge-item-{{ ai_gen_id }}:last-child {
     border-right: none;
   }
 
-  .ai-trust-badge-item-{{ ai_gen_id }}:nth-child(1) { animation-delay: 0ms; }
-  .ai-trust-badge-item-{{ ai_gen_id }}:nth-child(2) { animation-delay: 100ms; }
-  .ai-trust-badge-item-{{ ai_gen_id }}:nth-child(3) { animation-delay: 200ms; }
-  .ai-trust-badge-item-{{ ai_gen_id }}:nth-child(4) { animation-delay: 300ms; }
-  .ai-trust-badge-item-{{ ai_gen_id }}:nth-child(5) { animation-delay: 400ms; }
-
   .ai-trust-badge-item-{{ ai_gen_id }}:hover {
     transform: translateY(-4px);
   }
 
   .ai-trust-badge-icon-{{ ai_gen_id }} {
-    width: 52px !important;
-    height: 52px !important;
+    width: {{ section.settings.icon_size | default: 50 }}px !important;
+    height: {{ section.settings.icon_size | default: 50 }}px !important;
     border-radius: 50% !important;
     background: rgba(255,255,255,0.15) !important;
-    border: 1.5px solid rgba(255,255,255,0.3) !important;
+    border: {{ section.settings.icon_border_width | default: 2 }}px solid rgba(255,255,255,0.3) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 auto 12px auto !important;
+    margin: 0 auto {{ section.settings.item_gap | default: 12 }}px auto !important;
     transition: all 0.3s ease !important;
     box-sizing: border-box;
     flex-shrink: 0;
   }
 
   .ai-trust-badge-icon-{{ ai_gen_id }} svg {
-    width: 24px !important;
-    height: 24px !important;
-    stroke: #ffffff !important;
+    width: calc({{ section.settings.icon_size | default: 50 }}px * 0.46) !important;
+    height: calc({{ section.settings.icon_size | default: 50 }}px * 0.46) !important;
+    stroke: {{ section.settings.icon_color | default: '#ffffff' }} !important;
     fill: none !important;
-    stroke-width: 2 !important;
+    stroke-width: {{ section.settings.icon_border_width | default: 2 }}px !important;
     transition: all 0.3s ease !important;
   }
 
@@ -184,7 +123,7 @@
   }
 
   .ai-trust-badge-item-{{ ai_gen_id }}:hover .ai-trust-badge-icon-{{ ai_gen_id }} svg {
-    stroke: #E30613 !important;
+    stroke: {{ section.settings.background_color | default: '#E30613' }} !important;
   }
 
   .ai-trust-badge-content-{{ ai_gen_id }} {
@@ -193,28 +132,29 @@
   }
 
   .ai-trust-badge-heading-{{ ai_gen_id }} {
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
+    font-size: {{ section.settings.heading_size | default: 14 }}px !important;
+    font-weight: {{ section.settings.heading_weight | default: 700 }} !important;
+    color: {{ section.settings.heading_color | default: '#ffffff' }} !important;
     letter-spacing: 0.3px !important;
-    margin: 0 0 4px 0 !important;
+    margin: 0 0 {{ section.settings.heading_spacing | default: 4 }}px 0 !important;
     text-transform: none !important;
     line-height: 1.2;
   }
 
   .ai-trust-badge-description-{{ ai_gen_id }} {
-    font-size: 12px !important;
-    color: rgba(255,255,255,0.8) !important;
+    font-size: {{ section.settings.description_size | default: 12 }}px !important;
+    color: {{ section.settings.description_color | default: '#555555' }} !important;
     line-height: 1.5 !important;
-    max-width: 120px !important;
+    max-width: 180px !important;
     margin: 0 auto !important;
   }
 
+  /* Static mobile layout */
   @media screen and (max-width: 768px) {
     .ai-trust-badges-grid-{{ ai_gen_id }} {
       display: grid !important;
       grid-template-columns: repeat(3, 1fr) !important;
-      gap: 20px !important;
+      gap: {{ section.settings.mobile_gap | default: 20 }}px !important;
     }
 
     .ai-trust-badge-item-{{ ai_gen_id }} {
@@ -253,226 +193,156 @@
       max-width: 100% !important;
     }
   }
+
+  /* Marquee scroll continuous styling */
+  {%- if section.settings.enable_marquee -%}
+    .trust-marquee {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    .trust-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: trustScroll-{{ ai_gen_id }} {{ section.settings.marquee_speed | default: 25 }}s linear infinite;
+    }
+
+    .trust-marquee:hover .trust-marquee-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes trustScroll-{{ ai_gen_id }} {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .ai-trust-badges-grid-{{ ai_gen_id }} {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      gap: 0px !important; /* gap handled by padding on items for seamless borders */
+    }
+
+    .ai-trust-badge-item-{{ ai_gen_id }} {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      text-align: center !important;
+      flex: 0 0 auto !important;
+      width: 240px !important; /* Fixed width per badge in marquee */
+      padding: 0 24px !important;
+      border-right: 1px solid rgba(255,255,255,0.2) !important;
+      box-sizing: border-box !important;
+      opacity: 1 !important;
+      animation: none !important;
+    }
+
+    @media screen and (max-width: 768px) {
+      .ai-trust-badge-item-{{ ai_gen_id }} {
+        width: 180px !important; /* Smaller width on mobile */
+        padding: 0 12px !important;
+      }
+      
+      .ai-trust-badge-icon-{{ ai_gen_id }} {
+        width: 44px !important;
+        height: 44px !important;
+      }
+      .ai-trust-badge-icon-{{ ai_gen_id }} svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      .ai-trust-badge-heading-{{ ai_gen_id }} {
+        font-size: 13px !important;
+      }
+      .ai-trust-badge-description-{{ ai_gen_id }} {
+        font-size: 11px !important;
+        max-width: 100% !important;
+      }
+    }
+  {%- endif -%}
 {% endstyle %}
 
-<div class="ai-trust-badges-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+{%- capture badges_html -%}
+  {%- for i in (1..5) -%}
+    {%- assign icon_key = 'icon_' | append: i -%}
+    {%- assign heading_key = 'heading_' | append: i -%}
+    {%- assign description_key = 'description_' | append: i -%}
+    
+    {%- assign icon = section.settings[icon_key] -%}
+    {%- assign heading = section.settings[heading_key] -%}
+    {%- assign description = section.settings[description_key] -%}
+
+    {%- if heading != blank or description != blank -%}
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+          {% case icon %}
+            {% when 'shield' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            {% when 'refresh' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            {% when 'truck' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            {% when 'ribbon' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6"/>
+                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
+              </svg>
+            {% when 'headset' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+          {% endcase %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if heading != blank %}
+            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ heading }}</h3>
+          {% endif %}
+          {% if description != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div class="ai-trust-badges-section-{{ ai_gen_id }}" {{ section.shopify_attributes }}>
   <div class="ai-trust-badges-container-{{ ai_gen_id }}">
-    <div class="ai-trust-badges-grid-{{ ai_gen_id }}">
-      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
-        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
-          {% case block.settings.icon_1 %}
-            {% when 'shield' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
-            {% when 'refresh' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-            {% when 'truck' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            {% when 'ribbon' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="6"/>
-                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
-              </svg>
-            {% when 'headset' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-              </svg>
-          {% endcase %}
-        </div>
-        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
-          {% if block.settings.heading_1 != blank %}
-            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_1 }}</h3>
-          {% endif %}
-          {% if block.settings.description_1 != blank %}
-            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_1 }}</p>
-          {% endif %}
+    {%- if section.settings.enable_marquee -%}
+      <div class="trust-marquee">
+        <div class="trust-marquee-track">
+          <div class="ai-trust-badges-grid-{{ ai_gen_id }}">
+            {{ badges_html }}
+          </div>
+          <div class="ai-trust-badges-grid-{{ ai_gen_id }}" aria-hidden="true">
+            {{ badges_html }}
+          </div>
         </div>
       </div>
-
-      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
-        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
-          {% case block.settings.icon_2 %}
-            {% when 'shield' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
-            {% when 'refresh' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-            {% when 'truck' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            {% when 'ribbon' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="6"/>
-                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
-              </svg>
-            {% when 'headset' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-              </svg>
-          {% endcase %}
-        </div>
-        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
-          {% if block.settings.heading_2 != blank %}
-            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_2 }}</h3>
-          {% endif %}
-          {% if block.settings.description_2 != blank %}
-            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_2 }}</p>
-          {% endif %}
-        </div>
+    {%- else -%}
+      <div class="ai-trust-badges-grid-{{ ai_gen_id }}">
+        {{ badges_html }}
       </div>
-
-      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
-        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
-          {% case block.settings.icon_3 %}
-            {% when 'shield' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
-            {% when 'refresh' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-            {% when 'truck' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            {% when 'ribbon' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="6"/>
-                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
-              </svg>
-            {% when 'headset' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-              </svg>
-          {% endcase %}
-        </div>
-        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
-          {% if block.settings.heading_3 != blank %}
-            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_3 }}</h3>
-          {% endif %}
-          {% if block.settings.description_3 != blank %}
-            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_3 }}</p>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
-        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
-          {% case block.settings.icon_4 %}
-            {% when 'shield' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
-            {% when 'refresh' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-            {% when 'truck' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            {% when 'ribbon' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="6"/>
-                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
-              </svg>
-            {% when 'headset' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-              </svg>
-          {% endcase %}
-        </div>
-        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
-          {% if block.settings.heading_4 != blank %}
-            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_4 }}</h3>
-          {% endif %}
-          {% if block.settings.description_4 != blank %}
-            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_4 }}</p>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
-        <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
-          {% case block.settings.icon_5 %}
-            {% when 'shield' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
-            {% when 'refresh' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-            {% when 'truck' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            {% when 'ribbon' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="6"/>
-                <polyline points="8 14 8 22 12 20 16 22 16 14"/>
-              </svg>
-            {% when 'headset' %}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-              </svg>
-          {% endcase %}
-        </div>
-        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
-          {% if block.settings.heading_5 != blank %}
-            <h3 class="ai-trust-badge-heading-{{ ai_gen_id }}">{{ block.settings.heading_5 }}</h3>
-          {% endif %}
-          {% if block.settings.description_5 != blank %}
-            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.description_5 }}</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+    {%- endif -%}
   </div>
 </div>
 
