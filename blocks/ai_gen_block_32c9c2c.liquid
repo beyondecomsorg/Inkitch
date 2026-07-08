@@ -30,6 +30,54 @@
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
+
+.trust-marquee-track {
+    animation: trustScroll {{ block.settings.marquee_speed }}s linear infinite;
+}
+@media (max-width: 768px) {
+    .trust-marquee-track {
+        animation-duration: 18s;
+    }
+
+    .ai-trust-badge-item-{{ ai_gen_id }} {
+        width: 180px;
+    }
+}
+.trust-marquee {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.trust-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: trustScroll 25s linear infinite;
+}
+
+.trust-marquee:hover .trust-marquee-track {
+    animation-play-state: paused;
+}
+
+.ai-trust-badges-grid-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.ai-trust-badge-item-{{ ai_gen_id }} {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+@keyframes trustScroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
   .ai-trust-badges-section-{{ ai_gen_id }} {
     display: block;
     background: linear-gradient(135deg, #c0000f 0%, #E30613 60%, #ff2020 100%) !important;
@@ -437,6 +485,22 @@
       "type": "header",
       "content": "Badge 1"
     },
+    {
+  "type": "checkbox",
+  "id": "enable_marquee",
+  "label": "Enable Marquee",
+  "default": true
+},
+{
+  "type": "range",
+  "id": "marquee_speed",
+  "min": 10,
+  "max": 60,
+  "step": 5,
+  "unit": "s",
+  "label": "Scroll Speed",
+  "default": 25
+},
     {
       "type": "select",
       "id": "icon_1",
