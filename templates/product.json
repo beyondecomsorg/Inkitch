@@ -66,6 +66,7 @@
         },
         "shipping_estimate": {
           "type": "shipping_estimate",
+          "disabled": true,
           "settings": {}
         },
         "description": {
@@ -79,6 +80,7 @@
         },
         "share": {
           "type": "share",
+          "disabled": true,
           "settings": {
             "share_label": "Share"
           }
@@ -121,8 +123,8 @@
       "name": "Product videos",
       "settings": {
         "heading": "Product Features",
-        "section_background": "#FFFDF4",
-        "heading_color": "#1B2E2A",
+        "section_background": "#fffdf4",
+        "heading_color": "#1b2e2a",
         "text_color": "#555555",
         "card_border_radius": 20,
         "enable_card_shadow": true

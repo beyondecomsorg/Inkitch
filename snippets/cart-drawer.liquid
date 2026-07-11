@@ -14,6 +14,18 @@
 <style>
   .drawer {
     visibility: hidden;
+    z-index: 2147483647 !important; /* Place above chat widgets when active */
+  }
+
+  cart-drawer-items {
+    overflow-x: hidden !important;
+  }
+  
+  @media screen and (max-width: 749px) {
+    cart-drawer-items::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+    }
   }
 
   /* Cart Drawer Redesign Overrides */
@@ -46,52 +58,169 @@
 
   /* Product Row Styling */
 
+  .cart-drawer .cart-items {
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
   .cart-drawer .cart-item {
-    border-bottom: 1px solid rgba(var(--color-foreground), 0.05) !important;
+    display: grid !important;
+    grid-template-columns: 80px 1fr !important; /* Column 1: Image, Column 2: Content (Details & Stepper) */
+    grid-template-rows: auto auto !important;
+    gap: 1.2rem 1.6rem !important;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08) !important;
+    padding: 1.5rem 0 !important;
+    align-items: start !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Strip default padding/margins from all td cells */
+  .cart-drawer .cart-item__media,
+  .cart-drawer .cart-item__details,
+  .cart-drawer .cart-item__totals,
+  .cart-drawer .cart-item__quantity {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .cart-drawer .cart-item > td + td {
+    padding-left: 0 !important;
+  }
+
+  /* Column 1: Image Container (spans row 1 & 2) */
+  .cart-drawer .cart-item__media {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(var(--color-foreground), 0.05) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: rgba(var(--color-foreground), 0.02) !important;
+    align-self: start !important; /* Align to the top */
+    position: relative !important;
   }
 
   .cart-drawer .cart-item__image {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important;
+    height: auto !important;
+    width: auto !important;
     border-radius: 8px !important;
-    border: 1px solid rgba(var(--color-foreground), 0.05) !important;
+  }
+
+  /* Column 2: Details */
+  .cart-drawer .cart-item__details {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.4rem !important;
+    align-self: start !important;
+    width: 100% !important;
+    min-width: 0 !important; /* Allow proper text wrapping */
+  }
+
+  .cart-drawer .cart-item__details > * {
+    max-width: 100% !important; /* Prevent titles/prices overflowing cell */
+    margin: 0 !important;
   }
 
   .cart-drawer .cart-item__name {
-    line-height: 1.3 !important;
-    margin-bottom: 0.5rem !important;
     font-size: 1.4rem !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    color: rgb(var(--color-foreground)) !important;
+    text-decoration: none !important;
+    display: block !important;
+    word-break: break-word !important;
   }
 
+  .cart-drawer .cart-item__discounted-prices,
   .cart-drawer .product-option {
     font-size: 1.2rem !important;
-    color: rgba(var(--color-foreground), 0.5) !important;
-    margin-top: 0.2rem !important;
+    color: rgba(var(--color-foreground), 0.6) !important;
+    line-height: 1.4 !important;
   }
 
-  /* Quantity & Delete Icon */
+  .cart-drawer dl {
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+
+  .cart-drawer dl .product-option {
+    display: flex !important;
+    gap: 0.4rem !important;
+  }
+
+  /* Column 2, Row 2: Quantity Stepper & Remove Button */
+  .cart-drawer .cart-item__quantity {
+    grid-column: 2 !important; /* Spans across Column 2 */
+    grid-row: 2 !important;
+    align-self: center !important;
+    width: 100% !important;
+  }
+
   .cart-drawer .cart-item__quantity-wrapper {
     display: flex !important;
     align-items: center !important;
     gap: 1.5rem !important;
-  }
-
-  .cart-drawer .quantity,
-  .cart-drawer .quantity:after,
-  .cart-drawer .quantity:before {
-    border-radius: 40px !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping stepper and delete icon */
   }
 
   .cart-drawer .quantity {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 3.2rem !important;
+    height: 3.2rem !important;
+    width: 10rem !important;
+    border-radius: 40px !important;
+    border: 1px solid rgba(var(--color-foreground), 0.15) !important;
     overflow: hidden !important;
-    min-height: 3.6rem !important;
-    height: 3.6rem !important;
+    background-color: transparent !important;
+    position: relative !important;
+  }
+
+  .cart-drawer .quantity:after,
+  .cart-drawer .quantity:before {
+    display: none !important;
   }
 
   .cart-drawer .quantity__input {
-    font-size: 1.4rem !important;
+    font-size: 1.3rem !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+    color: rgb(var(--color-foreground)) !important;
   }
 
   .cart-drawer .quantity__button {
-    width: 3.6rem !important;
+    width: 3.2rem !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    color: rgba(var(--color-foreground), 0.6) !important;
   }
 
   .cart-drawer .quantity__button:hover {
@@ -100,6 +229,14 @@
   }
 
   .cart-drawer .cart-remove-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
     color: rgba(var(--color-foreground), 0.4) !important;
     transition: color 0.2s ease !important;
   }
@@ -232,14 +369,6 @@
                       >
                         {{ 'sections.cart.headings.product' | t }}
                       </th>
-                      <th
-                        id="CartDrawer-ColumnTotal"
-                        class="right caption-with-letter-spacing"
-                        scope="col"
-                        role="columnheader"
-                      >
-                        {{ 'sections.cart.headings.total' | t }}
-                      </th>
                       <th id="CartDrawer-ColumnQuantity" role="columnheader">
                         <span class="visually-hidden">{{ 'sections.cart.headings.quantity' | t }}</span>
                       </th>
@@ -261,6 +390,7 @@
                           role="cell"
                           headers="CartDrawer-ColumnProductImage"
                         >
+                          {%- render 'loading-spinner' -%}
                           {% if item.image %}
                             {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
                             <a href="{{ item.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>
@@ -284,27 +414,55 @@
                             {{- item.product.title | escape -}}
                           </a>
 
-                          {%- if item.original_price != item.final_price -%}
-                            <div class="cart-item__discounted-prices">
-                              <span class="visually-hidden">
-                                {{ 'products.product.price.regular_price' | t }}
-                              </span>
-                              <s class="cart-item__old-price product-option">
-                                {{- item.original_price | money -}}
-                              </s>
-                              <span class="visually-hidden">
-                                {{ 'products.product.price.sale_price' | t }}
-                              </span>
-                              <strong class="cart-item__final-price product-option">
-                                {{ item.final_price | money }}
-                              </strong>
-                            </div>
-                          {%- else -%}
-                            <div class="product-option">
-                              {{ item.original_price | money }}
-                            </div>
-                          {%- endif -%}
+                          {%- comment -%} Single Price Line Total with Discount % (Product Card Style) {%- endcomment -%}
+                          {%- liquid
+                            assign compare_at_line_price = item.variant.compare_at_price | times: item.quantity
+                            if compare_at_line_price == 0
+                              assign compare_at_line_price = item.original_line_price
+                            endif
+                            
+                            assign final_line_price = item.final_line_price
+                            assign on_sale = false
+                            if compare_at_line_price > final_line_price
+                              assign on_sale = true
+                            endif
+                            
+                            assign money_compare = compare_at_line_price | money | replace: 'Rs.', '' | replace: 'Rs', '' | replace: '₹', '' | replace: ' ', '' | remove: '.00'
+                            assign money_price = final_line_price | money | replace: 'Rs.', '₹' | replace: 'Rs', '₹' | replace: ' ', '' | remove: '.00'
+                          -%}
+                          
+                          <div class="custom-cart-price" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; margin-bottom: 4px; text-align: left; font-family: var(--font-body-family);">
+                            {%- if on_sale -%}
+                              <!-- Row 1: MRP Strikethrough -->
+                              <div class="custom-cart-price__mrp" style="font-size: 1.2rem; color: #767676; text-decoration: line-through; line-height: 1.2;">
+                                MRP {{ money_compare }}
+                              </div>
+                              <!-- Row 2: Price and Discount -->
+                              <div class="custom-card-price__row" style="display: flex; align-items: center; gap: 8px; line-height: 1.2;">
+                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #E30613;">
+                                  {{ money_price }}
+                                </span>
+                                {%- assign discount_percent = compare_at_line_price | minus: final_line_price | times: 100.0 | divided_by: compare_at_line_price | round -%}
+                                <span class="custom-card-price__discount" style="background-color: #E2F6EA; color: #107C41; font-size: 1.0rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block;">
+                                  {{ discount_percent }}% OFF
+                                </span>
+                              </div>
+                            {%- else -%}
+                              <!-- Regular Selling Price only -->
+                              <div class="custom-card-price__row" style="display: flex; align-items: center; line-height: 1.2;">
+                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #E30613;">
+                                  {{ money_price }}
+                                </span>
+                              </div>
+                            {%- endif -%}
 
+                            {%- if item.variant.available and item.unit_price_measurement -%}
+                              <div class="unit-price caption" style="font-size: 1.1rem; color: rgba(var(--color-foreground), 0.6); margin-top: 2px;">
+                                {% render 'unit-price', price: item.unit_price, measurement: item.unit_price_measurement %}
+                              </div>
+                            {%- endif -%}
+                          </div>
+                          
                           {%- if item.product.has_only_default_variant == false
                             or item.properties.size != 0
                             or item.selling_plan_allocation != null
@@ -313,11 +471,8 @@
                               {%- if item.product.has_only_default_variant == false -%}
                                 {%- for option in item.options_with_values -%}
                                   <div class="product-option">
-                                    <dt>{{ option.name }}:</dt>
-                                    <dd>
-                                      {{ option.value -}}
-                                      {%- unless forloop.last %}, {% endunless %}
-                                    </dd>
+                                    <dt>{{ option.name }}: </dt>
+                                    <dd>{{ option.value }}</dd>
                                   </div>
                                 {%- endfor -%}
                               {%- endif -%}
@@ -363,35 +518,7 @@
                           </ul>
                         </td>
 
-                        <td class="cart-item__totals right" role="cell" headers="CartDrawer-ColumnTotal">
-                          {%- render 'loading-spinner' -%}
-                          <div class="cart-item__price-wrapper">
-                            {%- if item.original_line_price != item.final_line_price -%}
-                              <div class="cart-item__discounted-prices">
-                                <span class="visually-hidden">
-                                  {{ 'products.product.price.regular_price' | t }}
-                                </span>
-                                <s class="cart-item__old-price price price--end">
-                                  {{ item.original_line_price | money }}
-                                </s>
-                                <span class="visually-hidden">
-                                  {{ 'products.product.price.sale_price' | t }}
-                                </span>
-                                <span class="price price--end">
-                                  {{ item.final_line_price | money }}
-                                </span>
-                              </div>
-                            {%- else -%}
-                              <span class="price price--end">
-                                {{ item.original_line_price | money }}
-                              </span>
-                            {%- endif -%}
 
-                            {%- if item.variant.available and item.unit_price_measurement -%}
-                              {% render 'unit-price', price: item.unit_price, measurement: item.unit_price_measurement %}
-                            {%- endif -%}
-                          </div>
-                        </td>
                         {%- liquid
                           assign has_qty_rules = false
                           if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null

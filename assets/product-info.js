@@ -27,6 +27,14 @@ if (!customElements.get('product-info')) {
 
         this.initQuantityHandlers();
         this.dispatchEvent(new CustomEvent('product-info:loaded', { bubbles: true }));
+
+        // Filter media gallery on load based on pre-selected variant
+        setTimeout(() => {
+          const packValue = this.getPackOptionValue();
+          if (packValue) {
+            this.filterMediaByVariantTag(packValue);
+          }
+        }, 0);
       }
 
       addPreProcessCallback(callback) {
@@ -208,6 +216,14 @@ if (!customElements.get('product-info')) {
               variant,
             },
           });
+
+          // Filter media gallery when variant updates
+          const packValue = this.getPackOptionValue();
+          if (packValue) {
+            this.filterMediaByVariantTag(packValue);
+          } else {
+            this.showAllMedia();
+          }
         };
       }
 
@@ -423,6 +439,191 @@ if (!customElements.get('product-info')) {
 
       get sectionId() {
         return this.dataset.originalSection || this.dataset.section;
+      }
+
+      getPackOptionValue() {
+        // Dropdown select
+        const select = this.querySelector('select[name^="options[Pack]"], select[name^="options[pack]"]');
+        if (select) {
+          return select.value.trim();
+        }
+
+        // Radio button / Swatch input in fieldsets
+        const fieldsets = this.querySelectorAll('fieldset');
+        for (const fieldset of fieldsets) {
+          const legend = fieldset.querySelector('legend');
+          if (legend && legend.textContent.toLowerCase().includes('pack')) {
+            const checkedInput = fieldset.querySelector('input:checked');
+            if (checkedInput) {
+              return checkedInput.value.trim();
+            }
+          }
+        }
+
+        // Fallback: search inputs directly by name starting with pack
+        const packInput = this.querySelector('input[name^="Pack-"]:checked, input[name^="pack-"]:checked');
+        if (packInput) {
+          return packInput.value.trim();
+        }
+
+        return null;
+      }
+
+      filterMediaByVariantTag(packValue) {
+        if (!packValue) return;
+
+        const mediaGallery = this.closest('.product')?.querySelector('media-gallery') || document.getElementById(`MediaGallery-${this.sectionId}`);
+        if (!mediaGallery) return;
+
+        const mainList = mediaGallery.querySelector('.product__media-list');
+        const thumbnailList = mediaGallery.querySelector('.thumbnail-list');
+        if (!mainList) return;
+
+        const mainGalleryItems = mainList.querySelectorAll('.product__media-item');
+        const thumbnailItems = thumbnailList ? thumbnailList.querySelectorAll('.thumbnail-list__item') : [];
+
+        // 1. Assign original index on load to preserve original relative order
+        mainGalleryItems.forEach((item, index) => {
+          if (!item.hasAttribute('data-original-index')) {
+            item.setAttribute('data-original-index', index);
+          }
+        });
+        thumbnailItems.forEach((item, index) => {
+          if (!item.hasAttribute('data-original-index')) {
+            item.setAttribute('data-original-index', index);
+          }
+        });
+
+        // Ensure everything is visible (there is no more hidden bucket)
+        mainGalleryItems.forEach((item) => item.classList.remove('hidden'));
+        thumbnailItems.forEach((item) => {
+          item.classList.remove('hidden');
+          const button = item.querySelector('.thumbnail');
+          if (button) button.classList.remove('hidden');
+        });
+
+        const packValueNormalized = packValue.trim().toLowerCase();
+        console.log(`[VariantFilter] filterMediaByVariantTag called with packValue: "${packValue}" (normalized: "${packValueNormalized}")`);
+
+        // Helper to partition and reorder children of a list container
+        const reorderList = (parentEl, listItems) => {
+          const matches = [];
+          const commons = [];
+
+          listItems.forEach((item) => {
+            let tag = '';
+            let label = '';
+            if (item.classList.contains('product__media-item')) {
+              tag = item.getAttribute('data-variant-tag')?.trim().toLowerCase() || '';
+              label = `Slide [ID: ${item.id}]`;
+            } else {
+              const button = item.querySelector('.thumbnail');
+              tag = button?.getAttribute('data-variant-tag')?.trim().toLowerCase() || '';
+              label = `Thumbnail [Target: ${item.dataset.target}]`;
+            }
+
+            const isMatch = (tag === packValueNormalized);
+            if (isMatch) {
+              matches.push({ item, originalIndex: parseInt(item.getAttribute('data-original-index')) });
+              console.log(`[VariantFilter] ${label} | Tag: "${tag}" | Bucket: match`);
+            } else {
+              commons.push({ item, originalIndex: parseInt(item.getAttribute('data-original-index')) });
+              console.log(`[VariantFilter] ${label} | Tag: "${tag}" | Bucket: common`);
+            }
+          });
+
+          // Sort each group to preserve original relative order
+          matches.sort((a, b) => a.originalIndex - b.originalIndex);
+          commons.sort((a, b) => a.originalIndex - b.originalIndex);
+
+          // Append nodes back in reordered sequence: matches first, then commons
+          const orderedItems = [...matches, ...commons];
+          orderedItems.forEach(({ item }) => {
+            parentEl.appendChild(item);
+          });
+        };
+
+        // 2. Perform DOM reordering for main gallery list and thumbnail list
+        reorderList(mainList, mainGalleryItems);
+        if (thumbnailList && thumbnailItems.length > 0) {
+          reorderList(thumbnailList, thumbnailItems);
+        }
+
+        // 3. Re-index slider pages using internal methods so dots/navigation adapt
+        if (mediaGallery.elements.viewer && typeof mediaGallery.elements.viewer.resetPages === 'function') {
+          mediaGallery.elements.viewer.resetPages();
+        }
+        if (mediaGallery.elements.thumbnails && typeof mediaGallery.elements.thumbnails.resetPages === 'function') {
+          mediaGallery.elements.thumbnails.resetPages();
+        }
+
+        // 4. Verify currently active slide and align to the first match if current is not a match
+        const activeSlide = mediaGallery.querySelector('.product__media-item.is-active');
+        let isActiveValid = false;
+        if (activeSlide) {
+          const activeTag = activeSlide.getAttribute('data-variant-tag')?.trim().toLowerCase() || '';
+          if (activeTag === packValueNormalized) {
+            isActiveValid = true;
+          }
+        }
+
+        if (!isActiveValid) {
+          const firstMatchSlide = Array.from(mainList.querySelectorAll('.product__media-item')).find(item => {
+            const tag = item.getAttribute('data-variant-tag')?.trim().toLowerCase() || '';
+            return tag === packValueNormalized;
+          });
+
+          if (firstMatchSlide) {
+            const mediaId = firstMatchSlide.getAttribute('data-media-id');
+            if (typeof mediaGallery.setActiveMedia === 'function') {
+              mediaGallery.setActiveMedia(mediaId, false);
+            }
+          }
+        }
+      }
+
+      showAllMedia() {
+        const mediaGallery = this.closest('.product')?.querySelector('media-gallery') || document.getElementById(`MediaGallery-${this.sectionId}`);
+        if (!mediaGallery) return;
+
+        const mainList = mediaGallery.querySelector('.product__media-list');
+        const thumbnailList = mediaGallery.querySelector('.thumbnail-list');
+        if (!mainList) return;
+
+        const mainGalleryItems = mainList.querySelectorAll('.product__media-item');
+        const thumbnailItems = thumbnailList ? thumbnailList.querySelectorAll('.thumbnail-list__item') : [];
+
+        // Reset visibility
+        mainGalleryItems.forEach((item) => item.classList.remove('hidden'));
+        thumbnailItems.forEach((item) => {
+          item.classList.remove('hidden');
+          const button = item.querySelector('.thumbnail');
+          if (button) button.classList.remove('hidden');
+        });
+
+        // Restore original order
+        const restoreOrder = (parentEl, listItems) => {
+          const sorted = Array.from(listItems).map(item => ({
+            item,
+            originalIndex: parseInt(item.getAttribute('data-original-index') || '0')
+          })).sort((a, b) => a.originalIndex - b.originalIndex);
+
+          sorted.forEach(({ item }) => {
+            parentEl.appendChild(item);
+          });
+        };
+
+        restoreOrder(mainList, mainGalleryItems);
+        if (thumbnailList && thumbnailItems.length > 0) {
+          restoreOrder(thumbnailList, thumbnailItems);
+        }
+
+        if (mediaGallery.elements.viewer && typeof mediaGallery.elements.viewer.resetPages === 'function') {
+          mediaGallery.elements.viewer.resetPages();
+        }
+        if (mediaGallery.elements.thumbnails && typeof mediaGallery.elements.thumbnails.resetPages === 'function') {
+          mediaGallery.elements.thumbnails.resetPages();
+        }
       }
     }
   );

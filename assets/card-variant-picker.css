@@ -1,0 +1,74 @@
+.card-variant-options {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.card-variant-options__row {
+  display: flex;
+  align-items: center; /* Vertical centering baseline */
+  gap: 1rem;
+}
+.card-variant-options__label {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+  min-width: 6rem; /* Consistent horizontal start of lists */
+  margin: 0;
+  text-transform: capitalize;
+}
+.card-variant-options__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem; /* Consistent gap between buttons */
+}
+/* Color Swatches circle style */
+.card-swatch-button {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  transition: transform 0.2s, border-color 0.2s;
+  background-size: cover;
+  background-position: center;
+}
+.card-swatch-button:hover {
+  transform: scale(1.15);
+}
+.card-swatch-button.active {
+  outline: 2px solid #E30613;
+  outline-offset: 1.5px;
+  border-color: transparent;
+}
+/* Pills text button style */
+.card-pill-button {
+  font-size: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  border: var(--variant-pills-border-width) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity));
+  border-radius: var(--variant-pills-radius);
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  transition: background-color var(--duration-short) ease, border-color var(--duration-short) ease, color var(--duration-short) ease;
+  line-height: 1;
+}
+.card-pill-button:hover {
+  background-color: rgba(var(--color-foreground), 0.05);
+  border-color: rgb(var(--color-foreground));
+}
+.card-pill-button.active {
+  background-color: rgb(var(--color-foreground));
+  border-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+.cart-btn.disabled {
+  background-color: #f3f3f3 !important;
+  color: #999 !important;
+  border-color: #e5e5e5 !important;
+  cursor: not-allowed !important;
+}

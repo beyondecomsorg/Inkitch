@@ -27,6 +27,8 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+  {{ 'card-variant-picker.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'card-variant-picker.js' | asset_url }}" defer="defer"></script>
 
   <style>
     /* Card Border & Curved Edges Styling */
@@ -299,6 +301,64 @@
                 </div>
               {%- endif -%}
             </div>
+
+            {%- if card_product.variants.size > 1 -%}
+              <card-variant-picker data-product-id="{{ card_product.id }}">
+                <div class="card-variant-options">
+                  {%- for option in card_product.options_with_values -%}
+                    {%- assign option_name_lower = option.name | downcase -%}
+                    {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+                      <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                        <span class="card-variant-options__label">{{ option.name }}:</span>
+                        <div class="card-variant-options__list">
+                          {%- for value in option.values -%}
+                            {%- liquid
+                              assign swatch_value = null
+                              if value.swatch.image
+                                assign image_url = value.swatch.image | image_url: width: 50
+                                assign swatch_value = 'url(' | append: image_url | append: ')'
+                              elsif value.swatch.color
+                                assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                              else
+                                assign swatch_value = value | handle
+                              endif
+                            -%}
+                            <button
+                              type="button"
+                              class="card-swatch-button{% if value.selected %} active{% endif %}"
+                              data-value="{{ value | escape }}"
+                              style="{% if swatch_value contains 'rgb' or swatch_value contains 'url' %}background: {{ swatch_value }};{% else %}background-color: {{ swatch_value }};{% endif %}"
+                              title="{{ value }}"
+                            >
+                              <span class="visually-hidden">{{ value }}</span>
+                            </button>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                    {%- else -%}
+                      <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                        <span class="card-variant-options__label">{{ option.name }}:</span>
+                        <div class="card-variant-options__list">
+                          {%- for value in option.values -%}
+                            <button
+                              type="button"
+                              class="card-pill-button{% if value.selected %} active{% endif %}"
+                              data-value="{{ value | escape }}"
+                            >
+                              {{ value }}
+                            </button>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+                <script type="application/json" data-variants>
+                  {{ card_product.variants | json }}
+                </script>
+              </card-variant-picker>
+            {%- endif -%}
+
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
                 {% liquid
@@ -391,67 +451,44 @@
                 assign qty_rules = true
               endif
             -%}
-            {%- if card_product.variants_count > 1 or qty_rules -%}
-
-             <div class="custom-product-buttons">
-
-             <a href="{{ card_product.url }}" class="cart-btn choose-btn">
-            🛒 ADD TO CART
-             </a>
-
-            </div>
-
-             {%- else -%}
-              <product-form data-section-id="{{ section.id }}">
-                {%- form 'product',
-                  card_product,
-                  id: product_form_id,
-                  class: 'form',
-                  novalidate: 'novalidate',
-                  data-type: 'add-to-cart-form'
-                -%}
-                  <input
-                    type="hidden"
-                    name="id"
-                    value="{{ card_product.selected_or_first_available_variant.id }}"
-                    class="product-variant-id"
+            <product-form data-section-id="{{ section.id }}">
+              {%- form 'product',
+                card_product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ card_product.selected_or_first_available_variant.id }}"
+                  class="product-variant-id"
+                  {% if card_product.selected_or_first_available_variant.available == false %}
+                    disabled
+                  {% endif %}
+                >
+                <div class="custom-product-buttons">
+                  <button
+                    type="submit"
+                    name="add"
+                    class="cart-btn submit-button"
                     {% if card_product.selected_or_first_available_variant.available == false %}
                       disabled
                     {% endif %}
                   >
-                
-                   <span>
+                    <span>
                       {%- if card_product.selected_or_first_available_variant.available -%}
-                        <div class="custom-product-buttons">
-  
-  <!-- Add to Cart -->
-  <form method="post" action="/cart/add">
-    <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
-    
-    <button type="submit" class="cart-btn">
-      🛒 ADD TO CART
-    </button>
-  </form>
-
-
-</div>
+                        🛒 ADD TO CART
                       {%- else -%}
                         {{ 'products.product.sold_out' | t }}
                       {%- endif -%}
                     </span>
-                    <span class="sold-out-message hidden">
-                      {{ 'products.product.sold_out' | t }}
-                    </span>
-                    {%- if horizontal_quick_add -%}
-                      <span class="icon-wrap">
-                        {{- 'icon-plus.svg' | inline_asset_content -}}
-                      </span>
-                    {%- endif -%}
                     {%- render 'loading-spinner' -%}
                   </button>
-                {%- endform -%}
-              </product-form>
-            {%- endif -%}
+                </div>
+              {%- endform -%}
+            </product-form>
           </div>
         {% elsif quick_add == 'bulk' %}
           {% if card_product.variants_count == 1 %}
