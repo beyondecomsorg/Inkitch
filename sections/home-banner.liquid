@@ -55,6 +55,28 @@
   text-decoration:none;
   border-radius:5px;
 }
+.banner-image{
+    width:100%;
+    display:block;
+}
+
+.banner-height-auto .banner-image{
+    height:auto;
+    object-fit:contain;
+}
+
+.banner-height-custom .banner-image{
+    height:var(--desktop-height);
+    object-fit:cover;
+}
+
+@media(max-width:768px){
+
+.banner-height-custom .banner-image{
+    height:var(--mobile-height);
+}
+
+}
 
 @media(max-width:768px){
 
@@ -91,7 +113,7 @@ font-size:15px;
 <section class="splide-banner">
 
 <div
-class="splide splide-banner-slider"
+class="splide splide-banner-slider {% if section.settings.banner_height == 'auto' %}banner-height-auto{% else %}banner-height-custom{% endif %}"
 style="
 --desktop-height:{{ section.settings.desktop_height }}px;
 --mobile-height:{{ section.settings.mobile_height }}px;
@@ -188,25 +210,41 @@ speed:800,
 "name":"Splide Banner",
 
 "settings":[
-
 {
-"type":"range",
-"id":"desktop_height",
-"label":"Desktop Height",
-"min":400,
-"max":900,
-"step":50,
-"default":500
+  "type": "select",
+  "id": "banner_height",
+  "label": "Banner Height",
+  "options": [
+    {
+      "value": "auto",
+      "label": "Auto (Image Ratio)"
+    },
+    {
+      "value": "custom",
+      "label": "Custom Height"
+    }
+  ],
+  "default": "auto"
 },
-
 {
-"type":"range",
-"id":"mobile_height",
-"label":"Mobile Height",
-"min":300,
-"max":700,
-"step":20,
-"default":500
+  "type": "range",
+  "id": "desktop_height",
+  "label": "Desktop Height",
+  "min": 400,
+  "max": 900,
+  "step": 10,
+  "default": 650,
+  "visible_if": "{{ section.settings.banner_height == 'custom' }}"
+},
+{
+  "type": "range",
+  "id": "mobile_height",
+  "label": "Mobile Height",
+  "min": 300,
+  "max": 700,
+  "step": 10,
+  "default": 500,
+  "visible_if": "{{ section.settings.banner_height == 'custom' }}"
 },
 
 {
