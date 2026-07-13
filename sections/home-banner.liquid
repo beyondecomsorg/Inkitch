@@ -179,11 +179,17 @@ loading="lazy">
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+function initBannerSlider(){
 
-if(document.querySelector(".splide-banner-slider")){
+const slider=document.querySelector(".splide-banner-slider");
 
-new Splide(".splide-banner-slider",{
+if(!slider) return;
+
+if(slider.classList.contains("is-initialized")) return;
+
+slider.classList.add("is-initialized");
+
+new Splide(slider,{
 type:"loop",
 perPage:1,
 autoplay:true,
@@ -197,7 +203,9 @@ speed:800,
 
 }
 
-});
+document.addEventListener("DOMContentLoaded",initBannerSlider);
+
+document.addEventListener("shopify:section:load",initBannerSlider);
 </script>
 
 {% schema %}
