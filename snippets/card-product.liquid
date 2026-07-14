@@ -36,6 +36,7 @@
       border: 1px solid #d4d4d4 !important; /* bit darker line border */
       border-radius: 12px !important;       /* curved edges */
       overflow: hidden !important;          /* respect rounded corners */
+      transition: border-color 0.3s ease, border 0.3s ease !important;
     }
     
     .product-card-wrapper .card__inner {
@@ -43,34 +44,57 @@
       overflow: hidden !important;
     }
 
-    /* Hover image crossfade on desktop / devices supporting hover */
-    @media (hover: hover) {
-      .card-wrapper .media.media--hover-effect > img {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-        transition: opacity 0.4s ease-in-out !important;
-      }
-      .card-wrapper .media.media--hover-effect > img:first-child {
-        opacity: 1 !important;
-        z-index: 1;
-      }
-      .card-wrapper .media.media--hover-effect > img + img {
-        opacity: 0 !important;
-        z-index: 2;
-      }
-      .card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child),
-      .card:hover .media.media--hover-effect > img:first-child:not(:only-child) {
-        opacity: 0 !important;
-      }
-      .card-wrapper:hover .media.media--hover-effect > img + img,
-      .card:hover .media.media--hover-effect > img + img {
-        opacity: 1 !important;
-        z-index: 3;
-      }
+    /* Transition and border radius for card wrapper translation and shadow glow */
+    .product-card-wrapper {
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+      border-radius: 12px !important;       /* match card curved edges */
+      background-color: #ffffff !important;
+    }
+
+    .product-card-wrapper:hover {
+      transform: translateY(-6px) !important;
+      box-shadow: 0 8px 30px rgba(227, 6, 19, 0.12) !important;
+      z-index: 5 !important;              /* float above adjacent cards */
+    }
+    .product-card-wrapper:hover .card {
+      border-color: #E30613 !important;
+    }
+
+    .product-card-wrapper:focus-within {
+      transform: translateY(-6px) !important;
+      box-shadow: 0 8px 30px rgba(227, 6, 19, 0.12) !important;
+      z-index: 5 !important;
+    }
+    .product-card-wrapper:focus-within .card {
+      border-color: #E30613 !important;
+    }
+
+    /* Hover image crossfade on all devices */
+    .card-wrapper .media.media--hover-effect > img {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      transition: opacity 0.4s ease-in-out !important;
+    }
+    .card-wrapper .media.media--hover-effect > img:first-child {
+      opacity: 1 !important;
+      z-index: 1;
+    }
+    .card-wrapper .media.media--hover-effect > img + img {
+      opacity: 0 !important;
+      z-index: 2;
+    }
+    .card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child),
+    .card:hover .media.media--hover-effect > img:first-child:not(:only-child) {
+      opacity: 0 !important;
+    }
+    .card-wrapper:hover .media.media--hover-effect > img + img,
+    .card:hover .media.media--hover-effect > img + img {
+      opacity: 1 !important;
+      z-index: 3;
     }
   </style>
 {%- endunless -%}

@@ -879,7 +879,7 @@ summary::-webkit-details-marker {
 }
 
 .subtitle {
-  font-size: 1.8rem;
+  font-size: 14px;
   line-height: calc(1 + 0.8 / var(--font-body-scale));
   letter-spacing: 0.06rem;
   color: rgba(var(--color-foreground), 0.7);
@@ -3871,4 +3871,12 @@ body a.cart-btn.choose-btn,
 .cart-drawer .cart__checkout-button:hover {
   background-color: #d60000 !important;
   color: #ffffff !important;
+}
+.sticky-atc__variant-selected,
+.sticky-atc__price{
+  display: none !important;
+}
+
+.sticky-atc__button::after{
+  box-shadow: none !important;
 }

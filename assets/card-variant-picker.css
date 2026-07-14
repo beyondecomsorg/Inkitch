@@ -1,20 +1,21 @@
 .card-variant-options {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 .card-variant-options__row {
   display: flex;
-  align-items: center; /* Vertical centering baseline */
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
 }
 .card-variant-options__label {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: rgb(var(--color-foreground));
-  min-width: 6rem; /* Consistent horizontal start of lists */
+  color: #767676;
+  min-width: auto;
   margin: 0;
   text-transform: capitalize;
 }
@@ -22,7 +23,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.8rem; /* Consistent gap between buttons */
+  gap: 0.6rem; /* Consistent gap between buttons */
 }
 /* Color Swatches circle style */
 .card-swatch-button {
@@ -62,8 +63,8 @@
   border-color: rgb(var(--color-foreground));
 }
 .card-pill-button.active {
-  background-color: rgb(var(--color-foreground));
-  border-color: rgb(var(--color-foreground));
+  background-color: #f60000;
+  border-color: #f60000;
   color: rgb(var(--color-background));
 }
 .cart-btn.disabled {

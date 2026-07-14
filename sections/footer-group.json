@@ -24,7 +24,6 @@
       "blocks": {
         "ai_gen_block_91facee_GT9XWR": {
           "type": "ai_gen_block_91facee",
-          "disabled": true,
           "settings": {
             "section_padding": 30,
             "background_color": "#ffffff",

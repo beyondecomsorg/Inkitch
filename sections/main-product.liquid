@@ -389,53 +389,53 @@
     /* Spacing Overrides */
     .product__info-container > * {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.4rem !important;
     }
     
     .product__info-container .product__text.caption-with-letter-spacing {
-      margin-bottom: 0.8rem !important;
+      margin-bottom: 0.4rem !important;
     }
     
     .product__title {
-      margin-bottom: 2.0rem !important;
+      margin-bottom: 1.2rem !important;
     }
     
     #price-{{ section.id }} {
-      margin-top: 0.4rem !important;
-      margin-bottom: 1.2rem !important;
+      margin-top: 0.2rem !important;
+      margin-bottom: 0.8rem !important;
     }
     
     .product__tax {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.4rem !important;
     }
     
     .product-form__input.product-form__input--pill {
-      margin-bottom: 2.0rem !important;
+      margin-bottom: 1.4rem !important;
     }
     
     .product-form__quantity {
-      margin-bottom: 2.0rem !important;
+      margin-bottom: 1.4rem !important;
     }
     
     .product-form {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.6rem !important;
     }
     
     .shipping-estimate-bar {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.6rem !important;
     }
     
     .trust-badges-strip {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.6rem !important;
     }
     
     .product__accordion {
       margin-top: 0 !important;
-      margin-bottom: 2.4rem !important;
+      margin-bottom: 1.6rem !important;
     }
   {%- endstyle -%}
 
@@ -592,15 +592,16 @@
                 {%- endif -%}
                 {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
                   <div class="product__tax caption rte">
+                  
                     {%- if cart.duties_included and cart.taxes_included -%}
-                      {{ 'products.product.duties_and_taxes_included' | t }}
+                    
                     {%- elsif cart.taxes_included -%}
-                      {{ 'products.product.taxes_included' | t }}
+                  
                     {%- elsif cart.duties_included -%}
-                      {{ 'products.product.duties_included' | t }}
+                     
                     {%- endif -%}
                     {%- if shop.shipping_policy.body != blank -%}
-                      {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+  incl. all taxes
                     {%- endif -%}
                   </div>
                 {%- endif -%}
@@ -1270,6 +1271,8 @@
     </script>
   </div>
 </product-info>
+
+{% render 'sticky-add-to-cart', product: product, section: section %}
 
 {% schema %}
 {

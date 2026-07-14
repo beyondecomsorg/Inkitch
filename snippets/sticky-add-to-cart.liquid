@@ -1,0 +1,336 @@
+{%- comment -%}
+  Renders a mobile-only sticky Add to Cart bar that floats at the bottom of the viewport
+  when the main Add to Cart button scrolls out of view.
+  Accepts:
+  - product: {Object} Product object.
+  - section: {Object} Section object.
+{%- endcomment -%}
+
+<div id="sticky-atc-{{ section.id }}" class="sticky-atc">
+  <div class="sticky-atc__container">
+    <div class="sticky-atc__product-info">
+      {%- if product.selected_or_first_available_variant.featured_media -%}
+        <img 
+          src="{{ product.selected_or_first_available_variant.featured_media | image_url: width: 120 }}" 
+          alt="{{ product.title | escape }}" 
+          class="sticky-atc__image" 
+          width="48" 
+          height="48" 
+          loading="lazy"
+        >
+      {%- elsif product.featured_media -%}
+        <img 
+          src="{{ product.featured_media | image_url: width: 120 }}" 
+          alt="{{ product.title | escape }}" 
+          class="sticky-atc__image" 
+          width="48" 
+          height="48" 
+          loading="lazy"
+        >
+      {%- endif -%}
+      <div class="sticky-atc__text">
+        <div class="sticky-atc__title">{{ product.title | escape }}</div>
+        <div class="sticky-atc__variant-selected">
+          {%- unless product.has_only_default_variant -%}
+            {{ product.selected_or_first_available_variant.title }}
+          {%- endunless -%}
+        </div>
+        <div class="sticky-atc__price" id="sticky-price-{{ section.id }}">
+          {%- render 'price', product: product, use_variant: true, show_badges: false, price_class: 'price--small' -%}
+        </div>
+      </div>
+    </div>
+    <div class="sticky-atc__button-wrapper">
+      <button type="button" class="sticky-atc__button button button--primary">
+        <span>
+          {%- if product.selected_or_first_available_variant == null -%}
+            {{ 'products.product.unavailable' | t }}
+          {%- elsif product.selected_or_first_available_variant.available == false -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- else -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- endif -%}
+        </span>
+        {%- render 'loading-spinner' -%}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sticky-atc {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.1);
+    padding: 10px 16px;
+    z-index: 95;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    border-top: 1px solid #eeeeee;
+  }
+  
+  .sticky-atc.active {
+    transform: translateY(0);
+  }
+  
+  .sticky-atc__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 100%;
+  }
+  
+  .sticky-atc__product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .sticky-atc__image {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #f2f2f2;
+    flex-shrink: 0;
+  }
+  
+  .sticky-atc__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  
+  .sticky-atc__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #121212;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  
+  .sticky-atc__variant-selected {
+    font-size: 1.1rem;
+    color: #767676;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    text-transform: capitalize;
+  }
+  
+  .sticky-atc__price {
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+  
+  .sticky-atc__price .price {
+    font-size: 1.3rem;
+    margin: 0 !important;
+  }
+  
+  .sticky-atc__price .price__container {
+    margin: 0 !important;
+  }
+
+  .sticky-atc__price .custom-card-price {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 !important;
+  }
+
+  .sticky-atc__price .custom-card-price__mrp {
+    font-size: 1.1rem !important;
+    margin: 0 !important;
+  }
+
+  .sticky-atc__price .custom-card-price__selling {
+    font-size: 1.3rem !important;
+    color: #E30613 !important;
+    margin: 0 !important;
+  }
+  
+  .sticky-atc__button-wrapper {
+    flex-shrink: 0;
+  }
+  
+  .sticky-atc__button {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    padding: 0 16px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    min-width: 125px !important;
+    margin: 0 !important;
+    text-transform: uppercase;
+    background-color: #E30613 !important;
+    border-color: #E30613 !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .sticky-atc__button:hover {
+    background-color: #c0000f !important;
+    border-color: #c0000f !important;
+  }
+
+  .sticky-atc__button[disabled],
+  .sticky-atc__button.disabled {
+    background-color: #cccccc !important;
+    border-color: #cccccc !important;
+    color: #888888 !important;
+    cursor: not-allowed !important;
+  }
+  
+  @media screen and (max-width: 749px) {
+    body.sticky-atc-active {
+      padding-bottom: 74px !important;
+    }
+  }
+  
+  @media screen and (min-width: 750px) {
+    .sticky-atc {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initStickyATC() {
+      const sectionId = '{{ section.id }}';
+      const mainButtonId = 'ProductSubmitButton-' + sectionId;
+      const stickyBarId = 'sticky-atc-{{ section.id }}';
+      const mainPriceId = 'price-' + sectionId;
+      const stickyPriceId = 'sticky-price-' + sectionId;
+      const mainInfoContainerId = 'ProductInfo-' + sectionId;
+      
+      const stickyBar = document.getElementById(stickyBarId);
+      if (!stickyBar) return;
+      
+      const mainButton = document.getElementById(mainButtonId);
+      const mainPrice = document.getElementById(mainPriceId);
+      const stickyPrice = document.getElementById(stickyPriceId);
+      const mainInfoContainer = document.getElementById(mainInfoContainerId);
+      const stickyButton = stickyBar.querySelector('.sticky-atc__button');
+      
+      // Perform initial sync
+      syncStickyBar();
+      
+      // Setup MutationObserver on main info container to listen for variant updates
+      if (mainInfoContainer) {
+        const infoObserver = new MutationObserver(() => {
+          syncStickyBar();
+        });
+        infoObserver.observe(mainInfoContainer, { childList: true, subtree: true, characterData: true });
+      }
+      
+      // Setup IntersectionObserver on the main button to trigger show/hide transitions
+      if (mainButton) {
+        const atcObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              stickyBar.classList.add('active');
+              document.body.classList.add('sticky-atc-active');
+            } else {
+              stickyBar.classList.remove('active');
+              document.body.classList.remove('sticky-atc-active');
+            }
+          });
+        }, {
+          root: null, // viewport
+          threshold: 0
+        });
+        atcObserver.observe(mainButton);
+      }
+      
+      // Route sticky button clicks to the main form submit button
+      if (stickyButton) {
+        stickyButton.addEventListener('click', () => {
+          const liveMainButton = document.getElementById(mainButtonId);
+          if (liveMainButton) {
+            liveMainButton.click();
+          }
+        });
+      }
+      
+      function syncStickyBar() {
+        const liveMainButton = document.getElementById(mainButtonId);
+        const liveStickyButton = stickyBar.querySelector('.sticky-atc__button');
+        const liveMainPrice = document.getElementById(mainPriceId);
+        const liveStickyPrice = document.getElementById(stickyPriceId);
+        
+        if (liveMainButton && liveStickyButton) {
+          liveStickyButton.disabled = liveMainButton.disabled;
+          const mainSpan = liveMainButton.querySelector('span');
+          const stickySpan = liveStickyButton.querySelector('span');
+          if (mainSpan && stickySpan) {
+            stickySpan.textContent = mainSpan.textContent;
+          }
+          if (liveMainButton.disabled) {
+            liveStickyButton.classList.add('disabled');
+            liveStickyButton.setAttribute('disabled', 'disabled');
+          } else {
+            liveStickyButton.classList.remove('disabled');
+            liveStickyButton.removeAttribute('disabled');
+          }
+          
+          // Sync loading states
+          if (liveMainButton.classList.contains('loading') || liveMainButton.hasAttribute('aria-disabled')) {
+            liveStickyButton.classList.add('loading');
+            liveStickyButton.setAttribute('aria-disabled', 'true');
+          } else {
+            liveStickyButton.classList.remove('loading');
+            liveStickyButton.removeAttribute('aria-disabled');
+          }
+        }
+        
+        if (liveMainPrice && liveStickyPrice) {
+          liveStickyPrice.innerHTML = liveMainPrice.innerHTML;
+        }
+        
+        // Sync active variant label & image src
+        const variantScript = document.querySelector('variant-selects [data-selected-variant]');
+        if (variantScript) {
+          try {
+            const variant = JSON.parse(variantScript.textContent);
+            const variantTitleEl = stickyBar.querySelector('.sticky-atc__variant-selected');
+            if (variantTitleEl && variant) {
+              variantTitleEl.textContent = variant.title || '';
+              variantTitleEl.style.display = (variant.title && variant.title !== 'Default Title') ? 'block' : 'none';
+            }
+            
+            const stickyImg = stickyBar.querySelector('.sticky-atc__image');
+            if (stickyImg && variant && variant.featured_image) {
+              stickyImg.src = variant.featured_image.src;
+            }
+          } catch(e) {
+            console.error('Error parsing selected variant JSON:', e);
+          }
+        }
+      }
+    }
+    
+    // Initialize sticky ATC bar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initStickyATC);
+    } else {
+      initStickyATC();
+    }
+  })();
+</script>
