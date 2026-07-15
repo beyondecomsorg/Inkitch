@@ -1,0 +1,288 @@
+{{ 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css' | stylesheet_tag }}
+
+<style>
+.splide-banner {
+  position: relative;
+}
+
+.splide-banner .splide__slide {
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: var(--desktop-height);
+  object-fit: cover;
+  display: block;
+}
+
+/* Default: show desktop, hide mobile */
+.banner-desktop {
+  display: block;
+}
+.banner-mobile {
+  display: none;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,{{ section.settings.overlay_opacity }});
+}
+
+.banner-content {
+  position: absolute;
+  top:50%;
+  left:8%;
+  transform:translateY(-50%);
+  color:#fff;
+  z-index:2;
+  max-width:600px;
+}
+
+.banner-content h2{
+  font-size:52px;
+  line-height:1.1;
+  margin-bottom:15px;
+}
+
+.banner-content p{
+  font-size:18px;
+  margin-bottom:25px;
+}
+
+.banner-btn{
+  display:inline-block;
+  padding:14px 32px;
+  background:#000;
+  color:#fff;
+  text-decoration:none;
+  border-radius:5px;
+}
+
+.banner-height-auto .banner-image{
+  height:auto;
+  object-fit:contain;
+}
+
+.banner-height-custom .banner-image{
+  height:var(--desktop-height);
+  object-fit:cover;
+}
+
+@media(max-width:768px){
+  /* On mobile: hide desktop, show mobile, adjust heights */
+  .banner-desktop {
+    display: none;
+  }
+  .banner-mobile {
+    display: block;
+  }
+
+  .banner-height-custom .banner-image{
+    height:var(--mobile-height);
+  }
+
+  .banner-content{
+    left:20px;
+    right:20px;
+    text-align:center;
+    max-width:100%;
+  }
+
+  .banner-content h2{
+    font-size:30px;
+  }
+
+  .banner-content p{
+    font-size:15px;
+  }
+}
+</style>
+
+<section class="splide-banner">
+  <div
+    class="splide splide-banner-slider {% if section.settings.banner_height == 'auto' %}banner-height-auto{% else %}banner-height-custom{% endif %}"
+    style="
+      --desktop-height:{{ section.settings.desktop_height }}px;
+      --mobile-height:{{ section.settings.mobile_height }}px;
+    "
+  >
+    <div class="splide__track">
+      <ul class="splide__list">
+        {% for block in section.blocks %}
+          <li class="splide__slide">
+            <div class="banner-overlay"></div>
+
+            {% if block.settings.desktop_image != blank %}
+              <img
+                class="banner-image banner-desktop"
+                src="{{ block.settings.desktop_image | image_url: width: 2200 }}"
+                alt=""
+                loading="lazy"
+              >
+            {% endif %}
+
+            {% if block.settings.mobile_image != blank %}
+              <img
+                class="banner-image banner-mobile"
+                src="{{ block.settings.mobile_image | image_url: width: 900 }}"
+                alt=""
+                loading="lazy"
+              >
+            {% endif %}
+
+            <div class="banner-content">
+              {% if block.settings.heading != blank %}
+                <h2>{{ block.settings.heading }}</h2>
+              {% endif %}
+
+              {% if block.settings.text != blank %}
+                <p>{{ block.settings.text }}</p>
+              {% endif %}
+
+              {% if block.settings.button_text != blank %}
+                <a href="{{ block.settings.button_link }}" class="banner-btn">
+                  {{ block.settings.button_text }}
+                </a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+<script>
+  function initBannerSlider() {
+    const slider = document.querySelector(".splide-banner-slider");
+    if (!slider) return;
+    if (slider.classList.contains("is-initialized")) return;
+
+    slider.classList.add("is-initialized");
+
+    new Splide(slider, {
+      type: "loop",
+      perPage: 1,
+      autoplay: true,
+      interval: {{ section.settings.autoplay_speed }},
+      pagination: true,
+      arrows: true,
+      pauseOnHover: {{ section.settings.pause_hover }},
+      pauseOnFocus: false,
+      speed: 800,
+    }).mount();
+  }
+
+  document.addEventListener("DOMContentLoaded", initBannerSlider);
+  document.addEventListener("shopify:section:load", initBannerSlider);
+</script>
+
+{% schema %}
+{
+  "name": "Splide Banner",
+  "settings": [
+    {
+      "type": "select",
+      "id": "banner_height",
+      "label": "Banner Height",
+      "options": [
+        { "value": "auto", "label": "Auto (Image Ratio)" },
+        { "value": "custom", "label": "Custom Height" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop Height",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "default": 650
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile Height",
+      "min": 300,
+      "max": 700,
+      "step": 10,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Auto Slide Speed (Milliseconds)",
+      "min": 3000,
+      "max": 9000,
+      "step": 100,
+      "default": 5000
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_hover",
+      "label": "Pause On Hover",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Premium Collection"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Sub Heading",
+          "default": "Discover our latest arrivals."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Splide Banner"
+    }
+  ]
+}
+{% endschema %}

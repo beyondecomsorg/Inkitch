@@ -37,7 +37,48 @@
         "ai_gen_block_5cd1fe4_dFGJyf",
         "ai_gen_block_13c08f3_FxWPLk"
       ],
+      "disabled": true,
       "settings": {}
+    },
+    "home_banner_WgzXrf": {
+      "type": "home-banner",
+      "blocks": {
+        "slide_AjzfCi": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.webp",
+            "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
+            "heading": "",
+            "text": "",
+            "button_text": "",
+            "button_link": "/"
+          }
+        },
+        "slide_Rpj3dE": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM.webp",
+            "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
+            "heading": "",
+            "text": "",
+            "button_text": "",
+            "button_link": "/"
+          }
+        }
+      },
+      "block_order": [
+        "slide_AjzfCi",
+        "slide_Rpj3dE"
+      ],
+      "name": "Splide Banner",
+      "settings": {
+        "banner_height": "auto",
+        "desktop_height": 500,
+        "mobile_height": 500,
+        "overlay_opacity": 0.3,
+        "autoplay_speed": 5000,
+        "pause_hover": true
+      }
     },
     "177687342526c3aeca": {
       "type": "_blocks",
@@ -297,7 +338,7 @@
             "product_1": "inkitch-black-24hrs-hot-cold-flask-1-liter",
             "product_2": "inkitch-grey-24hrs-hot-cold-flask-1-liter",
             "product_3": "inkitch-hot-cold-bottle-1000ml-2-in-1-sipper-wide-mouth-dual-cap-sports-water-bottle-vacuum-insulated-stainless-steel-flask-leakproof-travel-gym-office-bottle-black",
-            "product_4": "inkitch-stainless-steel-tumbler-with-lid-500ml-bpa-free-water-tumbler-leak-proof-office-tumbler-rust-free-easy-grip-easy-to-carry-travel-bottle-pink-pack-of-1",
+            "product_4": "onsip-leakproof-steel-juice-tumbler-500ml",
             "product_5": "inkitch-water-bottle-750ml-isi-certified-stainless-steel-leak-proof-24-hour-hot-cold-blue",
             "product_6": "inkitch-stainless-steel-water-bottle-1000-ml-silver-leak-proof-single-walled-office-bottle-gym-home-kitchen-hiking-trekking-travel-bottle-set-of-1",
             "desktop_width_percent": 100,
@@ -715,6 +756,7 @@
   },
   "order": [
     "178281114959f16150",
+    "home_banner_WgzXrf",
     "177687342526c3aeca",
     "look_book_wGFaKU",
     "1776874214582f2fe1",
