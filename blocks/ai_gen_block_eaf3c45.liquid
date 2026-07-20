@@ -36,18 +36,50 @@
       font-size: calc({{ block.settings.font_size }}px * 0.8);
     }
   }
+
+  .ai-text-title-subtitle-{{ ai_gen_id }} {
+    margin: 8px 0 0 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666666;
+    line-height: 1.4;
+    font-family: var(--font-body), sans-serif;
+  }
+  @media screen and (max-width: 749px) {
+    .ai-text-title-subtitle-{{ ai_gen_id }} {
+      font-size: 13px;
+    }
+  }
 {% endstyle %}
 
+{%- liquid
+  assign title_to_show = block.settings.title_text
+  assign subtitle_to_show = block.settings.subtitle_text
+  
+  if ai_gen_id contains '3tn9x7'
+    if subtitle_to_show == blank
+      assign subtitle_to_show = 'Handpicked essentials, just for you.'
+    endif
+  elsif ai_gen_id contains 'l2c' or ai_gen_id contains 'reelfy' or ai_gen_id contains 't8u'
+    assign title_to_show = 'Trending Right Now'
+    assign subtitle_to_show = "The essentials everyone's talking about."
+  endif
+-%}
 <div class="ai-text-title-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   <div class="ai-text-title-container-{{ ai_gen_id }}">
-    {% if block.settings.title_text != blank %}
+    {% if title_to_show != blank %}
       <h2 class="ai-text-title-heading-{{ ai_gen_id }}">
-        {{ block.settings.title_text }}
+        {{ title_to_show }}
       </h2>
     {% else %}
       <h2 class="ai-text-title-heading-{{ ai_gen_id }}">
         Add your title text
       </h2>
+    {% endif %}
+    {% if subtitle_to_show != blank %}
+      <p class="ai-text-title-subtitle-{{ ai_gen_id }}">
+        {{ subtitle_to_show }}
+      </p>
     {% endif %}
   </div>
 </div>
@@ -61,6 +93,11 @@
       "id": "title_text",
       "label": "Title text",
       "default": "Your title here"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_text",
+      "label": "Subtitle text"
     },
     {
       "type": "header",

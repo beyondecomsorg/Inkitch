@@ -27,8 +27,8 @@
           "settings": {
             "section_padding": 30,
             "background_color": "#ffffff",
-            "title": "Available on top marketplaces",
-            "subtitle": "Shop Inkitch products across India's leading platforms.",
+            "title": "Also Available On",
+            "subtitle": "Find inKitch on Amazon, Flipkart, and more.",
             "title_size": 36,
             "subtitle_size": 18,
             "title_color": "#000000",
@@ -132,6 +132,50 @@
     },
     "blocks_UQ3Vcn": {
       "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_32c9c2c_footer": {
+          "type": "ai_gen_block_32c9c2c",
+          "settings": {
+            "enable_marquee": true,
+            "marquee_speed": 25,
+            "icon_1": "shield",
+            "heading_1": "Secure Payment",
+            "description_1": "100% secure & encrypted checkout",
+            "icon_2": "refresh",
+            "heading_2": "Quality Assured",
+            "description_2": "Trusted quality, built to last.",
+            "icon_3": "truck",
+            "heading_3": "Fast Shipping",
+            "description_3": "Fast, reliable delivery across India",
+            "icon_4": "ribbon",
+            "heading_4": "Great Value",
+            "description_4": "Fair, honest everyday pricing",
+            "icon_5": "headset",
+            "heading_5": "24/7 Support",
+            "description_5": "Dedicated support team always available",
+            "max_width": 1200,
+            "padding_vertical": 20,
+            "padding_horizontal": 20,
+            "gap": 20,
+            "mobile_gap": 20,
+            "item_gap": 12,
+            "background_color": "#f5f5f5",
+            "icon_color": "#1d5c3a",
+            "heading_color": "#1a1a1a",
+            "description_color": "#555555",
+            "icon_size": 50,
+            "icon_border_width": 2,
+            "heading_size": 14,
+            "heading_weight": 700,
+            "heading_spacing": 4,
+            "description_size": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_32c9c2c_footer"
+      ],
       "name": "Trust badges",
       "settings": {}
     },
@@ -142,14 +186,24 @@
           "type": "text",
           "settings": {
             "heading": "inKitch",
-            "subtext": "<p>Welcome to inKitch a brand by Branbilly Lifestyle LLP. At inKitch we offer high quality  home essentials that blends functionality and durability to elevate your everyday living experience.</p>"
+            "subtext": "<p>Welcome to inKitch, a brand by BranBilly Lifestyle LLP. We make high-quality home essentials built on better materials, thoughtful design, and everyday durability — because we believe the things you use every day should simply work better.</p>",
+            "address": "",
+            "whatsapp_number": "9175939866",
+            "call_number": "917593986667",
+            "email_address": "inkitch.info@gmail.com",
+            "contact_hours": "Mon–Sat: 9:30am–6pm"
           }
         },
         "text_36atdn": {
           "type": "text",
           "settings": {
             "heading": "Contact Us:",
-            "subtext": "<p>Call : 9175939866</p><p>WhatsApp : 9175939866</p><p>Customer Support : 24x7</p><p>Email : inkitch.info@gmail.com</p>"
+            "subtext": "<p>Call : 9175939866</p><p>WhatsApp : 9175939866</p><p>Customer Support : 24x7</p><p>Email : inkitch.info@gmail.com</p>",
+            "address": "",
+            "whatsapp_number": "9175939866",
+            "call_number": "9175939866",
+            "email_address": "inkitch.info@gmail.com",
+            "contact_hours": "Mon–Sat: 9:30am–6pm"
           }
         }
       },

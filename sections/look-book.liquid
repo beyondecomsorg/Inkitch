@@ -118,23 +118,39 @@
 
 
   <div class="wau-stats">
-
-    {% for block in section.blocks %}
-
-      {% if block.type == 'stat' %}
-
-        <div class="wau-stat-pill" {{ block.shopify_attributes }}>
-
-          <strong>{{ block.settings.stat_value }}</strong>
-
-          <span>{{ block.settings.stat_label }}</span>
-
-        </div>
-
-      {% endif %}
-
-    {% endfor %}
-
+    <div class="wau-stats-row">
+      {% assign stat_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'stat' %}
+          {% assign stat_count = stat_count | plus: 1 %}
+          {% if stat_count <= 3 %}
+            <div class="wau-stat-pill" {{ block.shopify_attributes }}>
+              <strong>{{ block.settings.stat_value }}</strong>
+              <span>{{ block.settings.stat_label }}</span>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    <div class="wau-stats-row">
+      {% assign stat_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'stat' %}
+          {% assign stat_count = stat_count | plus: 1 %}
+          {% if stat_count > 3 %}
+            <div class="wau-stat-pill wau-stat-pill-row2" {{ block.shopify_attributes }}>
+              {% if block.settings.stat_value != blank %}
+                <strong>{{ block.settings.stat_value }}</strong>
+              {% endif %}
+              {% if block.settings.stat_label != blank %}
+                <span>{{ block.settings.stat_label }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 
 </div>
@@ -286,7 +302,7 @@
 #wau-{{ section.id }}.wau-section,
 .wau-section-wrapper .wau-section {
   position: relative !important;
-  width: 100vw !important;
+  width: 99vw !important;
   left: 50% !important;
   margin-left: -50vw !important;
   margin-right: -50vw !important;
@@ -451,10 +467,16 @@
 /* Stats */
 #wau-{{ section.id }} .wau-stats {
   display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  margin-top: 48px !important;
+  width: 100% !important;
+}
+
+#wau-{{ section.id }} .wau-stats-row {
+  display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  gap: 20px !important; /* Increased consistent gaps */
-  margin-top: 48px !important; /* More top margin spacing */
+  gap: 20px !important;
   width: 100% !important;
 }
 
@@ -472,6 +494,18 @@
   text-align: left !important;
   backdrop-filter: blur(10px);
   transition: background-color 0.25s, border-color 0.25s !important;
+}
+
+#wau-{{ section.id }} .wau-stat-pill-row2 {
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 16px 20px !important;
+}
+
+#wau-{{ section.id }} .wau-stat-pill-row2 span {
+  font-size: 14px !important;
+  font-weight: 600 !important;
 }
 
 #wau-{{ section.id }} .wau-stat-pill:hover {
@@ -498,7 +532,7 @@
 }
 
 @media (max-width: 1024px) {
-  #wau-{{ section.id }} .wau-stats {
+  #wau-{{ section.id }} .wau-stats-row {
     flex-wrap: wrap !important;
     justify-content: center !important;
     gap: 16px !important;
@@ -513,6 +547,9 @@
 }
 
 @media (max-width: 480px) {
+  #wau-{{ section.id }} .wau-stats-row {
+    flex-direction: column !important;
+  }
   #wau-{{ section.id }} .wau-stat-pill {
     flex: 1 1 100% !important;
   }

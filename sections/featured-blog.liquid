@@ -466,7 +466,7 @@
             {{ section.settings.heading }}
           </h2>
           <div class="heading-accent-line-{{ section.id }}"></div>
-          <p class="blog__subtitle-custom-{{ section.id }}">Tips, stories & kitchen inspiration</p>
+          <p class="blog__subtitle-custom-{{ section.id }}">Built better — and why that matters for you.</p>
         </div>
 
         {%- if section.settings.blog != blank
@@ -538,27 +538,38 @@
                   class="blog__post grid__item article"
                 >
                   <div class="article-card-custom-wrapper-{{ section.id }}">
-                    <span class="article-category-badge-{{ section.id }}">Lifestyle</span>
-                    <div class="article-card-wrapper card-wrapper">
-                      <div class="card article-card card--standard">
-                        <div class="article-card__image-wrapper card__media">
-                          <div class="article-card__image media">
-                            {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
+                    <span class="article-category-badge-{{ section.id }}">INKITCH</span>
+                    <div class="article-card-wrapper card-wrapper underline-links-hover">
+                      <div class="card article-card card--standard card--media">
+                        <div class="card__inner ratio" style="--ratio-percent: 56.25%;">
+                          <div class="article-card__image-wrapper card__media">
+                            <div class="article-card__image media media--hover-effect">
+                              {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
+                            </div>
                           </div>
+                          <div class="card__content"></div>
                         </div>
                         <div class="card__content">
                           <div class="card__information">
+                            <h3 class="card__heading h2">
+                              <a href="#" class="full-unstyled-link">
+                                {%- if i == 2 -%}
+                                  Everyday Cookware Essentials
+                                {%- else -%}
+                                  Better Tools for Everyday Cooking
+                                {%- endif -%}
+                              </a>
+                            </h3>
                             <div class="article-card__info caption-with-letter-spacing h5">
                               <span class="circle-divider">June 28, 2026</span>
                               <span>inKitch Editorial</span>
                             </div>
-                            <h3 class="card__heading h2">
-                              <a href="#" class="full-unstyled-link">
-                                Discover Premium Cookware Inspiration
-                              </a>
-                            </h3>
                             <p class="article-card__excerpt rte-width">
-                              Explore our latest collections designed to elevate your everyday cooking experience with stylish, durable kitchen essentials.
+                              {%- if i == 2 -%}
+                                Discover how using the right tools and materials like steel and aluminium can make a difference in your daily cooking, providing reliability and durability.
+                              {%- else -%}
+                                Explore our thoughtfully designed kitchen tools, crafted from steel and aluminium to make daily meal prep simple, reliable, and durable.
+                              {%- endif -%}
                             </p>
                           </div>
                         </div>
@@ -588,15 +599,15 @@
                       </div>
                       <div class="card__content">
                         <div class="card__information">
-                          <div class="article-card__info caption-with-letter-spacing h5">
-                            <span class="circle-divider">June 28, 2026</span>
-                            <span>inKitch Editorial</span>
-                          </div>
                           <h3 class="card__heading h2">
                             <a href="#" class="full-unstyled-link">
                               {{ 'sections.featured_blog.onboarding_title' | t }}
                             </a>
                           </h3>
+                          <div class="article-card__info caption-with-letter-spacing h5">
+                            <span class="circle-divider">June 28, 2026</span>
+                            <span>inKitch Editorial</span>
+                          </div>
                           <p class="article-card__excerpt rte-width">
                             {{ 'sections.featured_blog.onboarding_content' | t }}
                           </p>

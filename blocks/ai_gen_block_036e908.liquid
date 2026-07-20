@@ -1,36 +1,14 @@
 {% doc %}
-  @prompt
-    “Create a premium mobile-first testimonial section design in vertical slide format (1080x1920 Instagram Story/PPT slide style) for a kitchenware/lifestyle brand. Use a rich teal background with elegant minimal aesthetics.
-    
-    At the top center, add a clean white heading:
-    ‘Verified, Honest Reviews’
-    
-    Below it, place a large rounded-corner testimonial card in soft pastel blue/light cyan with subtle shadows and generous spacing.
-    
-    Inside the card include:
-    
-    * 5 elegant star icons at the top
-    * Large bold review title: ‘Superb Finish’
-    * Short customer review text in modern clean typography
-    * Circular customer profile image centered below review text
-    * Customer name in bold at the bottom
-    
-    Design style should be:
-    
-    * Premium and minimal
-    * Luxury cookware/homeware brand aesthetic
-    * Soft rounded corners
-    * Modern sans-serif fonts like Poppins or Montserrat
-    * Clean alignment and lots of white space
-    * Mobile responsive slide composition
-    * Presentation-style layout suitable for Canva, PowerPoint, Instagram Story, or website slides
-    
-    Use smooth spacing, subtle shadows, and a polished UI/UX feel.”
-    , Add slides in the same for more reviews
+  @prompt Testimonial carousel section for inKitch — block-based repeatable testimonials,
+  auto-sliding carousel, red gradient background, white cards with star ratings.
+  Desktop: 3 cards per page with smooth sliding transition, arrows + dot pagination.
+  Mobile: 1 card at a time with same arrow/dot controls.
+  Each testimonial is a nested testimonial-item block that renders its own card HTML.
 {% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
+  /* ── Outer section ───────────────────────────────────────────────────── */
   .ai-testimonial-slider-{{ ai_gen_id }} {
     display: block;
     width: 100%;
@@ -41,7 +19,6 @@
     box-sizing: border-box;
   }
 
-  /* Subtle diagonal texture */
   .ai-testimonial-slider-{{ ai_gen_id }}::before {
     content: '';
     position: absolute;
@@ -54,395 +31,210 @@
     z-index: 1;
   }
 
-  /* Decorative circles */
   .ai-testimonial-circle-1-{{ ai_gen_id }} {
-    position: absolute;
-    top: -80px;
-    left: -80px;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    pointer-events: none;
-    z-index: 1;
+    position: absolute; top: -80px; left: -80px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: rgba(255,255,255,0.04); pointer-events: none; z-index: 1;
   }
-
   .ai-testimonial-circle-2-{{ ai_gen_id }} {
-    position: absolute;
-    bottom: -60px;
-    right: -60px;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    pointer-events: none;
-    z-index: 1;
+    position: absolute; bottom: -60px; right: -60px;
+    width: 250px; height: 250px; border-radius: 50%;
+    background: rgba(255,255,255,0.04); pointer-events: none; z-index: 1;
   }
 
+  /* ── Header ─────────────────────────────────────────────────────────── */
   .ai-testimonial-header-{{ ai_gen_id }} {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    margin-bottom: 50px;
+    position: relative; z-index: 2; text-align: center; margin-bottom: 50px;
   }
-
   .ai-testimonial-slider__heading-{{ ai_gen_id }} {
-    font-size: 34px !important;
-    font-weight: 800 !important;
-    color: #ffffff !important;
-    text-align: center !important;
-    margin: 0 !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
-    line-height: 1.2;
-    font-family: inherit;
+    font-size: 34px !important; font-weight: 800 !important;
+    color: #ffffff !important; text-align: center !important;
+    margin: 0 !important; text-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    line-height: 1.2; font-family: inherit;
   }
-
   .ai-testimonial-heading-accent-{{ ai_gen_id }} {
-    width: 60px;
-    height: 3px;
-    background-color: #ffffff;
-    opacity: 0.6;
-    margin: 10px auto 0;
+    width: 60px; height: 3px; background-color: #ffffff;
+    opacity: 0.6; margin: 10px auto 0;
   }
-
   .ai-testimonial-subtitle-{{ ai_gen_id }} {
-    color: rgba(255,255,255,0.75);
-    font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 0;
-    text-align: center;
+    color: rgba(255,255,255,0.75); font-size: 14px;
+    margin-top: 10px; margin-bottom: 0; text-align: center;
   }
 
-  .ai-testimonial-slider__slides-{{ ai_gen_id }} {
-    position: relative;
-    width: 100%;
-    min-height: 460px;
-    z-index: 2;
+  /* ── Viewport + track (JS injects .ikt-slides-track inside) ─────────── */
+  .ai-testimonial-slides-{{ ai_gen_id }} {
+    position: relative; z-index: 2;
+    overflow: hidden;
+    /* height is managed by JS after build */
   }
 
-  /* Slide transition - pure CSS animation based on DOM order */
-  .ai-testimonial-slider__slide-{{ ai_gen_id }} {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-30px);
-    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease !important;
+  .ikt-slides-track {
+    display: flex;
+    will-change: transform;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .ai-testimonial-slider__slide-{{ ai_gen_id }}.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0) !important;
-  }
-
-  .ai-testimonial-slider__slide-{{ ai_gen_id }}.active ~ .ai-testimonial-slider__slide-{{ ai_gen_id }} {
-    transform: translateX(30px);
-  }
-
-  .ai-testimonial-slider__card-{{ ai_gen_id }} {
-    background: #ffffff !important;
-    border-radius: 20px !important;
-    padding: 36px 32px !important;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2) !important;
-    max-width: 600px !important;
-    margin: 0 auto !important;
-    position: relative !important;
-    text-align: center !important;
+  /* Each page = one viewport-width strip */
+  .ikt-slides-page {
+    min-width: 100%;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 0;
-
-    /* Stagger entrance animations support */
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease !important;
+    align-items: stretch;
   }
 
-  .ai-testimonial-slider__card-{{ ai_gen_id }}.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+  /* Each slide inside a page */
+  .ikt-testimonial-slide {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    /* width set by JS (100% mobile, 33.33% desktop) */
+    padding: 8px 12px;
+    /* entrance animation on page turn */
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
 
-  .ai-testimonial-slider__card-{{ ai_gen_id }}.is-visible:hover {
-    transform: translateY(-10px) scale(1.02) !important;
+  /* ── Card ────────────────────────────────────────────────────────────── */
+  .ikt-testimonial-card {
+    background: #ffffff !important; border-radius: 20px !important;
+    padding: 36px 32px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.2) !important;
+    height: 100%;
+    position: relative !important; text-align: center !important;
+    box-sizing: border-box; display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+    opacity: 0; transform: scale(0.96) translateY(20px);
+    transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease !important;
+  }
+  .ikt-testimonial-card.is-visible {
+    opacity: 1; transform: scale(1) translateY(0);
+  }
+  .ikt-testimonial-card.is-visible:hover {
+    transform: translateY(-8px) scale(1.02) !important;
     box-shadow: 0 30px 70px rgba(0,0,0,0.3) !important;
   }
-
-  .ai-testimonial-slider__card-{{ ai_gen_id }}::before {
-    content: "“" !important;
-    font-size: 80px !important;
-    color: #E30613 !important;
-    opacity: 0.12 !important;
-    position: absolute !important;
-    top: 10px !important;
-    left: 20px !important;
-    font-family: Georgia, serif !important;
-    line-height: 1 !important;
+  .ikt-testimonial-card::before {
+    content: "\201C" !important; font-size: 80px !important;
+    color: #E30613 !important; opacity: 0.12 !important;
+    position: absolute !important; top: 10px !important; left: 20px !important;
+    font-family: Georgia, serif !important; line-height: 1 !important;
     pointer-events: none !important;
   }
 
-  .ai-testimonial-slider__rating-wrap-{{ ai_gen_id }} {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 16px;
+  /* ── Stars ──────────────────────────────────────────────────────────── */
+  .ikt-testimonial-rating-wrap {
+    display: flex; flex-direction: column; align-items: center; margin-bottom: 16px;
   }
-
-  .ai-testimonial-slider__stars-{{ ai_gen_id }} {
-    display: flex !important;
-    gap: 3px !important;
-    justify-content: center !important;
-    margin-bottom: 4px !important;
+  .ikt-testimonial-stars {
+    display: flex !important; gap: 3px !important;
+    justify-content: center !important; margin-bottom: 4px !important;
   }
-
-  .ai-testimonial-slider__star-{{ ai_gen_id }} {
-    width: 20px !important;
-    height: 20px !important;
-    fill: #f5a623 !important;
+  .ikt-testimonial-star {
+    width: 20px !important; height: 20px !important; fill: #f5a623 !important;
   }
+  .ikt-testimonial-star.empty { fill: #dddddd !important; }
+  .ikt-testimonial-rating-text { font-size: 12px; color: #aaaaaa; font-weight: 500; }
 
-  .ai-testimonial-rating-text-{{ ai_gen_id }} {
-    font-size: 12px;
-    color: #aaaaaa;
-    font-weight: 500;
-  }
-
-  .ai-testimonial-slider__title-{{ ai_gen_id }} {
-    font-size: 20px !important;
-    font-weight: 800 !important;
-    color: #111111 !important;
-    margin: 0 0 12px 0 !important;
-    text-align: center !important;
-    line-height: 1.3;
-  }
-
-  .ai-testimonial-slider__text-{{ ai_gen_id }} {
-    font-size: 15px !important;
-    color: #555555 !important;
-    line-height: 1.8 !important;
-    font-style: italic !important;
-    max-width: 480px !important;
+  /* ── Quote text ──────────────────────────────────────────────────────── */
+  .ikt-testimonial-text {
+    font-size: 15px !important; color: #555555 !important;
+    line-height: 1.8 !important; font-style: italic !important;
     margin: 0 auto 24px auto !important;
-    text-align: center !important;
-    opacity: 1 !important;
+    text-align: center !important; flex-grow: 1;
   }
 
-  .ai-testimonial-slider__profile-{{ ai_gen_id }} {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 14px !important;
-    margin-top: 0 !important;
+  /* ── Profile row ─────────────────────────────────────────────────────── */
+  .ikt-testimonial-profile {
+    display: flex !important; flex-direction: row !important;
+    align-items: center !important; justify-content: center !important;
+    gap: 14px !important; margin-top: 0 !important; width: 100%;
+  }
+  .ikt-testimonial-avatar-wrap {
+    width: 52px !important; height: 52px !important; border-radius: 50% !important;
+    overflow: hidden !important; border: 3px solid #E30613 !important;
+    box-shadow: 0 4px 12px rgba(227,6,19,0.25) !important; flex-shrink: 0;
+  }
+  .ikt-testimonial-avatar { width: 100%; height: 100%; object-fit: cover; }
+  .ikt-testimonial-avatar-placeholder {
+    width: 100%; height: 100%; background: #f0f0f0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ikt-testimonial-avatar-placeholder svg { width: 60%; height: 60%; opacity: 0.3; }
+  .ikt-testimonial-meta {
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .ikt-testimonial-name {
+    font-size: 15px !important; font-weight: 700 !important;
+    color: #111111 !important; margin: 0 !important;
+    text-align: left !important; line-height: 1.2;
+  }
+  .ikt-testimonial-verified {
+    font-size: 11px; color: #E30613; font-weight: 600;
+    margin-top: 3px; line-height: 1; text-align: left;
   }
 
-  .ai-testimonial-slider__image-wrapper-{{ ai_gen_id }} {
-    width: 52px !important;
-    height: 52px !important;
-    border-radius: 50% !important;
-    overflow: hidden !important;
-    border: 3px solid #E30613 !important;
-    box-shadow: 0 4px 12px rgba(227,6,19,0.25) !important;
-    flex-shrink: 0;
+  /* ── Arrows ─────────────────────────────────────────────────────────── */
+  .ai-testimonial-arrows-{{ ai_gen_id }} {
+    display: flex !important; justify-content: center !important;
+    gap: 16px !important; margin-top: 28px !important;
+    z-index: 10 !important; position: relative;
   }
-
-  .ai-testimonial-slider__image-{{ ai_gen_id }} {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .ai-testimonial-arrow-{{ ai_gen_id }} {
+    background: rgba(255,255,255,0.15) !important; border: 2px solid rgba(255,255,255,0.3) !important;
+    width: 44px !important; height: 44px !important; border-radius: 50% !important;
+    display: flex !important; align-items: center !important;
+    justify-content: center !important; cursor: pointer !important;
+    transition: all 0.3s ease !important; padding: 0 !important;
   }
-
-  .ai-testimonial-slider__image-placeholder-{{ ai_gen_id }} {
-    width: 100%;
-    height: 100%;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ai-testimonial-slider__image-placeholder-{{ ai_gen_id }} svg {
-    width: 60%;
-    height: 60%;
-    opacity: 0.3;
-  }
-
-  .ai-testimonial-slider__profile-meta-{{ ai_gen_id }} {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .ai-testimonial-slider__name-{{ ai_gen_id }} {
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    color: #111111 !important;
-    margin: 0 !important;
-    text-align: left !important;
-    line-height: 1.2;
-  }
-
-  .ai-testimonial-verified-badge-{{ ai_gen_id }} {
-    font-size: 11px;
-    color: #E30613;
-    font-weight: 600;
-    margin-top: 3px;
-    line-height: 1;
-    text-align: left;
-  }
-
-  .ai-testimonial-slider__controls-{{ ai_gen_id }} {
-    position: static !important;
-    transform: none !important;
-    display: flex !important;
-    gap: 8px !important;
-    justify-content: center !important;
-    margin-top: 28px !important;
-    z-index: 10 !important;
-  }
-
-  .ai-testimonial-slider__dot-{{ ai_gen_id }} {
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 50% !important;
-    background: rgba(255,255,255,0.4) !important;
-    opacity: 1 !important;
-    border: none !important;
-    padding: 0 !important;
-    cursor: pointer !important;
+  .ai-testimonial-arrow-{{ ai_gen_id }} svg {
+    width: 20px !important; height: 20px !important; stroke: #ffffff !important;
     transition: all 0.3s ease !important;
   }
+  .ai-testimonial-arrow-{{ ai_gen_id }}:hover {
+    background: #ffffff !important; border-color: #ffffff !important;
+  }
+  .ai-testimonial-arrow-{{ ai_gen_id }}:hover svg { stroke: #E30613 !important; }
+  .ai-testimonial-arrow-{{ ai_gen_id }}:disabled {
+    opacity: 0.35 !important; cursor: not-allowed !important;
+  }
 
-  .ai-testimonial-slider__dot-{{ ai_gen_id }}.active {
-    background: #ffffff !important;
-    width: 24px !important;
+  /* ── Nav dots ────────────────────────────────────────────────────────── */
+  .ai-testimonial-dots-{{ ai_gen_id }} {
+    display: flex !important; gap: 8px !important;
+    justify-content: center !important; margin-top: 16px !important;
+    z-index: 10 !important; position: relative;
+  }
+  .ai-testimonial-dot-{{ ai_gen_id }} {
+    width: 8px !important; height: 8px !important; border-radius: 50% !important;
+    background: rgba(255,255,255,0.4) !important; border: none !important;
+    padding: 0 !important; cursor: pointer !important;
+    transition: all 0.3s ease !important;
+  }
+  .ai-testimonial-dot-{{ ai_gen_id }}.active {
+    background: #ffffff !important; width: 24px !important;
     border-radius: 12px !important;
-    transform: none !important;
   }
 
-  .ai-testimonial-slider__arrows-{{ ai_gen_id }} {
-    position: absolute !important;
-    top: 55% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 100% !important;
-    max-width: 720px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 0 20px !important;
-    pointer-events: none !important;
-    z-index: 10 !important;
-    box-sizing: border-box;
-  }
-
-  .ai-testimonial-slider__arrow-{{ ai_gen_id }} {
-    background: transparent !important;
-    border: none !important;
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
-    transition: all 0.3s ease !important;
-    opacity: 1 !important;
-    padding: 0 !important;
-  }
-
-  .ai-testimonial-slider__arrow-{{ ai_gen_id }} svg {
-    width: 20px !important;
-    height: 20px !important;
-    fill: #E30613 !important;
-    transition: all 0.3s ease !important;
-  }
-
-  .ai-testimonial-slider__arrow-{{ ai_gen_id }}:hover {
-    background: #E30613 !important;
-  }
-
-  .ai-testimonial-slider__arrow-{{ ai_gen_id }}:hover svg {
-    fill: #ffffff !important;
-  }
-
+  /* ── Desktop adjustments ─────────────────────────────────────────────── */
   @media screen and (min-width: 901px) {
-    .ai-testimonial-slider-{{ ai_gen_id }} {
-      padding: 80px 40px !important;
-    }
-
-    .ai-testimonial-slider__slides-{{ ai_gen_id }} {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 30px !important;
-      min-height: auto !important;
-      max-width: 1200px !important;
-      margin: 0 auto !important;
-      position: relative !important;
-    }
-
-    .ai-testimonial-slider__slide-{{ ai_gen_id }} {
-      position: relative !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: none !important;
-      left: auto !important;
-      top: auto !important;
-    }
-
-    .ai-testimonial-slider__slide-{{ ai_gen_id }}.active ~ .ai-testimonial-slider__slide-{{ ai_gen_id }} {
-      transform: none !important;
-    }
-
-    .ai-testimonial-slider__arrows-{{ ai_gen_id }},
-    .ai-testimonial-slider__controls-{{ ai_gen_id }} {
-      display: none !important;
+    .ai-testimonial-slider-{{ ai_gen_id }} { padding: 80px 40px !important; }
+    .ai-testimonial-slides-{{ ai_gen_id }} {
+      max-width: 1200px;
+      margin: 0 auto;
     }
   }
 
+  /* ── Mobile tweaks ───────────────────────────────────────────────────── */
   @media screen and (max-width: 600px) {
-    .ai-testimonial-slider-{{ ai_gen_id }} {
-      padding: 50px 16px !important;
-    }
-
-    .ai-testimonial-slider__heading-{{ ai_gen_id }} {
-      font-size: 26px !important;
-    }
-
-    .ai-testimonial-slider__card-{{ ai_gen_id }} {
-      padding: 24px 20px !important;
-    }
-
-    .ai-testimonial-slider__text-{{ ai_gen_id }} {
-      font-size: 14px !important;
-    }
-
-    .ai-testimonial-slider__slides-{{ ai_gen_id }} {
-      min-height: 290px !important;
-    }
-
-    .ai-testimonial-slider__arrows-{{ ai_gen_id }} {
-      max-width: 100% !important;
-      padding: 0 10px !important;
-      top: 60% !important;
-    }
-
-    .ai-testimonial-slider__arrow-{{ ai_gen_id }} {
-      width: 36px !important;
-      height: 36px !important;
-    }
+    .ai-testimonial-slider-{{ ai_gen_id }} { padding: 50px 16px !important; }
+    .ai-testimonial-slider__heading-{{ ai_gen_id }} { font-size: 26px !important; }
+    .ikt-testimonial-card { padding: 24px 20px !important; }
+    .ikt-testimonial-text { font-size: 14px !important; }
   }
 {% endstyle %}
 
-<testimonial-slider-{{ ai_gen_id }} class="ai-testimonial-slider-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+<testimonial-slider-{{ ai_gen_id }}
+  class="ai-testimonial-slider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
   <div class="ai-testimonial-circle-1-{{ ai_gen_id }}"></div>
   <div class="ai-testimonial-circle-2-{{ ai_gen_id }}"></div>
 
@@ -451,202 +243,220 @@
       {{ block.settings.heading }}
     </h2>
     <div class="ai-testimonial-heading-accent-{{ ai_gen_id }}"></div>
-    <p class="ai-testimonial-subtitle-{{ ai_gen_id }}">What our customers are saying</p>
+    <p class="ai-testimonial-subtitle-{{ ai_gen_id }}">Real reviews from real inKitch homes.</p>
   </div>
 
-  <div class="ai-testimonial-slider__slides-{{ ai_gen_id }}">
-    {% for i in (1..3) %}
-      {% liquid
-        assign review_title_key = 'review_title_' | append: i
-        assign review_text_key = 'review_text_' | append: i
-        assign customer_name_key = 'customer_name_' | append: i
-        assign customer_image_key = 'customer_image_' | append: i
-
-        assign review_title = block.settings[review_title_key]
-        assign review_text = block.settings[review_text_key]
-        assign customer_name = block.settings[customer_name_key]
-        assign customer_image = block.settings[customer_image_key]
-      %}
-
-      <div class="ai-testimonial-slider__slide-{{ ai_gen_id }} {% if i == 1 %}active{% endif %}" data-slide="{{ i }}">
-        <div class="ai-testimonial-slider__card-{{ ai_gen_id }}">
-          <div class="ai-testimonial-slider__rating-wrap-{{ ai_gen_id }}">
-            <div class="ai-testimonial-slider__stars-{{ ai_gen_id }}">
-              {% for star in (1..5) %}
-                <svg class="ai-testimonial-slider__star-{{ ai_gen_id }}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              {% endfor %}
-            </div>
-            <div class="ai-testimonial-rating-text-{{ ai_gen_id }}">(5/5)</div>
-          </div>
-
-          <h3 class="ai-testimonial-slider__title-{{ ai_gen_id }}">
-            {{ review_title }}
-          </h3>
-
-          <p class="ai-testimonial-slider__text-{{ ai_gen_id }}">
-            {{ review_text }}
-          </p>
-
-          <div class="ai-testimonial-slider__profile-{{ ai_gen_id }}">
-            <div class="ai-testimonial-slider__image-wrapper-{{ ai_gen_id }}">
-              {% if customer_image %}
-                <img
-                  src="{{ customer_image | image_url: width: 200 }}"
-                  alt="{{ customer_name | escape }}"
-                  class="ai-testimonial-slider__image-{{ ai_gen_id }}"
-                  loading="lazy"
-                  width="200"
-                  height="200"
-                >
-              {% else %}
-                <div class="ai-testimonial-slider__image-placeholder-{{ ai_gen_id }}">
-                  {{ 'image' | placeholder_svg_tag }}
-                </div>
-              {% endif %}
-            </div>
-
-            <div class="ai-testimonial-slider__profile-meta-{{ ai_gen_id }}">
-              <p class="ai-testimonial-slider__name-{{ ai_gen_id }}">
-                {{ customer_name }}
-              </p>
-              <div class="ai-testimonial-verified-badge-{{ ai_gen_id }}">Verified Buyer ✓</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
+  <div class="ai-testimonial-slides-{{ ai_gen_id }}">
+    {% content_for 'blocks' %}
   </div>
 
-  <div class="ai-testimonial-slider__arrows-{{ ai_gen_id }}">
-    <button class="ai-testimonial-slider__arrow-{{ ai_gen_id }} ai-testimonial-slider__arrow-prev-{{ ai_gen_id }}" aria-label="Previous testimonial">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <div class="ai-testimonial-arrows-{{ ai_gen_id }}">
+    <button class="ai-testimonial-arrow-{{ ai_gen_id }} js-prev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </button>
-    <button class="ai-testimonial-slider__arrow-{{ ai_gen_id }} ai-testimonial-slider__arrow-next-{{ ai_gen_id }}" aria-label="Next testimonial">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <button class="ai-testimonial-arrow-{{ ai_gen_id }} js-next" aria-label="Next">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18l6-6-6-6"/>
       </svg>
     </button>
   </div>
 
-  <div class="ai-testimonial-slider__controls-{{ ai_gen_id }}">
-    {% for i in (1..3) %}
-      <button class="ai-testimonial-slider__dot-{{ ai_gen_id }} {% if i == 1 %}active{% endif %}" data-slide="{{ i }}" aria-label="Go to slide {{ i }}"></button>
-    {% endfor %}
-  </div>
+  <div class="ai-testimonial-dots-{{ ai_gen_id }}"></div>
 </testimonial-slider-{{ ai_gen_id }}>
 
 <script>
   (function() {
+    if (customElements.get('testimonial-slider-{{ ai_gen_id }}')) return;
+
+    const DESKTOP_BP  = 901;  // px — cards per page switches at this breakpoint
+    const AUTOPLAY_MS = 3000;
+
     class TestimonialSlider{{ ai_gen_id }} extends HTMLElement {
       constructor() {
         super();
-        this.currentSlide = 1;
-        this.totalSlides = 3;
-        this.autoplayInterval = null;
+        this.currentPage  = 0;
+        this.timer        = null;
+        this.pauseTimeout = null;
+        this.paused       = false;
+        this.pages        = [];  // array of page DOM nodes
+        this.track        = null;
       }
 
+      /* ── Lifecycle ─────────────────────────────────────────────────── */
       connectedCallback() {
-        this.slides = this.querySelectorAll('.ai-testimonial-slider__slide-{{ ai_gen_id }}');
-        this.dots = this.querySelectorAll('.ai-testimonial-slider__dot-{{ ai_gen_id }}');
-        this.prevButton = this.querySelector('.ai-testimonial-slider__arrow-prev-{{ ai_gen_id }}');
-        this.nextButton = this.querySelector('.ai-testimonial-slider__arrow-next-{{ ai_gen_id }}');
+        this.viewport   = this.querySelector('.ai-testimonial-slides-{{ ai_gen_id }}');
+        this.dotsEl     = this.querySelector('.ai-testimonial-dots-{{ ai_gen_id }}');
+        this.prevBtn    = this.querySelector('.js-prev');
+        this.nextBtn    = this.querySelector('.js-next');
 
-        this.setupEventListeners();
+        this.rawSlides = Array.from(this.querySelectorAll('.ikt-testimonial-slide'));
+        if (this.rawSlides.length === 0) return;
+
+        this.build();
+        this.bindEvents();
+        this.goTo(0, false);
         this.startAutoplay();
-        this.initScrollAnimation();
-      }
+        this.initReveal();
 
-      initScrollAnimation() {
-        const cards = this.querySelectorAll('.ai-testimonial-slider__card-{{ ai_gen_id }}');
-        if ('IntersectionObserver' in window) {
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                cards.forEach((card, index) => {
-                  setTimeout(() => {
-                    card.classList.add('is-visible');
-                  }, index * 150);
-                });
-                observer.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.1 });
-          observer.observe(this);
-        } else {
-          cards.forEach(card => card.classList.add('is-visible'));
-        }
-      }
-
-      setupEventListeners() {
-        this.dots.forEach((dot) => {
-          dot.addEventListener('click', () => {
-            const slideNumber = parseInt(dot.getAttribute('data-slide'));
-            this.goToSlide(slideNumber);
-            this.resetAutoplay();
-          });
-        });
-
-        this.prevButton.addEventListener('click', () => {
-          this.previousSlide();
-          this.resetAutoplay();
-        });
-
-        this.nextButton.addEventListener('click', () => {
-          this.nextSlide();
-          this.resetAutoplay();
-        });
-      }
-
-      goToSlide(slideNumber) {
-        this.slides.forEach((slide) => {
-          slide.classList.remove('active');
-        });
-
-        this.dots.forEach((dot) => {
-          dot.classList.remove('active');
-        });
-
-        const targetSlide = this.querySelector(`.ai-testimonial-slider__slide-{{ ai_gen_id }}[data-slide="${slideNumber}"]`);
-        const targetDot = this.querySelector(`.ai-testimonial-slider__dot-{{ ai_gen_id }}[data-slide="${slideNumber}"]`);
-        if (targetSlide) {
-          targetSlide.classList.add('active');
-        }
-
-        if (targetDot) {
-          targetDot.classList.add('active');
-        }
-
-        this.currentSlide = slideNumber;
-      }
-
-      nextSlide() {
-        const nextSlideNumber = this.currentSlide === this.totalSlides ? 1 : this.currentSlide + 1;
-        this.goToSlide(nextSlideNumber);
-      }
-
-      previousSlide() {
-        const prevSlideNumber = this.currentSlide === 1 ? this.totalSlides : this.currentSlide - 1;
-        this.goToSlide(prevSlideNumber);
-      }
-
-      startAutoplay() {
-        this.autoplayInterval = setInterval(() => {
-          this.nextSlide();
-        }, 5000);
-      }
-
-      resetAutoplay() {
-        clearInterval(this.autoplayInterval);
-        this.startAutoplay();
+        // Rebuild on resize when crossing DESKTOP_BP
+        this._resizeHandler = this._onResize.bind(this);
+        window.addEventListener('resize', this._resizeHandler, { passive: true });
       }
 
       disconnectedCallback() {
-        if (this.autoplayInterval) {
-          clearInterval(this.autoplayInterval);
+        clearInterval(this.timer);
+        clearTimeout(this.pauseTimeout);
+        window.removeEventListener('resize', this._resizeHandler);
+      }
+
+      /* ── Build track ──────────────────────────────────────────────── */
+      cardsPerPage() {
+        return window.innerWidth >= DESKTOP_BP ? 3 : 1;
+      }
+
+      build() {
+        const cpp = this.cardsPerPage();
+        this._lastCpp = cpp;
+
+        // Create track
+        const track = document.createElement('div');
+        track.className = 'ikt-slides-track';
+        this.track = track;
+        this.pages = [];
+
+        // Chunk slides into pages
+        const slides = this.rawSlides;
+        for (let i = 0; i < slides.length; i += cpp) {
+          const pageEl = document.createElement('div');
+          pageEl.className = 'ikt-slides-page';
+          const chunk = slides.slice(i, i + cpp);
+          chunk.forEach(s => {
+            s.style.width = (100 / cpp) + '%';
+            pageEl.appendChild(s);
+          });
+          track.appendChild(pageEl);
+          this.pages.push(pageEl);
+        }
+
+        this.viewport.innerHTML = '';
+        this.viewport.appendChild(track);
+
+        this.buildDots();
+        if (this.currentPage >= this.pages.length) this.currentPage = 0;
+      }
+
+      _onResize() {
+        const cpp = this.cardsPerPage();
+        if (cpp === this._lastCpp) return;   // breakpoint not crossed
+        // Rebuild track for new cpp
+        const prevPage = this.currentPage;
+        // Put all slides back flat before rebuild
+        const allSlides = [];
+        this.pages.forEach(p => allSlides.push(...p.querySelectorAll('.ikt-testimonial-slide')));
+        this.rawSlides = allSlides;
+        this.build();
+        this.goTo(Math.min(prevPage, this.pages.length - 1), false);
+      }
+
+      /* ── Dots ─────────────────────────────────────────────────────── */
+      buildDots() {
+        if (!this.dotsEl) return;
+        this.dotsEl.innerHTML = '';
+        if (this.pages.length <= 1) return;
+        this.pages.forEach((_, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'ai-testimonial-dot-{{ ai_gen_id }}';
+          btn.setAttribute('aria-label', 'Page ' + (i + 1));
+          btn.addEventListener('click', () => { this.goTo(i); this.resetAutoplay(); });
+          this.dotsEl.appendChild(btn);
+        });
+        this.dots = Array.from(this.dotsEl.querySelectorAll('.ai-testimonial-dot-{{ ai_gen_id }}'));
+      }
+
+      /* ── Navigation ───────────────────────────────────────────────── */
+      goTo(pageIndex, animate = true) {
+        if (!animate) this.track.style.transition = 'none';
+
+        this.track.style.transform = `translateX(-${pageIndex * 100}%)`;
+
+        if (!animate) {
+          // Force reflow then re-enable transition
+          this.track.getBoundingClientRect();
+          this.track.style.transition = '';
+        }
+
+        // Animate incoming cards: scale + fade entrance
+        this.pages.forEach((page, pi) => {
+          const cards = page.querySelectorAll('.ikt-testimonial-card');
+          if (pi === pageIndex) {
+            cards.forEach((c, ci) => {
+              c.style.opacity = '0';
+              c.style.transform = 'scale(0.96) translateY(16px)';
+              setTimeout(() => {
+                c.style.opacity = '';
+                c.style.transform = '';
+              }, 80 + ci * 80);
+            });
+          }
+        });
+
+        // Update dots
+        if (this.dots) {
+          this.dots.forEach((d, i) => d.classList.toggle('active', i === pageIndex));
+        }
+
+        // Update arrow disabled state
+        if (this.prevBtn) this.prevBtn.disabled = false;
+        if (this.nextBtn) this.nextBtn.disabled = false;
+
+        this.currentPage = pageIndex;
+      }
+
+      next() { this.goTo((this.currentPage + 1) % this.pages.length); }
+      prev() { this.goTo((this.currentPage - 1 + this.pages.length) % this.pages.length); }
+
+      /* ── Events ───────────────────────────────────────────────────── */
+      bindEvents() {
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => { this.prev(); this.resetAutoplay(); });
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => { this.next(); this.resetAutoplay(); });
+
+        this.addEventListener('mouseenter', () => { this.paused = true; });
+        this.addEventListener('mouseleave', () => {
+          clearTimeout(this.pauseTimeout);
+          this.pauseTimeout = setTimeout(() => { this.paused = false; }, 3000);
+        });
+        this.addEventListener('touchstart', () => { this.paused = true; }, { passive: true });
+        this.addEventListener('touchend', () => {
+          clearTimeout(this.pauseTimeout);
+          this.pauseTimeout = setTimeout(() => { this.paused = false; }, 3000);
+        }, { passive: true });
+      }
+
+      /* ── Autoplay ─────────────────────────────────────────────────── */
+      startAutoplay() {
+        this.paused = false;
+        this.timer = setInterval(() => { if (!this.paused) this.next(); }, AUTOPLAY_MS);
+      }
+
+      resetAutoplay() { clearInterval(this.timer); this.startAutoplay(); }
+
+      /* ── Scroll reveal ────────────────────────────────────────────── */
+      initReveal() {
+        const cards = this.querySelectorAll('.ikt-testimonial-card');
+        if ('IntersectionObserver' in window) {
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                cards.forEach((c, i) => setTimeout(() => c.classList.add('is-visible'), i * 120));
+                obs.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(this);
+        } else {
+          cards.forEach(c => c.classList.add('is-visible'));
         }
       }
     }
@@ -657,234 +467,52 @@
 
 {% schema %}
 {
-  "name": "Testimonial slider",
+  "name": "Testimonial Slider",
   "settings": [
-    {
-      "type": "header",
-      "content": "Heading"
-    },
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading",
+      "label": "Section heading",
       "default": "Verified, Honest Reviews"
-    },
+    }
+  ],
+  "blocks": [
     {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "heading_size",
-      "label": "Heading size",
-      "min": 18,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 28
-    },
-    {
-      "type": "header",
-      "content": "Background"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background color",
-      "default": "#1a7a7a"
-    },
-    {
-      "type": "header",
-      "content": "Card style"
-    },
-    {
-      "type": "color",
-      "id": "card_background",
-      "label": "Card background",
-      "default": "#d4e8f0"
-    },
-    {
-      "type": "color",
-      "id": "card_text_color",
-      "label": "Card text color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "card_radius",
-      "label": "Card corner radius",
-      "min": 8,
-      "max": 40,
-      "step": 4,
-      "unit": "px",
-      "default": 24
-    },
-    {
-      "type": "range",
-      "id": "shadow_opacity",
-      "label": "Shadow opacity",
-      "min": 0,
-      "max": 0.5,
-      "step": 0.1,
-      "default": 0.2
-    },
-    {
-      "type": "range",
-      "id": "review_title_size",
-      "label": "Title size",
-      "min": 18,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 26
-    },
-    {
-      "type": "range",
-      "id": "review_text_size",
-      "label": "Text size",
-      "min": 12,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "header",
-      "content": "Stars"
-    },
-    {
-      "type": "range",
-      "id": "star_size",
-      "label": "Star size",
-      "min": 16,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 24
-    },
-    {
-      "type": "color",
-      "id": "star_color",
-      "label": "Star color",
-      "default": "#ffc107"
-    },
-    {
-      "type": "header",
-      "content": "Profile image"
-    },
-    {
-      "type": "range",
-      "id": "profile_image_size",
-      "label": "Image size",
-      "min": 50,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "default": 80
-    },
-    {
-      "type": "color",
-      "id": "profile_border_color",
-      "label": "Image border color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "name_size",
-      "label": "Name size",
-      "min": 12,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "header",
-      "content": "Review 1"
-    },
-    {
-      "type": "text",
-      "id": "review_title_1",
-      "label": "Review title",
-      "default": "Superb Finish"
-    },
-    {
-      "type": "textarea",
-      "id": "review_text_1",
-      "label": "Review text",
-      "default": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!"
-    },
-    {
-      "type": "text",
-      "id": "customer_name_1",
-      "label": "Customer name",
-      "default": "Sarah Johnson"
-    },
-    {
-      "type": "image_picker",
-      "id": "customer_image_1",
-      "label": "Customer image"
-    },
-    {
-      "type": "header",
-      "content": "Review 2"
-    },
-    {
-      "type": "text",
-      "id": "review_title_2",
-      "label": "Review title",
-      "default": "Love the Quality"
-    },
-    {
-      "type": "textarea",
-      "id": "review_text_2",
-      "label": "Review text",
-      "default": "Beautiful craftsmanship and attention to detail. These products have transformed my cooking experience!"
-    },
-    {
-      "type": "text",
-      "id": "customer_name_2",
-      "label": "Customer name",
-      "default": "Michael Chen"
-    },
-    {
-      "type": "image_picker",
-      "id": "customer_image_2",
-      "label": "Customer image"
-    },
-    {
-      "type": "header",
-      "content": "Review 3"
-    },
-    {
-      "type": "text",
-      "id": "review_title_3",
-      "label": "Review title",
-      "default": "Highly Recommend"
-    },
-    {
-      "type": "textarea",
-      "id": "review_text_3",
-      "label": "Review text",
-      "default": "Worth every penny! The premium materials and elegant design make these a must-have for any kitchen enthusiast."
-    },
-    {
-      "type": "text",
-      "id": "customer_name_3",
-      "label": "Customer name",
-      "default": "Emma Williams"
-    },
-    {
-      "type": "image_picker",
-      "id": "customer_image_3",
-      "label": "Customer image"
+      "type": "testimonial-item"
     }
   ],
   "presets": [
     {
-      "name": "Testimonial slider"
+      "name": "Testimonial Slider",
+      "blocks": [
+        {
+          "type": "testimonial-item",
+          "settings": {
+            "rating": 5,
+            "quote": "The build quality is solid and everything fits perfectly. Worth every rupee — my kitchen feels so much more organised now.",
+            "customer_name": "Priya S.",
+            "verified_label": "Verified Buyer ✓"
+          }
+        },
+        {
+          "type": "testimonial-item",
+          "settings": {
+            "rating": 5,
+            "quote": "Brilliant quality for the price. No rust, no warping — still looks brand new after months of daily use.",
+            "customer_name": "Rahul M.",
+            "verified_label": "Verified Buyer ✓"
+          }
+        },
+        {
+          "type": "testimonial-item",
+          "settings": {
+            "rating": 5,
+            "quote": "Gifted these to my mother and she absolutely loves them. Well-made, easy to clean, and they look great on the shelf.",
+            "customer_name": "Anjali K.",
+            "verified_label": "Verified Buyer ✓"
+          }
+        }
+      ]
     }
   ]
 }

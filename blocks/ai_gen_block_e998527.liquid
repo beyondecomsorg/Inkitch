@@ -4,7 +4,7 @@
     <h2 class="category-heading">
       {{ block.settings.heading }}
     </h2>
-    <p class="category-subtitle">Explore our wide range of stainless steel products</p>
+    <p class="category-subtitle">Better-built home essentials for everyday use.</p>
   </div>
 
   <div class="category-slider">
@@ -92,13 +92,19 @@
 }
 
 .category-heading {
-  font-size: clamp(28px, 4vw, 36px);
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
   color: #111;
   margin: 0 0 12px 0;
   position: relative;
   display: inline-block;
   font-family: var(--font-heading), serif;
+}
+
+@media screen and (max-width: 749px) {
+  .category-heading {
+    font-size: 25.6px;
+  }
 }
 
 .category-heading::after {

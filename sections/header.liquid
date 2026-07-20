@@ -151,7 +151,7 @@
       {%- if request.page_type == 'index' -%}
         <h1 class="header__heading">
       {%- endif -%}
-      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset" style="display: inline-flex; align-items: center; gap: 10px;">
         {%- if settings.logo != blank -%}
           <div class="header__heading-logo-wrapper">
             {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
@@ -194,7 +194,7 @@
       {%- if request.page_type == 'index' -%}
         <h1 class="header__heading">
       {%- endif -%}
-      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset" style="display: inline-flex; align-items: center; gap: 10px;">
         {%- if settings.logo != blank -%}
           <div class="header__heading-logo-wrapper">
             {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
@@ -326,6 +326,7 @@
       this.headerBounds = {};
 
       this.setHeaderHeight();
+      this.setAnnouncementBarHeight();
 
       window.matchMedia('(max-width: 990px)').addEventListener('change', this.setHeaderHeight.bind(this));
 
@@ -343,6 +344,17 @@
       this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
       window.addEventListener('scroll', this.onScrollHandler, false);
 
+      this.onResizeHandler = this.setAnnouncementBarHeight.bind(this);
+      window.addEventListener('resize', this.onResizeHandler);
+
+      this.onSectionLoad = () => {
+        this.setAnnouncementBarHeight();
+        this.setHeaderHeight();
+      };
+      document.addEventListener('shopify:section:load', this.onSectionLoad);
+      document.addEventListener('shopify:section:unload', this.onSectionLoad);
+
+      document.body.classList.add('has-sticky-header');
       this.createObserver();
     }
 
@@ -350,9 +362,19 @@
       document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
     }
 
+    setAnnouncementBarHeight() {
+      const announcementBar = document.querySelector('.announcement-bar-section');
+      const height = announcementBar ? announcementBar.offsetHeight : 0;
+      document.documentElement.style.setProperty('--announcement-bar-height', `${height}px`);
+    }
+
     disconnectedCallback() {
       this.removeEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
       window.removeEventListener('scroll', this.onScrollHandler);
+      window.removeEventListener('resize', this.onResizeHandler);
+      document.removeEventListener('shopify:section:load', this.onSectionLoad);
+      document.removeEventListener('shopify:section:unload', this.onSectionLoad);
+      document.body.classList.remove('has-sticky-header');
     }
 
     createObserver() {

@@ -1,75 +1,213 @@
-
+{% comment %} Custom Carousel responsive banner {% endcomment %}
 {% schema %}
 {
   "name": "Custom Responsive Banner",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "desktop_image",
-      "label": "Desktop Image"
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable Auto-Play",
+      "default": true
     },
     {
-      "type": "image_picker",
-      "id": "mobile_image",
-      "label": "Mobile Image"
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-Play Speed",
+      "default": 5
     },
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Welcome to our store"
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Navigation Arrows",
+      "default": true
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button Label",
-      "default": "Shop Now"
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show Navigation Dots",
+      "default": true
     },
     {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
+      "type": "select",
+      "id": "banner_height",
+      "label": "Banner Height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to Image"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "fullscreen",
+          "label": "Full Screen"
+        }
+      ],
+      "default": "adapt"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Welcome to our store"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button/Slide Link"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Custom Responsive Banner"
+      "name": "Custom Responsive Banner",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
     }
   ]
 }
 {% endschema %}
-<style>
-.banner__buttons{
-position:absolute;
-bottom:20px;
-left:0;
-right:0;
-display:flex;
-justify-content:center;
-z-index:9;
-}
-</style>
 
 <style>
-
-.custom-responsive-banner {
+.custom-responsive-banner-slider {
   position: relative;
-  width: 100%;
+  width: 100% !important;
   overflow: hidden;
+  display: block;
 }
 
-.custom-responsive-banner img {
-  width: 100%;
-  height: auto;
+.banner-slider__slides {
+  display: flex;
+  width: 100% !important;
+  position: relative;
+}
+
+.banner-slider__slide {
+  flex: 0 0 100%;
+  width: 100% !important;
+  position: relative;
+  display: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.banner-slider__slide.active {
   display: block;
+  opacity: 1;
+}
+
+.banner-slider__link-wrapper {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.banner-slider__image {
+  width: 100% !important;
+  display: block !important;
 }
 
 .desktop-banner {
-  display: block;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .mobile-banner {
   display: none;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Height Customizations based on data-height-mode */
+
+/* Adapt to Image (Ratio based) */
+.custom-responsive-banner-slider[data-height-mode="adapt"] {
+  height: auto !important;
+}
+.custom-responsive-banner-slider[data-height-mode="adapt"] .banner-slider__slides {
+  height: auto !important;
+}
+.custom-responsive-banner-slider[data-height-mode="adapt"] .banner-slider__slide {
+  height: auto !important;
+  aspect-ratio: var(--desktop-aspect-ratio) !important;
+}
+.custom-responsive-banner-slider[data-height-mode="adapt"] .banner-slider__link-wrapper {
+  height: auto !important;
+}
+.custom-responsive-banner-slider[data-height-mode="adapt"] .desktop-banner,
+.custom-responsive-banner-slider[data-height-mode="adapt"] .mobile-banner {
+  height: auto !important;
+}
+.custom-responsive-banner-slider[data-height-mode="adapt"] .banner-slider__image {
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+/* Small */
+.custom-responsive-banner-slider[data-height-mode="small"] .banner-slider__slide {
+  height: 350px !important;
+}
+/* Medium */
+.custom-responsive-banner-slider[data-height-mode="medium"] .banner-slider__slide {
+  height: 500px !important;
+}
+/* Large */
+.custom-responsive-banner-slider[data-height-mode="large"] .banner-slider__slide {
+  height: 650px !important;
+}
+/* Full Screen */
+.custom-responsive-banner-slider[data-height-mode="fullscreen"] .banner-slider__slide {
+  height: calc(100vh - 80px) !important;
+}
+
+.custom-responsive-banner-slider[data-height-mode="small"] .banner-slider__image,
+.custom-responsive-banner-slider[data-height-mode="medium"] .banner-slider__image,
+.custom-responsive-banner-slider[data-height-mode="large"] .banner-slider__image,
+.custom-responsive-banner-slider[data-height-mode="fullscreen"] .banner-slider__image {
+  height: 100% !important;
+  object-fit: contain !important;
 }
 
 .banner-content {
@@ -79,12 +217,14 @@ z-index:9;
   transform: translateY(-50%);
   z-index: 5;
   color: #ffffff;
+  pointer-events: none;
 }
 
 .banner-content h2 {
   font-size: 48px;
   margin: 0 0 20px;
   line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .banner-button {
@@ -94,16 +234,100 @@ z-index:9;
   color: #ffffff;
   text-decoration: none;
   border-radius: 6px;
+  pointer-events: auto;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.banner-button:hover {
+  background: #333333;
+  transform: translateY(-2px);
+}
+
+.banner-slider__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.banner-slider__arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.banner-slider__arrow--prev {
+  left: 20px;
+}
+
+.banner-slider__arrow--next {
+  right: 20px;
+}
+
+.banner-slider__dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.banner-slider__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.banner-slider__dot.active {
+  background: #ffffff;
+  transform: scale(1.15);
 }
 
 @media screen and (max-width: 749px) {
-
   .desktop-banner {
     display: none !important;
   }
 
   .mobile-banner {
     display: block !important;
+  }
+
+  /* Mobile Aspect Ratio for Adapt to Image */
+  .custom-responsive-banner-slider[data-height-mode="adapt"] .banner-slider__slide {
+    aspect-ratio: var(--mobile-aspect-ratio) !important;
+  }
+
+  /* Mobile heights for fixed modes */
+  .custom-responsive-banner-slider[data-height-mode="small"] .banner-slider__slide {
+    height: 250px !important;
+  }
+  .custom-responsive-banner-slider[data-height-mode="medium"] .banner-slider__slide {
+    height: 350px !important;
+  }
+  .custom-responsive-banner-slider[data-height-mode="large"] .banner-slider__slide {
+    height: 450px !important;
+  }
+  .custom-responsive-banner-slider[data-height-mode="fullscreen"] .banner-slider__slide {
+    height: calc(100vh - 60px) !important;
   }
 
   .banner-content {
@@ -113,53 +337,223 @@ z-index:9;
   .banner-content h2 {
     font-size: 28px;
   }
-}
+  
+  .banner-slider__arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  .banner-slider__arrow--prev {
+    left: 10px;
+  }
 
+  .banner-slider__arrow--next {
+    right: 10px;
+  }
+  
+  .banner-slider__dots {
+    bottom: 12px;
+  }
+}
 </style>
 
-<div class="custom-responsive-banner">
+{%- assign first_slide = section.blocks | where: "type", "slide" | first -%}
+{%- if first_slide and first_slide.settings.desktop_image != blank -%}
+  {%- assign desktop_aspect_ratio = first_slide.settings.desktop_image.aspect_ratio -%}
+{%- else -%}
+  {%- assign desktop_aspect_ratio = 2.333 -%}
+{%- endif -%}
+{%- if first_slide and first_slide.settings.mobile_image != blank -%}
+  {%- assign mobile_aspect_ratio = first_slide.settings.mobile_image.aspect_ratio -%}
+{%- elsif first_slide and first_slide.settings.desktop_image != blank -%}
+  {%- assign mobile_aspect_ratio = first_slide.settings.desktop_image.aspect_ratio -%}
+{%- else -%}
+  {%- assign mobile_aspect_ratio = 1.0 -%}
+{%- endif -%}
 
-  {% if section.settings.desktop_image != blank %}
-    <div class="desktop-banner">
-      {{
-        section.settings.desktop_image
-        | image_url: width: 2400
-        | image_tag:
-          loading: 'lazy',
-          alt: 'Desktop Banner'
-      }}
-    </div>
-  {% endif %}
+<banner-slider class="custom-responsive-banner-slider" id="BannerSlider-{{ section.id }}" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-height-mode="{{ section.settings.banner_height }}" style="--desktop-aspect-ratio: {{ desktop_aspect_ratio }}; --mobile-aspect-ratio: {{ mobile_aspect_ratio }};">
+  <div class="banner-slider__slides">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'slide' -%}
+        <div class="banner-slider__slide {% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.button_link != blank -%}
+            <a href="{{ block.settings.button_link }}" class="banner-slider__link-wrapper">
+          {%- endif -%}
+          
+          {%- if block.settings.desktop_image != blank -%}
+            {%- assign desktop_alt = block.settings.desktop_image.alt | default: block.settings.heading | default: 'Desktop Banner' | escape -%}
+            <div class="desktop-banner">
+              {{ block.settings.desktop_image | image_url: width: 2400 | image_tag: loading: 'lazy', sizes: '100vw', alt: desktop_alt, class: 'banner-slider__image' }}
+            </div>
+          {%- else -%}
+            <div class="desktop-banner">
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg banner-slider__image' }}
+            </div>
+          {%- endif -%}
+          
+          {%- if block.settings.mobile_image != blank -%}
+            {%- assign mobile_alt = block.settings.mobile_image.alt | default: block.settings.heading | default: 'Mobile Banner' | escape -%}
+            <div class="mobile-banner">
+              {{ block.settings.mobile_image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '100vw', alt: mobile_alt, class: 'banner-slider__image' }}
+            </div>
+          {%- elsif block.settings.desktop_image != blank -%}
+            {%- assign mobile_fallback_alt = block.settings.desktop_image.alt | default: block.settings.heading | default: 'Mobile Banner (Fallback)' | escape -%}
+            <div class="mobile-banner">
+              {{ block.settings.desktop_image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '100vw', alt: mobile_fallback_alt, class: 'banner-slider__image' }}
+            </div>
+          {%- else -%}
+            <div class="mobile-banner">
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg banner-slider__image' }}
+            </div>
+          {%- endif -%}
 
-  {% if section.settings.mobile_image != blank %}
-    <div class="mobile-banner">
-      {{
-        section.settings.mobile_image
-        | image_url: width: 1200
-        | image_tag:
-          loading: 'lazy',
-          alt: 'Mobile Banner'
-      }}
-    </div>
-  {% endif %}
+          {%- if block.settings.button_link != blank -%}
+            </a>
+          {%- endif -%}
+          
+          {%- if block.settings.heading != blank or block.settings.button_label != blank -%}
+            <div class="banner-content">
+              {%- if block.settings.heading != blank -%}
+                <h2>{{ block.settings.heading | escape }}</h2>
+              {%- endif -%}
+              {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+                <a class="banner-button" href="{{ block.settings.button_link }}">
+                  {{ block.settings.button_label | escape }}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  
+  {%- if section.blocks.size > 1 -%}
+    {%- if section.settings.show_arrows -%}
+      <button type="button" class="banner-slider__arrow banner-slider__arrow--prev" aria-label="Previous slide">&#10094;</button>
+      <button type="button" class="banner-slider__arrow banner-slider__arrow--next" aria-label="Next slide">&#10095;</button>
+    {%- endif -%}
+    
+    {%- if section.settings.show_dots -%}
+      <div class="banner-slider__dots">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'slide' -%}
+            <button type="button" class="banner-slider__dot {% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</banner-slider>
 
-  {% if section.settings.heading != blank or section.settings.button_label != blank %}
-    <div class="banner-content">
+<script>
+  (function() {
+    class BannerSlider extends HTMLElement {
+      constructor() {
+        super();
+        this.slides = this.querySelectorAll('.banner-slider__slide');
+        this.dots = this.querySelectorAll('.banner-slider__dot');
+        this.prevBtn = this.querySelector('.banner-slider__arrow--prev');
+        this.nextBtn = this.querySelector('.banner-slider__arrow--next');
+        
+        this.currentIndex = 0;
+        this.autoplay = this.getAttribute('data-autoplay') === 'true';
+        this.speed = parseInt(this.getAttribute('data-speed')) || 5000;
+        this.intervalId = null;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
 
-      {% if section.settings.heading != blank %}
-        <h2>{{ section.settings.heading }}</h2>
-      {% endif %}
+        if (this.slides.length <= 1) return;
 
-      {% if section.settings.button_label != blank %}
-        <a
-          class="banner-button"
-          href="{{ section.settings.button_link }}"
-        >
-          {{ section.settings.button_label }}
-        </a>
-      {% endif %}
+        this.init();
+      }
 
-    </div>
-  {% endif %}
+      init() {
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => {
+          this.prevSlide();
+          this.startAutoplay(); // Reset autoplay timer on manual click
+        });
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => {
+          this.nextSlide();
+          this.startAutoplay(); // Reset autoplay timer on manual click
+        });
+        
+        this.dots.forEach(dot => {
+          dot.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            this.goToSlide(index);
+            this.startAutoplay(); // Reset autoplay timer on manual click
+          });
+        });
 
-</div>
+        // Swipe support
+        this.addEventListener('touchstart', (e) => {
+          this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.addEventListener('touchend', (e) => {
+          this.touchEndX = e.changedTouches[0].screenX;
+          this.handleSwipe();
+        }, { passive: true });
+
+        this.startAutoplay();
+
+        // Pause autoplay on hover
+        this.addEventListener('mouseenter', () => this.stopAutoplay());
+        this.addEventListener('mouseleave', () => this.startAutoplay());
+      }
+
+      handleSwipe() {
+        const threshold = 50; // Minimum swipe distance in px
+        if (this.touchStartX - this.touchEndX > threshold) {
+          this.nextSlide();
+          this.startAutoplay();
+        } else if (this.touchEndX - this.touchStartX > threshold) {
+          this.prevSlide();
+          this.startAutoplay();
+        }
+      }
+
+      goToSlide(index) {
+        this.slides[this.currentIndex].classList.remove('active');
+        if (this.dots.length > 0) this.dots[this.currentIndex].classList.remove('active');
+        
+        this.currentIndex = (index + this.slides.length) % this.slides.length;
+        
+        this.slides[this.currentIndex].classList.add('active');
+        if (this.dots.length > 0) this.dots[this.currentIndex].classList.add('active');
+      }
+
+      nextSlide() {
+        this.goToSlide(this.currentIndex + 1);
+      }
+
+      prevSlide() {
+        this.goToSlide(this.currentIndex - 1);
+      }
+
+      startAutoplay() {
+        if (this.autoplay) {
+          this.stopAutoplay();
+          this.intervalId = setInterval(() => this.nextSlide(), this.speed);
+        }
+      }
+
+      stopAutoplay() {
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+    }
+
+    if (!customElements.get('banner-slider')) {
+      customElements.define('banner-slider', BannerSlider);
+    }
+  })();
+</script>

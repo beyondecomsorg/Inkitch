@@ -298,11 +298,10 @@
     }
   }
 {% endstyle %}
-
 <deals-slider-{{ ai_gen_id }} class="ai-latest-deals-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   <div class="ai-latest-deals__heading-wrapper-{{ ai_gen_id }}">
     <h2 class="ai-latest-deals__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
-    <p class="ai-latest-deals__subtitle-{{ ai_gen_id }}">Limited time offers — grab them before they're gone!</p>
+    <p class="ai-latest-deals__subtitle-{{ ai_gen_id }}">Limited-time offers on everyday essentials.</p>
   </div>
 
   <div class="ai-latest-deals__grid-{{ ai_gen_id }}">
@@ -330,7 +329,7 @@
       {% endif %}
 
         <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
-          <span class="ai-latest-deals__badge-{{ ai_gen_id }}">Limited Offer</span>
+          <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
           {% if image %}
             <img
               src="{{ image | image_url: width: 600 }}"
@@ -366,7 +365,17 @@
             <div class="ai-latest-deals__description-{{ ai_gen_id }}">{{ description }}</div>
           {% endif %}
 
-          <div class="ai-latest-deals__btn-{{ ai_gen_id }}">Shop Now →</div>
+          {% liquid
+            assign btn_text = "Shop Now →"
+            if i == 1
+              assign btn_text = "Shop Containers →"
+            elsif i == 2
+              assign btn_text = "Shop Lunch Boxes →"
+            elsif i == 3
+              assign btn_text = "Shop Bottles →"
+            endif
+          %}
+          <div class="ai-latest-deals__btn-{{ ai_gen_id }}">{{ btn_text }}</div>
         </div>
 
       {% if link != blank %}
@@ -403,7 +412,7 @@
         {% endif %}
 
           <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
-            <span class="ai-latest-deals__badge-{{ ai_gen_id }}">Limited Offer</span>
+            <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
             {% if image %}
               <img
                 src="{{ image | image_url: width: 600 }}"
@@ -439,7 +448,17 @@
               <div class="ai-latest-deals__description-{{ ai_gen_id }}">{{ description }}</div>
             {% endif %}
 
-            <div class="ai-latest-deals__btn-{{ ai_gen_id }}">Shop Now →</div>
+            {% liquid
+              assign btn_text = "Shop Now →"
+              if i == 1
+                assign btn_text = "Shop Containers →"
+              elsif i == 2
+                assign btn_text = "Shop Lunch Boxes →"
+              elsif i == 3
+                assign btn_text = "Shop Bottles →"
+              endif
+            %}
+            <div class="ai-latest-deals__btn-{{ ai_gen_id }}">{{ btn_text }}</div>
           </div>
 
         {% if link != blank %}

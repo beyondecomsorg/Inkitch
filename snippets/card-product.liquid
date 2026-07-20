@@ -76,8 +76,11 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
-      object-fit: cover !important;
+      object-fit: contain !important;
       transition: opacity 0.4s ease-in-out !important;
+    }
+    .card__inner {
+      background-color: #f7f7f7 !important;
     }
     .card-wrapper .media.media--hover-effect > img:first-child {
       opacity: 1 !important;
@@ -100,11 +103,43 @@
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
+    assign featured_media = card_product.featured_media
+    assign test_url = featured_media | image_url: width: 100
+    assign has_valid_media = true
+    if featured_media == null or test_url == blank or test_url contains 'no-image'
+      assign has_valid_media = false
+    endif
+
+    if has_valid_media == false
+      for media in card_product.media
+        assign test_media_url = media | image_url: width: 100
+        assign media_is_valid = true
+        if test_media_url == blank or test_media_url contains 'no-image'
+          assign media_is_valid = false
+        endif
+        if media_is_valid
+          assign featured_media = media
+          break
+        endif
+      endfor
+    endif
+    if featured_media == null
+      assign featured_media = card_product.images[0]
+    endif
+
     assign ratio = 1
-    if card_product.featured_media and media_aspect_ratio == 'portrait'
+    if featured_media and media_aspect_ratio == 'portrait'
       assign ratio = 0.8
-    elsif card_product.featured_media and media_aspect_ratio == 'adapt'
-      assign ratio = card_product.featured_media.aspect_ratio
+    elsif featured_media and media_aspect_ratio == 'adapt'
+      if parent_ratio
+        assign ratio = parent_ratio
+      elsif collection.products.first.featured_media
+        assign ratio = collection.products.first.featured_media.aspect_ratio
+      elsif search.results.first.featured_media
+        assign ratio = search.results.first.featured_media.aspect_ratio
+      else
+        assign ratio = featured_media.aspect_ratio
+      endif
     endif
     if ratio == 0 or ratio == null
       assign ratio = 1
@@ -114,42 +149,52 @@
     <div
       class="
         card card--{{ settings.card_style }}
-        {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}
+        {% if featured_media %} card--media{% else %} card--text{% endif %}
         {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
         {% if image_shape and image_shape != 'default' %} card--shape{% endif %}
         {% if extend_height %} card--extend-height{% endif %}
-        {% if card_product.featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}
+        {% if featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}
         {% if horizontal_class %} card--horizontal{% endif %}
       "
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
       <div
-        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
+        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
         style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
-        {%- if card_product.featured_media -%}
+        {%- if featured_media -%}
           <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
             <div class="media media--transparent media--hover-effect">
               {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
               <img
-                srcset="
-                  {%- if card_product.featured_media.width >= 165 -%}{{ card_product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 360 -%}{{ card_product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 533 -%}{{ card_product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 720 -%}{{ card_product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 940 -%}{{ card_product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 1066 -%}{{ card_product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
-                  {{ card_product.featured_media | image_url }} {{ card_product.featured_media.width }}w
+                data-initial-src="{{ featured_media | image_url: width: 533 }}"
+                data-initial-srcset="
+                  {%- if featured_media.width >= 165 -%}{{ featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if featured_media.width >= 360 -%}{{ featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if featured_media.width >= 533 -%}{{ featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if featured_media.width >= 720 -%}{{ featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if featured_media.width >= 940 -%}{{ featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+                  {%- if featured_media.width >= 1066 -%}{{ featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                  {{ featured_media | image_url }} {{ featured_media.width }}w
                 "
-                src="{{ card_product.featured_media | image_url: width: 533 }}"
+                srcset="
+                  {%- if featured_media.width >= 165 -%}{{ featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if featured_media.width >= 360 -%}{{ featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if featured_media.width >= 533 -%}{{ featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if featured_media.width >= 720 -%}{{ featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if featured_media.width >= 940 -%}{{ featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+                  {%- if featured_media.width >= 1066 -%}{{ featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                  {{ featured_media | image_url }} {{ featured_media.width }}w
+                "
+                src="{{ featured_media | image_url: width: 533 }}"
                 sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
                 alt="{{ card_product.featured_media.alt | escape }}"
                 class="motion-reduce"
                 {% unless lazy_load == false %}
                   loading="lazy"
                 {% endunless %}
-                width="{{ card_product.featured_media.width }}"
-                height="{{ card_product.featured_media.height }}"
+                width="{{ featured_media.width }}"
+                height="{{ featured_media.height }}"
               >
               {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
 
@@ -180,7 +225,7 @@
           <div class="card__information">
             <h3
               class="card__heading"
-              {% if card_product.featured_media == null and settings.card_style == 'standard' %}
+              {% if featured_media == null and settings.card_style == 'standard' %}
                 id="title-{{ section_id }}-{{ card_product.id }}"
               {% endif %}
             >
@@ -216,8 +261,8 @@
       <div class="card__content">
         <div class="card__information">
           <h3
-            class="card__heading{% if card_product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"
-            {% if card_product.featured_media or settings.card_style == 'card' %}
+            class="card__heading{% if featured_media or settings.card_style == 'standard' %} h5{% endif %}"
+            {% if featured_media or settings.card_style == 'card' %}
               id="title-{{ section_id }}-{{ card_product.id }}"
             {% endif %}
           >
@@ -230,6 +275,7 @@
               {{ card_product.title | escape }}
             </a>
           </h3>
+  
           {% comment %}
           {% if card_product.metafields.custom.subtitle != blank %}
   <div class="card-product__subtitle" style="font-size:0.8rem !important; line-height:1.35 !important; color:#6b6b6b !important; font-weight:400 !important; margin-top:4px; text-transform:none !important;">
@@ -326,62 +372,67 @@
               {%- endif -%}
             </div>
 
-            {%- if card_product.variants.size > 1 -%}
-              <card-variant-picker data-product-id="{{ card_product.id }}">
-                <div class="card-variant-options">
-                  {%- for option in card_product.options_with_values -%}
-                    {%- assign option_name_lower = option.name | downcase -%}
-                    {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
-                      <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
-                        <span class="card-variant-options__label">{{ option.name }}:</span>
-                        <div class="card-variant-options__list">
-                          {%- for value in option.values -%}
-                            {%- liquid
-                              assign swatch_value = null
-                              if value.swatch.image
-                                assign image_url = value.swatch.image | image_url: width: 50
-                                assign swatch_value = 'url(' | append: image_url | append: ')'
-                              elsif value.swatch.color
-                                assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
-                              else
-                                assign swatch_value = value | handle
-                              endif
-                            -%}
-                            <button
-                              type="button"
-                              class="card-swatch-button{% if value.selected %} active{% endif %}"
-                              data-value="{{ value | escape }}"
-                              style="{% if swatch_value contains 'rgb' or swatch_value contains 'url' %}background: {{ swatch_value }};{% else %}background-color: {{ swatch_value }};{% endif %}"
-                              title="{{ value }}"
-                            >
-                              <span class="visually-hidden">{{ value }}</span>
-                            </button>
-                          {%- endfor -%}
+            <div class="card-variant-picker-wrapper">
+              {%- if card_product.variants.size > 1 -%}
+                <card-variant-picker data-product-id="{{ card_product.id }}">
+                  <div class="card-variant-options">
+                    {%- for option in card_product.options_with_values -%}
+                      {%- assign option_name_lower = option.name | downcase -%}
+                      {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                          <span class="card-variant-options__label">{{ option.name }}:</span>
+                          <div class="card-variant-options__list">
+                            {%- for value in option.values -%}
+                              {%- liquid
+                                assign swatch_value = null
+                                if value.swatch.image
+                                  assign image_url = value.swatch.image | image_url: width: 50
+                                  assign swatch_value = 'url(' | append: image_url | append: ')'
+                                elsif value.swatch.color
+                                  assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                                else
+                                  assign swatch_value = value | handle
+                                endif
+                              -%}
+                              <button
+                                type="button"
+                                class="card-swatch-button{% if value.selected %} active{% endif %}"
+                                data-value="{{ value | escape }}"
+                                style="{% if swatch_value contains 'rgb' or swatch_value contains 'url' %}background: {{ swatch_value }};{% else %}background-color: {{ swatch_value }};{% endif %}"
+                                title="{{ value }}"
+                              >
+                                <span class="visually-hidden">{{ value }}</span>
+                              </button>
+                            {%- endfor -%}
+                          </div>
                         </div>
-                      </div>
-                    {%- else -%}
-                      <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
-                        <span class="card-variant-options__label">{{ option.name }}:</span>
-                        <div class="card-variant-options__list">
-                          {%- for value in option.values -%}
-                            <button
-                              type="button"
-                              class="card-pill-button{% if value.selected %} active{% endif %}"
-                              data-value="{{ value | escape }}"
-                            >
-                              {{ value }}
-                            </button>
-                          {%- endfor -%}
+                      {%- else -%}
+                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                          <span class="card-variant-options__label">{{ option.name }}:</span>
+                          <div class="card-variant-options__list">
+                            {%- for value in option.values -%}
+                              <button
+                                type="button"
+                                class="card-pill-button{% if value.selected %} active{% endif %}"
+                                data-value="{{ value | escape }}"
+                              >
+                                {{ value }}
+                              </button>
+                            {%- endfor -%}
+                          </div>
                         </div>
-                      </div>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </div>
-                <script type="application/json" data-variants>
-                  {{ card_product.variants | json }}
-                </script>
-              </card-variant-picker>
-            {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                  <script type="application/json" data-variants>
+                    {{ card_product.variants | json }}
+                  </script>
+                  <script type="application/json" data-options>
+                    {{ card_product.options_with_values | json }}
+                  </script>
+                </card-variant-picker>
+              {%- endif -%}
+            </div>
 
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
@@ -475,7 +526,7 @@
                 assign qty_rules = true
               endif
             -%}
-            <product-form data-section-id="{{ section.id }}">
+            <product-form data-section-id="{{ section.id }}" data-variants-count="{{ card_product.variants.size }}">
               {%- form 'product',
                 card_product,
                 id: product_form_id,
@@ -674,6 +725,9 @@
             </span>
           {%- endif -%}
         </div>
+      </div>
+      <div class="inkitch-tagline-strip">
+        INKITCH · Built Better for Everyday Use
       </div>
     </div>
   </div>

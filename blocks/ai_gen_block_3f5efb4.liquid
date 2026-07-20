@@ -27,8 +27,8 @@
     display: block;
     width: 100%;
     padding: 60px 24px !important;
-    background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%) !important;
-    border-top: 4px solid #E30613 !important;
+    background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important;
+    border-top: none !important;
     box-sizing: border-box;
   }
 
@@ -45,7 +45,7 @@
   .ai-why-inkitch-heading-{{ ai_gen_id }} {
     font-size: 36px !important;
     font-weight: 800 !important;
-    color: #111111 !important;
+    color: #ffffff !important;
     text-align: center !important;
     margin: 0;
     line-height: 1.2;
@@ -55,13 +55,13 @@
   .ai-why-inkitch-heading-accent-{{ ai_gen_id }} {
     width: 70px;
     height: 3px;
-    background-color: #E30613;
+    background-color: #ffffff !important;
     margin: 10px auto 0;
   }
 
   .ai-why-inkitch-description-{{ ai_gen_id }} {
     font-size: 15px !important;
-    color: #666666 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
     max-width: 560px !important;
     margin: 16px auto 0 !important;
     line-height: 1.8 !important;
@@ -76,13 +76,13 @@
     margin-top: 48px;
   }
 
-  /* Feature Card Base Styles with Brand Red Gradient */
+  /* Feature Card Base Styles with Solid White Background */
   .ai-why-inkitch-feature-{{ ai_gen_id }} {
-    background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important;
+    background: #ffffff !important;
     border-radius: 16px !important;
     padding: 32px 24px !important;
-    border: none !important; /* Removed light gray border */
-    box-shadow: 0 12px 30px rgba(227, 6, 19, 0.18) !important; /* Added brand-colored subtle shadow */
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
     text-align: center !important;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@
     /* Animation and Hover transitions */
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease !important;
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease !important;
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible {
@@ -102,11 +102,10 @@
     transform: translateY(0);
   }
 
-  /* Hover Lift & Brightened Gradient on Desktop */
+  /* Hover Lift on Desktop */
   .ai-why-inkitch-feature-{{ ai_gen_id }}.is-visible:hover {
     transform: translateY(-8px) !important;
-    background: linear-gradient(135deg, #9c0000 0%, #d10010 40%, #f60815 100%) !important; /* Brightened version of brand gradient */
-    box-shadow: 0 16px 36px rgba(227, 6, 19, 0.28) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15) !important;
   }
 
   /* Icon Wrapper (Removed background circle and border, placed directly on card) */
@@ -122,11 +121,11 @@
     transition: all 0.3s ease;
   }
 
-  /* Icon Style (Colored white, slightly increased size) */
+  /* Icon Style (Colored black, slightly increased size) */
   .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
     width: 40px !important;
     height: 40px !important;
-    stroke: #ffffff !important; /* Set icon outline to white */
+    stroke: #000000 !important; /* Set icon outline to black */
     fill: none;
     stroke-width: 1.5;
     transition: all 0.3s ease;
@@ -139,15 +138,15 @@
 
   /* Interactive hover scale for the SVG icon */
   .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-icon-wrap-{{ ai_gen_id }} svg {
-    stroke: #ffffff !important;
+    stroke: #000000 !important;
     transform: scale(1.08) !important;
   }
 
-  /* Card Headings (White text color) */
+  /* Card Headings (Black text color) */
   .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
     font-size: 15px !important;
     font-weight: 700 !important;
-    color: #ffffff !important; /* Make text white */
+    color: #000000 !important; /* Make text black */
     margin-top: 4px;
     margin-bottom: 0;
     transition: color 0.3s ease;
@@ -156,24 +155,24 @@
   }
 
   .ai-why-inkitch-feature-{{ ai_gen_id }}:hover .ai-why-inkitch-feature-title-{{ ai_gen_id }} {
-    color: #ffffff !important; /* Stay white on hover */
+    color: #000000 !important;
   }
 
-  /* Card Descriptions (White text with soft opacity for readability) */
+  /* Card Descriptions (Charcoal text for readability) */
   .ai-why-inkitch-feature-desc-{{ ai_gen_id }} {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.9) !important; /* Set text to white with high visibility opacity */
+    color: #555555 !important; /* Set text to charcoal */
     margin-top: 8px !important;
     margin-bottom: 0;
     line-height: 1.5;
     font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
   }
 
-  /* Counter/Numbers (White text color) */
+  /* Counter/Numbers (Black text color) */
   .ai-why-inkitch-counter-{{ ai_gen_id }} {
     font-size: 32px;
     font-weight: 800;
-    color: #ffffff !important; /* Make numbers white */
+    color: #000000 !important; /* Make numbers black */
     line-height: 1;
     margin-bottom: 8px;
     font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
@@ -186,10 +185,10 @@
 
   .ai-why-inkitch-cta-{{ ai_gen_id }} {
     display: inline-block;
-    color: #E30613;
+    color: #ffffff !important;
     font-weight: 600;
     font-size: 14px;
-    text-decoration: none;
+    text-decoration: underline;
     transition: all 0.3s ease;
     cursor: pointer;
   }
@@ -294,17 +293,17 @@
           assign feature_desc = ""
           case feature_icon
             when 'certificate'
-              assign feature_desc = "Internationally certified quality standards"
+              assign feature_desc = "ISI-certified and food-grade materials"
             when 'experience'
-              assign feature_desc = "Trusted expertise in global export markets"
+              assign feature_desc = "Rooted in Falcon International's global export legacy"
             when 'factory'
-              assign feature_desc = "In-house production for consistent quality"
+              assign feature_desc = "Rooted in Falcon International's global export legacy"
             when 'customers'
-              assign feature_desc = "Loved by customers across India"
+              assign feature_desc = "Your satisfaction always comes first"
             when 'range'
               assign feature_desc = "Products for every kitchen need"
             when 'bestseller'
-              assign feature_desc = "Top-rated across Amazon, Flipkart & more"
+              assign feature_desc = "Top-ranked on Amazon, Flipkart & more"
           endcase
         %}
 
@@ -353,12 +352,6 @@
                   </svg>
               {% endcase %}
             </div>
-
-            {% if feature_icon == 'experience' %}
-              <div class="ai-why-inkitch-counter-{{ ai_gen_id }}" data-target="30" data-suffix="+">0+</div>
-            {% elsif feature_icon == 'customers' %}
-              <div class="ai-why-inkitch-counter-{{ ai_gen_id }}" data-target="1" data-suffix="M+">0M+</div>
-            {% endif %}
 
             <h3 class="ai-why-inkitch-feature-title-{{ ai_gen_id }}">{{ feature_title }}</h3>
 

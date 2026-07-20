@@ -36,12 +36,13 @@
 }
 
 .collection-hero__title {
-  margin: 2.5rem 0;
+  margin: 0rem 0;
+      font-size: 24px;
 }
 @media only screen and (min-width: 768px){
   .collection-hero__title{
     margin: 1rem 0;
-    font-size: 40px;
+    font-size: 24px;
   }
 }
 
@@ -87,6 +88,9 @@
 @media screen and (max-width: 749px) {
   .collection-hero__image-container {
     height: 20rem;
+  }
+  .collection.page-width{
+        padding: 0 0.5rem;
   }
 }
 

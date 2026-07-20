@@ -40,6 +40,58 @@
         </div>
       </div>
     </div>
+
+    {%- unless product.has_only_default_variant -%}
+      <div class="sticky-atc__variant-select-wrapper">
+        <select class="sticky-atc__variant-select">
+          {%- for variant in product.variants -%}
+            <option value="{{ variant.id }}"
+                    data-option1="{{ variant.option1 | escape }}"
+                    data-option2="{{ variant.option2 | escape }}"
+                    data-option3="{{ variant.option3 | escape }}"
+                    {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+                    {% unless variant.available %}disabled="disabled"{% endunless %}>
+              {{ variant.title }} - {% if settings.currency_code_enabled %}{{ variant.price | money_with_currency }}{% else %}{{ variant.price | money }}{% endif %}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endunless -%}
+
+    {%- assign show_quantity_selector = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'quantity_selector' -%}
+        {%- assign show_quantity_selector = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if show_quantity_selector -%}
+      <div class="sticky-atc__quantity">
+        <quantity-input class="quantity">
+          <button class="quantity__button" name="minus" type="button">
+            <span class="visually-hidden">-</span>
+            <span class="svg-wrapper">
+              {{- 'icon-minus.svg' | inline_asset_content -}}
+            </span>
+          </button>
+          <input
+            class="quantity__input"
+            type="number"
+            name="quantity"
+            id="Quantity-{{ section.id }}-sticky"
+            min="1"
+            value="1"
+          >
+          <button class="quantity__button" name="plus" type="button">
+            <span class="visually-hidden">+</span>
+            <span class="svg-wrapper">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+            </span>
+          </button>
+        </quantity-input>
+      </div>
+    {%- endif -%}
+
     <div class="sticky-atc__button-wrapper">
       <button type="button" class="sticky-atc__button button button--primary">
         <span>
@@ -197,15 +249,102 @@
     cursor: not-allowed !important;
   }
   
-  @media screen and (max-width: 749px) {
-    body.sticky-atc-active {
-      padding-bottom: 74px !important;
-    }
+  .sticky-atc__variant-select-wrapper {
+    display: none;
+  }
+  
+  .sticky-atc__quantity {
+    display: none;
+  }
+
+  body.sticky-atc-active {
+    padding-bottom: 74px !important;
   }
   
   @media screen and (min-width: 750px) {
     .sticky-atc {
+      padding: 12px 24px;
+    }
+
+    .sticky-atc__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    .sticky-atc__product-info {
+      flex: 1 1 auto;
+    }
+
+    .sticky-atc__text {
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .sticky-atc__title {
+      font-size: 1.5rem;
+      max-width: 320px;
+      margin: 0;
+    }
+
+    .sticky-atc__variant-selected {
       display: none !important;
+    }
+
+    .sticky-atc__price {
+      font-size: 1.5rem;
+      margin-left: 10px;
+    }
+
+    .sticky-atc__variant-select-wrapper {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .sticky-atc__variant-select {
+      display: block;
+      font-size: 1.3rem;
+      padding: 8px 32px 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      min-width: 160px;
+      max-width: 260px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 16px;
+    }
+
+    .sticky-atc__quantity {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .sticky-atc__quantity .quantity {
+      min-height: 38px;
+      height: 38px;
+      width: 90px;
+    }
+
+    .sticky-atc__quantity .quantity__button {
+      width: 28px;
+    }
+
+    .sticky-atc__quantity .quantity__input {
+      width: 34px;
+      font-size: 1.3rem;
+    }
+
+    .sticky-atc__button {
+      height: 40px !important;
+      min-height: 40px !important;
+      min-width: 160px !important;
+      font-size: 1.3rem !important;
     }
   }
 </style>
@@ -228,6 +367,8 @@
       const stickyPrice = document.getElementById(stickyPriceId);
       const mainInfoContainer = document.getElementById(mainInfoContainerId);
       const stickyButton = stickyBar.querySelector('.sticky-atc__button');
+      const stickyVariantSelect = stickyBar.querySelector('.sticky-atc__variant-select');
+      const stickyQtyInput = stickyBar.querySelector('.sticky-atc__quantity input[name="quantity"]');
       
       // Perform initial sync
       syncStickyBar();
@@ -268,6 +409,49 @@
           }
         });
       }
+
+      // Sync variant changes from sticky dropdown to main page selectors
+      if (stickyVariantSelect) {
+        stickyVariantSelect.addEventListener('change', (e) => {
+          const selectedOption = e.target.options[e.target.selectedIndex];
+          const opt1 = selectedOption.getAttribute('data-option1');
+          const opt2 = selectedOption.getAttribute('data-option2');
+          const opt3 = selectedOption.getAttribute('data-option3');
+          const options = [opt1, opt2, opt3];
+
+          options.forEach((optVal, index) => {
+            if (!optVal) return;
+
+            // Find matching main selectors (select dropdowns)
+            const selects = document.querySelectorAll(`variant-selects select`);
+            if (selects.length > index) {
+              selects[index].value = optVal;
+              selects[index].dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Find matching main selectors (radio buttons / swatches)
+            const fieldsets = document.querySelectorAll(`variant-radios fieldset`);
+            if (fieldsets.length > index) {
+              const radio = fieldsets[index].querySelector(`input[type="radio"][value="${CSS.escape(optVal)}"]`);
+              if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }
+          });
+        });
+      }
+
+      // Sync quantity changes from sticky bar to main form
+      if (stickyQtyInput) {
+        stickyQtyInput.addEventListener('change', () => {
+          const mainQtyInput = document.querySelector('quantity-input input[name="quantity"]');
+          if (mainQtyInput) {
+            mainQtyInput.value = stickyQtyInput.value;
+            mainQtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+      }
       
       function syncStickyBar() {
         const liveMainButton = document.getElementById(mainButtonId);
@@ -304,7 +488,7 @@
           liveStickyPrice.innerHTML = liveMainPrice.innerHTML;
         }
         
-        // Sync active variant label & image src
+        // Sync active variant label, select dropdown, and image src
         const variantScript = document.querySelector('variant-selects [data-selected-variant]');
         if (variantScript) {
           try {
@@ -319,9 +503,20 @@
             if (stickyImg && variant && variant.featured_image) {
               stickyImg.src = variant.featured_image.src;
             }
+
+            // Sync the sticky select dropdown option
+            if (stickyVariantSelect && variant) {
+              stickyVariantSelect.value = variant.id;
+            }
           } catch(e) {
             console.error('Error parsing selected variant JSON:', e);
           }
+        }
+
+        // Sync main quantity back to sticky bar quantity input
+        const mainQtyInput = document.querySelector('quantity-input input[name="quantity"]');
+        if (mainQtyInput && stickyQtyInput) {
+          stickyQtyInput.value = mainQtyInput.value;
         }
       }
     }

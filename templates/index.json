@@ -37,7 +37,45 @@
         "ai_gen_block_5cd1fe4_dFGJyf",
         "ai_gen_block_13c08f3_FxWPLk"
       ],
+      "disabled": true,
       "settings": {}
+    },
+    "image_banner_NUQwep": {
+      "type": "image-banner",
+      "blocks": {
+        "slide_NFGGUj": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM_1.webp",
+            "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
+            "heading": "",
+            "button_label": "",
+            "button_link": "shopify://collections/all"
+          }
+        },
+        "slide_XywRg6": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM_1.webp",
+            "mobile_image": "shopify://shop_images/Untitled_design_83.png",
+            "heading": "",
+            "button_label": "",
+            "button_link": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "slide_NFGGUj",
+        "slide_XywRg6"
+      ],
+      "name": "Custom Responsive Banner",
+      "settings": {
+        "autoplay": true,
+        "autoplay_speed": 3,
+        "show_arrows": true,
+        "show_dots": true,
+        "banner_height": "adapt"
+      }
     },
     "177687342526c3aeca": {
       "type": "_blocks",
@@ -45,7 +83,7 @@
         "ai_gen_block_e998527_qKLGLQ": {
           "type": "ai_gen_block_e998527",
           "settings": {
-            "heading": "Shop by category",
+            "heading": "Shop by Category",
             "image_1": "shopify://shop_images/lunch_box.png",
             "title_1": "Lunch Boxes",
             "link_1": "tiffin-or-lunch-box",
@@ -91,22 +129,22 @@
             "symbol_size": 30,
             "off_size": 26,
             "description_size": 14,
-            "deal_1_label": "Get instant",
+            "deal_1_label": "SAVE",
             "deal_1_number": "10",
             "deal_1_symbol": "%",
-            "deal_1_description": "On Every Purchase",
+            "deal_1_description": "On Storage Containers",
             "deal_1_image": "shopify://shop_images/ChatGPT_Image_May_22_2026_03_51_22_PM.png",
             "deal_1_link": "",
-            "deal_2_label": "TAKE",
+            "deal_2_label": "SAVE",
             "deal_2_number": "10",
             "deal_2_symbol": "%",
-            "deal_2_description": "Set of 3 container.",
+            "deal_2_description": "On Lunch Boxes",
             "deal_2_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_17_33_PM.png",
             "deal_2_link": "",
             "deal_3_label": "SAVE",
             "deal_3_number": "10",
             "deal_3_symbol": "%",
-            "deal_3_description": "On Stainless steel bottle",
+            "deal_3_description": "On Bottles & Flasks",
             "deal_3_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_25_35_PM.png",
             "deal_3_link": ""
           },
@@ -126,42 +164,42 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
-            "card_label": "PREMIUM FINISH"
+            "card_label": "Better Materials"
           }
         },
         "card_B3DAyB": {
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
-            "card_label": "SMART DESIGN"
+            "card_label": "Thoughtful Design"
           }
         },
         "card_ChQQtp": {
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
-            "card_label": "DURABLE BUILD"
+            "card_label": "Built to Last"
           }
         },
         "stat_yBexg8": {
           "type": "stat",
           "settings": {
-            "stat_value": "10K+",
-            "stat_label": "HAPPY CUSTOMERS"
+            "stat_value": "40K+",
+            "stat_label": "Happy Customers"
           }
         },
         "stat_CgPYMV": {
           "type": "stat",
           "settings": {
-            "stat_value": "4.9★",
-            "stat_label": "AVG. RATING"
+            "stat_value": "4.5★",
+            "stat_label": "Average Rating"
           }
         },
         "stat_je3tTx": {
           "type": "stat",
           "settings": {
-            "stat_value": "100%",
-            "stat_label": "MADE WITH LOVE"
+            "stat_value": "25+ Yrs",
+            "stat_label": "Global Export Heritage"
           }
         }
       },
@@ -176,9 +214,9 @@
       "name": "About Us - Fan Cards",
       "settings": {
         "heading": "ABOUT US",
-        "body_text": "Welcome to inKitch, where we craft premium home and kitchen essentials that blend style, functionality, and durability to elevate your everyday living experience.",
-        "cta_text": "OUR STORY",
-        "cta_url": "",
+        "body_text": "<h3 style=\"font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 12px;\">Everyday home essentials deserve to be better.</h3><p style=\"font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.8); margin: 0;\">Born from 25+ years of global export heritage, inKitch brings world-class quality back to Indian homes. Better materials. Modern design. Built to last.</p>",
+        "cta_text": "Read our story →",
+        "cta_url": "/pages/our-story",
         "section_font": "sans_serif_n4",
         "heading_color": "#ffffff",
         "heading_size": 40,
@@ -229,8 +267,8 @@
             "collection_1": "frontpage",
             "tab_2_label": "Best Sellers",
             "collection_2": "best-seller",
-            "tab_3_label": "",
-            "collection_3": "",
+            "tab_3_label": "Combos",
+            "collection_3": "combo",
             "products_per_tab": 5,
             "tab_font_size": 16,
             "tab_color": "#666666",
@@ -278,6 +316,7 @@
           "type": "ai_gen_block_eaf3c45",
           "settings": {
             "title_text": "Top Picks for You",
+            "subtitle_text": "Handpicked essentials, just for you.",
             "font_size": 40,
             "font_weight": "700",
             "line_height": "1.2",
@@ -295,7 +334,7 @@
           "type": "ai_gen_block_92036b8",
           "settings": {
             "product_1": "thermolock-classic-24hr-hot-cold-steel-flask-1l",
-            "product_2": "inkitch-grey-24hrs-hot-cold-flask-1-liter",
+            "product_2": "flauntsip-slim-steel-sipper-bottle-800ml",
             "product_3": "inkitch-hot-cold-bottle-1000ml-2-in-1-sipper-wide-mouth-dual-cap-sports-water-bottle-vacuum-insulated-stainless-steel-flask-leakproof-travel-gym-office-bottle-black",
             "product_4": "inkitch-stainless-steel-tumbler-with-lid-500ml-bpa-free-water-tumbler-leak-proof-office-tumbler-rust-free-easy-grip-easy-to-carry-travel-bottle-pink-pack-of-1",
             "product_5": "inkitch-water-bottle-750ml-isi-certified-stainless-steel-leak-proof-24-hour-hot-cold-blue",
@@ -352,13 +391,40 @@
       ],
       "settings": {}
     },
+    "trending_title_section": {
+      "type": "_blocks",
+      "blocks": {
+        "trending_title_block": {
+          "type": "ai_gen_block_eaf3c45",
+          "settings": {
+            "title_text": "Trending Right Now",
+            "subtitle_text": "The essentials everyone's talking about.",
+            "font_size": 40,
+            "font_weight": "700",
+            "line_height": "1.2",
+            "letter_spacing": 0,
+            "text_transform": "none",
+            "text_alignment": "center",
+            "desktop_width_percent": 100,
+            "padding_top": 40,
+            "padding_bottom": 12,
+            "text_color": "#121212"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "trending_title_block"
+      ],
+      "settings": {}
+    },
     "1783318539fb3211c9": {
       "type": "apps",
       "blocks": {
         "whatmore_shoppable_videos_app_block_GDEz48": {
           "type": "shopify://apps/whatmore-shoppable-videos/blocks/app-block/20db8a72-315a-4364-8885-64219ee48303",
           "settings": {
-            "heading": "Trending Products on Social Media",
+            "heading": "",
             "widget-identity": "wgt_default",
             "template-type": "template-b",
             "title-font-size": 40,
@@ -434,8 +500,8 @@
         "reelfy_videos_reelfy_section_t8UCJE": {
           "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
           "settings": {
-            "title": "Trending Products on Social Media",
-            "subtitle": "",
+            "title": "Trending Right Now",
+            "subtitle": "The essentials everyone's talking about.",
             "heading_size": "1",
             "heading_align": "center",
             "heading_color": "#070606",
@@ -541,23 +607,23 @@
             "heading_letter_spacing": 0,
             "heading_margin": 20,
             "heading_color": "#000000",
-            "description": "<p>Crafting premium kitchenware with precision and passion. Our commitment to quality and innovation has made us a trusted name in homes worldwide.</p>",
+            "description": "<p>We care about the things you use every day. That's why we focus on better materials, honest design, and quality that lasts — and if something isn't right, we make it right.</p>",
             "body_font": "assistant_n4",
             "description_size": 15,
             "description_max_width": 600,
             "description_color": "#000000",
-            "feature_1_icon": "certificate",
-            "feature_1_title": "ISO Certified",
-            "feature_2_icon": "experience",
-            "feature_2_title": "",
-            "feature_3_icon": "factory",
-            "feature_3_title": "",
+            "feature_1_icon": "experience",
+            "feature_1_title": "25+ Years of Heritage",
+            "feature_2_icon": "certificate",
+            "feature_2_title": "Certified Quality",
+            "feature_3_icon": "bestseller",
+            "feature_3_title": "Marketplace Bestseller",
             "feature_4_icon": "customers",
-            "feature_4_title": "Millions Satisfied Customers",
+            "feature_4_title": "Customer-First Promise",
             "feature_5_icon": "range",
-            "feature_5_title": "Wide Range",
+            "feature_5_title": "",
             "feature_6_icon": "bestseller",
-            "feature_6_title": "Marketplace Bestsellers",
+            "feature_6_title": "",
             "icon_size": 50,
             "icon_stroke_width": 1.5,
             "icon_spacing": 15,
@@ -576,50 +642,10 @@
             "section_padding_bottom": 60
           },
           "blocks": {}
-        },
-        "ai_gen_block_32c9c2c_PKUUMt": {
-          "type": "ai_gen_block_32c9c2c",
-          "settings": {
-            "enable_marquee": true,
-            "marquee_speed": 25,
-            "icon_1": "shield",
-            "heading_1": "Secure Payment",
-            "description_1": "100% secure & encrypted checkout",
-            "icon_2": "refresh",
-            "heading_2": "Quality Assured",
-            "description_2": "Trusted quality, built to last.",
-            "icon_3": "truck",
-            "heading_3": "Fast Shipping",
-            "description_3": "Free shipping on orders over $50",
-            "icon_4": "ribbon",
-            "heading_4": "Best Price",
-            "description_4": "Guaranteed unbeatable prices always",
-            "icon_5": "headset",
-            "heading_5": "24/7 Support",
-            "description_5": "Dedicated support team always available",
-            "max_width": 1200,
-            "padding_vertical": 20,
-            "padding_horizontal": 20,
-            "gap": 20,
-            "mobile_gap": 20,
-            "item_gap": 12,
-            "background_color": "#ffffff",
-            "icon_color": "#ffffff",
-            "heading_color": "#ffffff",
-            "description_color": "#ffffff",
-            "icon_size": 50,
-            "icon_border_width": 2,
-            "heading_size": 14,
-            "heading_weight": 700,
-            "heading_spacing": 4,
-            "description_size": 12
-          },
-          "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_3f5efb4_YzkaAE",
-        "ai_gen_block_32c9c2c_PKUUMt"
+        "ai_gen_block_3f5efb4_YzkaAE"
       ],
       "settings": {}
     },
@@ -633,7 +659,7 @@
       "settings": {
         "blog": "news",
         "post_limit": 4,
-        "heading": "Blog posts",
+        "heading": "The inKitch Journal",
         "heading_size": "h1",
         "columns_desktop": 2,
         "show_view_all": false,
@@ -659,35 +685,84 @@
         "ai_gen_block_036e908_RpiJed": {
           "type": "ai_gen_block_036e908",
           "settings": {
-            "heading": "Testimonials",
-            "heading_color": "#ffffff",
-            "heading_size": 28,
-            "background_color": "#ffffff",
-            "card_background": "#ffffff",
-            "card_text_color": "#1a1a1a",
-            "card_radius": 24,
-            "shadow_opacity": 0.2,
-            "review_title_size": 26,
-            "review_text_size": 16,
-            "star_size": 24,
-            "star_color": "#ffc107",
-            "profile_image_size": 80,
-            "profile_border_color": "#ffffff",
-            "name_size": 16,
-            "review_title_1": "Superb Finish",
-            "review_text_1": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
-            "customer_name_1": "Ankit Agarwal",
-            "customer_image_1": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg",
-            "review_title_2": "Love the Quality",
-            "review_text_2": "Beautiful craftsmanship and attention to detail. These products have transformed my cooking experience!",
-            "customer_name_2": "Ansu Gogoi",
-            "customer_image_2": "shopify://shop_images/5_1eeb867c-e74d-4755-b406-84a23822ce4b.png",
-            "review_title_3": "Highly Recommend",
-            "review_text_3": "Worth every penny! The premium materials and elegant design make these a must-have for any kitchen enthusiast.",
-            "customer_name_3": "virat Kohli",
-            "customer_image_3": "shopify://shop_images/ChatGPT_Image_May_7_2026_03_11_19_PM.png"
+            "heading": "What Our Customers Say"
           },
-          "blocks": {}
+          "blocks": {
+            "testimonial_item_001": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
+                "customer_name": "Ankit Agarwal",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+              },
+              "blocks": {}
+            },
+            "testimonial_item_002": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "Beautiful craftsmanship and attention to detail. These products have transformed my cooking experience!",
+                "customer_name": "Ansu Gogoi",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/5_1eeb867c-e74d-4755-b406-84a23822ce4b.png"
+              },
+              "blocks": {}
+            },
+            "testimonial_item_3YtbAh": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
+                "customer_name": "Ankit Agarwal",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+              },
+              "blocks": {}
+            },
+            "testimonial_item_003": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "Worth every penny! The solid build and thoughtful design make these a must-have for any kitchen enthusiast.",
+                "customer_name": "Vijay",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/ChatGPT_Image_May_7_2026_03_11_19_PM.png"
+              },
+              "blocks": {}
+            },
+            "testimonial_item_TKniwD": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
+                "customer_name": "Ankit Agarwal",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+              },
+              "blocks": {}
+            },
+            "testimonial_item_3LLf8E": {
+              "type": "testimonial-item",
+              "settings": {
+                "rating": 5,
+                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
+                "customer_name": "Ankit Agarwal",
+                "verified_label": "Verified Buyer ✓",
+                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "testimonial_item_001",
+            "testimonial_item_002",
+            "testimonial_item_3YtbAh",
+            "testimonial_item_003",
+            "testimonial_item_TKniwD",
+            "testimonial_item_3LLf8E"
+          ]
         }
       },
       "block_order": [
@@ -715,9 +790,11 @@
   },
   "order": [
     "178281114959f16150",
+    "image_banner_NUQwep",
     "177687342526c3aeca",
     "look_book_wGFaKU",
     "1776874214582f2fe1",
+    "trending_title_section",
     "1783318539fb3211c9",
     "center_carousel_AHm6fg",
     "178289953232b64777",

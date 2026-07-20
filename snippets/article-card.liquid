@@ -22,6 +22,28 @@
     if media_aspect_ratio != null
       assign ratio = media_aspect_ratio
     endif
+
+    assign display_author = article.author
+    assign author_upper = article.author | upcase | strip
+    if author_upper == 'LIFESTYLE' or author_upper == 'BRANBILLY LIFESTYLE' or author_upper == 'BRANBILLY' or author_upper == 'IN KITCH EDITORIAL' or author_upper == 'INKITCH EDITORIAL' or author_upper == 'INKITCH'
+      assign display_author = 'inKitch Editorial'
+    endif
+
+    assign article_title = article.title
+    assign article_excerpt = article.excerpt
+    assign has_excerpt = false
+    if article.excerpt.size > 0 or article.content.size > 0
+      assign has_excerpt = true
+    endif
+    if article_excerpt == blank or article_excerpt == empty
+      assign article_excerpt = article.content
+    endif
+
+    if article.url contains 'discover-premium-cookware-inspiration' or article.title contains 'Discover Premium Cookware'
+      assign article_title = 'Everyday Cookware Essentials'
+      assign article_excerpt = 'Discover how using the right tools and materials like steel and aluminium can make a difference in your daily cooking, providing reliability and durability.'
+      assign has_excerpt = true
+    endif
   -%}
   <div class="article-card-wrapper card-wrapper underline-links-hover">
     {% comment %} <article aria-labelledby="Article-{{ article.id }}"> {% endcomment %}
@@ -77,7 +99,7 @@
           <div class="card__information">
             <h3 class="card__heading{% if show_excerpt %} h2{% endif %}">
               <a href="{{ article.url }}" class="full-unstyled-link">
-                {{ article.title | truncate: 50 | escape }}
+                {{ article_title | truncate: 50 | escape }}
               </a>
             </h3>
             <div class="article-card__info caption-with-letter-spacing h5">
@@ -85,17 +107,13 @@
                 <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
               {%- endif -%}
               {%- if show_author -%}
-                <span>{{ article.author }}</span>
+                <span>{{ display_author }}</span>
               {%- endif -%}
             </div>
             {%- if show_excerpt -%}
-              {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+              {%- if has_excerpt -%}
                 <p class="article-card__excerpt rte-width">
-                  {%- if article.excerpt.size > 0 -%}
-                    {{ article.excerpt | strip_html | truncatewords: 30 }}
-                  {%- else -%}
-                    {{ article.content | strip_html | truncatewords: 30 }}
-                  {%- endif -%}
+                  {{ article_excerpt | strip_html | truncatewords: 30 }}
                 </p>
               {%- endif -%}
               <div class="article-card__footer">
@@ -116,7 +134,7 @@
         <div class="card__information">
           <h3 class="card__heading{% if show_excerpt %} h2{% endif %}">
             <a href="{{ article.url }}" class="full-unstyled-link">
-              {{ article.title | truncate: 50 | escape }}
+              {{ article_title | truncate: 50 | escape }}
             </a>
           </h3>
           <div class="article-card__info caption-with-letter-spacing h5">
@@ -124,17 +142,13 @@
               <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
             {%- endif -%}
             {%- if show_author -%}
-              <span>{{ article.author }}</span>
+              <span>{{ display_author }}</span>
             {%- endif -%}
           </div>
           {%- if show_excerpt -%}
-            {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+            {%- if has_excerpt -%}
               <p class="article-card__excerpt rte-width">
-                {%- if article.excerpt.size > 0 -%}
-                  {{ article.excerpt | strip_html | truncatewords: 30 }}
-                {%- else -%}
-                  {{ article.content | strip_html | truncatewords: 30 }}
-                {%- endif -%}
+                {{ article_excerpt | strip_html | truncatewords: 30 }}
               </p>
             {%- endif -%}
             <div class="article-card__footer">

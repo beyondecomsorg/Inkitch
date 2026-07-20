@@ -327,17 +327,7 @@
     border-radius: 2px !important;
   }
 
-  [class*="ai-text-title-heading-"]::after {
-    content: 'Our most loved products, just for you' !important;
-    display: block !important;
-    color: #888 !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    font-family: var(--font-body), sans-serif !important;
-    margin-top: 10px !important;
-    line-height: 1.4 !important;
-    text-transform: none !important;
-  }
+
 
   @media screen and (max-width: 749px) {
     .ai-product-carousel-{{ ai_gen_id }} {
@@ -418,6 +408,7 @@
 
                 <div class="ai-product-card-content-{{ ai_gen_id }}">
                   <h3 class="ai-product-card-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+         
                   <div class="ai-product-card-price-{{ ai_gen_id }}">
                     {% if product.compare_at_price > product.price %}
                       <span class="ai-product-card-compare-price-{{ ai_gen_id }}">
@@ -435,6 +426,9 @@
                   <div class="ai-product-card-button-wrap-{{ ai_gen_id }}">
                     <span class="ai-product-card-btn-{{ ai_gen_id }}">View Product</span>
                   </div>
+                </div>
+                <div class="inkitch-tagline-strip">
+                  INKITCH · Built Better for Everyday Use
                 </div>
               </div>
             </a>

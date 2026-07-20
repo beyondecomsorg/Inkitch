@@ -1,75 +1,154 @@
-.card-variant-options {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/*
+ * Card Variant Picker — Pill & Swatch Styling
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Layout rules:
+ *   - Every variant option group (Color, Size, Type, …) stacks on its own full-
+ *     width row — label first, then the pill/swatch list below it.
+ *   - Two option groups NEVER share a horizontal line.
+ *   - Pills wrap to a new line within a card before ever overflowing/clipping.
+ *
+ * Brand red token matches the ATC button border on the same card (#C8102E).
+ */
+
+/* ─── Brand / spacing tokens ──────────────────────────────────────────────── */
+.card-wrapper {
+  --card-brand-red: #C8102E;
+  --card-pill-border: rgba(0, 0, 0, 0.18);
+  --card-pill-text: #444444;
+  --card-pill-radius: 100px;
+  --card-pill-height: 28px;
 }
+
+/* ─── Outer wrapper ───────────────────────────────────────────────────────── */
+/*
+ * min-height so single-variant cards still reserve some whitespace;
+ * height is auto so multi-option-group cards expand without clipping.
+ */
+.card-variant-picker-wrapper {
+  min-height: 36px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* ─── Option-groups container — VERTICAL STACK ────────────────────────────── */
+/*
+ * Each .card-variant-options__row is one group (Color / Size / Type).
+ * flex-direction: column ensures they NEVER share a horizontal row.
+ */
+.card-variant-options {
+  margin: 0;
+  display: flex;
+  flex-direction: column;   /* ← groups stacked vertically, not side-by-side */
+  align-items: flex-start;
+  gap: 10px;              /* vertical gap between option groups             */
+  width: 100%;
+}
+
+/* ─── Single option-group row (label + pills/swatches) ────────────────────── */
 .card-variant-options__row {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;   /* label above, pill/swatch list below            */
   align-items: flex-start;
-  gap: 0.6rem;
+  gap: 10px;
+  width: 100%;
 }
+
+/* Inline label: "Size:", "Color:", "Type:" */
 .card-variant-options__label {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #767676;
-  min-width: auto;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #888888;
   margin: 0;
   text-transform: capitalize;
+  white-space: nowrap;
+  line-height: 1;
 }
+
+/* Pill / swatch list — wraps so options never overflow the card edge */
 .card-variant-options__list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;           /* ← wrap within the card, never clip/overflow   */
   align-items: center;
-  gap: 0.6rem; /* Consistent gap between buttons */
+  gap: 10px;       /* row-gap col-gap                               */
+  width: 100%;
 }
-/* Color Swatches circle style */
+
+/* ─── Colour-swatch circle buttons ───────────────────────────────────────── */
 .card-swatch-button {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
-  border: 1px solid rgba(var(--color-foreground), 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   cursor: pointer;
   position: relative;
   padding: 0;
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.18s ease, border-color 0.18s ease, outline-color 0.18s ease;
   background-size: cover;
   background-position: center;
+  flex-shrink: 0;
 }
+
 .card-swatch-button:hover {
-  transform: scale(1.15);
+  transform: scale(1.12);
+  border-color: rgba(0, 0, 0, 0.35);
 }
+
 .card-swatch-button.active {
-  outline: 2px solid #E30613;
+  outline: 2px solid var(--card-brand-red);
   outline-offset: 1.5px;
   border-color: transparent;
 }
-/* Pills text button style */
+
+/* ─── Text / size pill buttons ────────────────────────────────────────────── */
 .card-pill-button {
-  font-size: 1.2rem;
-  padding: 0.6rem 1.2rem;
-  border: var(--variant-pills-border-width) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity));
-  border-radius: var(--variant-pills-radius);
-  background-color: rgb(var(--color-background));
-  color: rgb(var(--color-foreground));
-  cursor: pointer;
-  transition: background-color var(--duration-short) ease, border-color var(--duration-short) ease, color var(--duration-short) ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--card-pill-height);   /* fixed height for consistency           */
+  min-width: 40px;
+  padding: 0 0.85rem;
+  font-size: 1.1rem;
+  font-weight: 500;
   line-height: 1;
+  white-space: nowrap;
+  border: 1.5px solid var(--card-pill-border);
+  border-radius: var(--card-pill-radius);
+  background-color: #ffffff;
+  color: var(--card-pill-text);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
+
+/* Hover / tap — light red tint with brand border */
 .card-pill-button:hover {
-  background-color: rgba(var(--color-foreground), 0.05);
-  border-color: rgb(var(--color-foreground));
+  background-color: rgba(193, 8, 46, 0.06);
+  border-color: var(--card-brand-red);
+  color: var(--card-brand-red);
 }
+
+/* Active / selected — solid brand red fill */
 .card-pill-button.active {
-  background-color: #f60000;
-  border-color: #f60000;
-  color: rgb(var(--color-background));
+  background-color: var(--card-brand-red) !important;
+  border-color: var(--card-brand-red) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
+
+/* ─── Sold-out / disabled ATC button state ────────────────────────────────── */
 .cart-btn.disabled {
   background-color: #f3f3f3 !important;
-  color: #999 !important;
+  color: #999999 !important;
   border-color: #e5e5e5 !important;
   cursor: not-allowed !important;
 }

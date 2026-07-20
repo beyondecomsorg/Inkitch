@@ -471,7 +471,7 @@
     
     <div class="ai-new-popular-heading-wrapper-{{ ai_gen_id }}">
       <h2 class="ai-new-popular-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
-      <p class="ai-new-popular-subtitle-{{ ai_gen_id }}">Handpicked products loved by our customers</p>
+      <p class="ai-new-popular-subtitle-{{ ai_gen_id }}">New arrivals and everyday favourites.</p>
     </div>
 
     <div class="ai-new-popular-tabs-{{ ai_gen_id }}">
@@ -548,6 +548,7 @@
                     <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
                       {{ product.title }}
                     </span>
+                
                     <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
                       {% if product.compare_at_price > product.price %}
                         <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
@@ -567,6 +568,9 @@
                         </span>
                       {% endif %}
                     </div>
+                  </div>
+                  <div class="inkitch-tagline-strip">
+                    INKITCH · Built Better for Everyday Use
                   </div>
                 </div>
               </a>
@@ -597,7 +601,7 @@
 
           <div class="ai-new-popular-grid-{{ ai_gen_id }}">
             {% for product in block.settings.collection_2.products limit: block.settings.products_per_tab %}
-              <a href="{{ product.url }}" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
+              <a href="{{ product.url }}" style="text-decoration: none;"  class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
                 <div class="ai-new-popular-card-{{ ai_gen_id }}">
                   <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
                     {% if product.featured_image %}
@@ -631,6 +635,7 @@
                     <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
                       {{ product.title }}
                     </span>
+
                     <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
                       {% if product.compare_at_price > product.price %}
                         <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
@@ -650,6 +655,9 @@
                         </span>
                       {% endif %}
                     </div>
+                  </div>
+                  <div class="inkitch-tagline-strip">
+                    INKITCH · Built Better for Everyday Use
                   </div>
                 </div>
               </a>
@@ -680,7 +688,7 @@
 
           <div class="ai-new-popular-grid-{{ ai_gen_id }}">
             {% for product in block.settings.collection_3.products limit: block.settings.products_per_tab %}
-              <a href="{{ product.url }}" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
+              <a href="{{ product.url }}" style="text-decoration: none;" class="ai-new-popular-card-link-wrapper-{{ ai_gen_id }}">
                 <div class="ai-new-popular-card-{{ ai_gen_id }}">
                   <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
                     {% if product.featured_image %}
@@ -707,13 +715,13 @@
                     {% else %}
                       <div class="ai-new-popular-sold-out-badge-{{ ai_gen_id }}">SOLD OUT</div>
                     {% endif %}
-                    <span class="ai-new-popular-badge-{{ ai_gen_id }} badge-barista">SELECTED</span>
                   </div>
-
+ 
                   <div class="ai-new-popular-card-info-{{ ai_gen_id }}">
                     <span class="ai-new-popular-card-title-{{ ai_gen_id }}">
                       {{ product.title }}
                     </span>
+             
                     <div class="ai-new-popular-card-price-{{ ai_gen_id }}">
                       {% if product.compare_at_price > product.price %}
                         <span class="ai-new-popular-compare-price-{{ ai_gen_id }}">
@@ -733,6 +741,9 @@
                         </span>
                       {% endif %}
                     </div>
+                  </div>
+                  <div class="inkitch-tagline-strip">
+                    INKITCH · Built Better for Everyday Use
                   </div>
                 </div>
               </a>

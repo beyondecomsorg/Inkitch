@@ -347,15 +347,10 @@
         %}
 
         {% if marketplace_enabled %}
-          <a
-            href="{{ marketplace_url }}"
+          <div
+    
             class="ai-marketplace-card-{{ ai_gen_id }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Shop on {{ marketplace_name | escape }}"
-            {% if marketplace_name != blank %}
-              aria-label="{{ marketplace_name }}"
-            {% endif %}
+          
           >
             <div class="ai-marketplace-logo-wrapper-{{ ai_gen_id }}">
               {% if marketplace_logo %}
@@ -376,7 +371,7 @@
             {% if marketplace_name != blank %}
               <p class="ai-marketplace-name-{{ ai_gen_id }}">{{ marketplace_name }}</p>
             {% endif %}
-          </a>
+          </div>
         {% endif %}
       {% endfor %}
     </div>

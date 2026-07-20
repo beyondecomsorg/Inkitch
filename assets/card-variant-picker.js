@@ -50,6 +50,15 @@ if (!customElements.get('card-variant-picker')) {
         this.updateVariant();
       }
 
+      formatMoney(cents) {
+        const amount = cents / 100;
+        const formatted = amount.toLocaleString('en-IN', {
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0
+        });
+        return `₹${formatted}`;
+      }
+
       updateVariant() {
         let matchedVariant = null;
 
@@ -65,10 +74,67 @@ if (!customElements.get('card-variant-picker')) {
           matchedVariant = possibleMatches.find(v => v.available) || possibleMatches[0];
         }
 
-        if (matchedVariant && this.variantIdInput) {
-          this.variantIdInput.value = matchedVariant.id;
-          this.variantIdInput.removeAttribute('disabled');
+        if (matchedVariant) {
+          // 1. Update Variant ID input field
+          if (this.variantIdInput) {
+            this.variantIdInput.value = matchedVariant.id;
+            this.variantIdInput.removeAttribute('disabled');
+          }
 
+          // 2. Update price display inline
+          const priceContainer = this.cardContainer?.querySelector('.custom-card-price');
+          if (priceContainer) {
+            const price = matchedVariant.price;
+            const compareAtPrice = matchedVariant.compare_at_price;
+            
+            if (compareAtPrice && compareAtPrice > price) {
+              const discountPercent = Math.round((compareAtPrice - price) * 100 / compareAtPrice);
+              priceContainer.innerHTML = `
+                <!-- Row 1: MRP Strikethrough -->
+                <div class="custom-card-price__mrp" style="font-size: 1.3rem; color: #767676; text-decoration: line-through; line-height: 1.2;">
+                  MRP ${this.formatMoney(compareAtPrice)}
+                </div>
+                <!-- Row 2: Price and Discount -->
+                <div class="custom-card-price__row" style="display: flex; align-items: center; gap: 8px; line-height: 1.2;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                    ${this.formatMoney(price)}
+                  </span>
+                  <span class="custom-card-price__discount" style="background-color: #E2F6EA; color: #107C41; font-size: 1.1rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block;">
+                    ${discountPercent}% OFF
+                  </span>
+                </div>
+              `;
+            } else {
+              priceContainer.innerHTML = `
+                <!-- Regular Selling Price only -->
+                <div class="custom-card-price__row" style="display: flex; align-items: center; line-height: 1.2;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                    ${this.formatMoney(price)}
+                  </span>
+                </div>
+              `;
+            }
+          }
+
+          // 3. Swap image if variant-specific image exists
+          const cardImage = this.cardContainer?.querySelector('.card__media img');
+          if (cardImage) {
+            if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+              let imgUrl = matchedVariant.featured_image.src;
+              cardImage.src = imgUrl;
+              cardImage.srcset = imgUrl;
+            } else {
+              // Restore initial image
+              if (cardImage.dataset.initialSrc) {
+                cardImage.src = cardImage.dataset.initialSrc;
+              }
+              if (cardImage.dataset.initialSrcset) {
+                cardImage.srcset = cardImage.dataset.initialSrcset;
+              }
+            }
+          }
+
+          // 4. Update submit button state
           if (this.submitButton) {
             if (matchedVariant.available) {
               this.submitButton.removeAttribute('disabled');

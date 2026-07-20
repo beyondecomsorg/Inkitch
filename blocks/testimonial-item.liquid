@@ -1,0 +1,96 @@
+{% doc %}
+  @prompt Each testimonial card — rendered by this block using its own settings.
+  The parent slider (ai_gen_block_036e908) provides the wrapper, CSS, and JS.
+  This block outputs one slide div that the parent's JS controls.
+{% enddoc %}
+
+{%- assign ti_rating = block.settings.rating | default: 5 -%}
+{%- assign ti_quote = block.settings.quote -%}
+{%- assign ti_name = block.settings.customer_name -%}
+{%- assign ti_label = block.settings.verified_label | default: 'Verified Buyer ✓' -%}
+{%- assign ti_avatar = block.settings.avatar -%}
+
+<div class="ikt-testimonial-slide" {{ block.shopify_attributes }}>
+  <div class="ikt-testimonial-card">
+    <div class="ikt-testimonial-rating-wrap">
+      <div class="ikt-testimonial-stars">
+        {%- for star in (1..5) -%}
+          <svg class="ikt-testimonial-star{% if star > ti_rating %} empty{% endif %}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        {%- endfor -%}
+      </div>
+      <div class="ikt-testimonial-rating-text">({{ ti_rating }}/5)</div>
+    </div>
+
+    {%- if ti_quote != blank -%}
+      <p class="ikt-testimonial-text">"{{ ti_quote }}"</p>
+    {%- endif -%}
+
+    <div class="ikt-testimonial-profile">
+      <div class="ikt-testimonial-avatar-wrap">
+        {%- if ti_avatar != blank -%}
+          <img
+            src="{{ ti_avatar | image_url: width: 200 }}"
+            alt="{{ ti_name | escape }}"
+            class="ikt-testimonial-avatar"
+            loading="lazy"
+            width="52"
+            height="52"
+          >
+        {%- else -%}
+          <div class="ikt-testimonial-avatar-placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="ikt-testimonial-meta">
+        {%- if ti_name != blank -%}
+          <p class="ikt-testimonial-name">{{ ti_name }}</p>
+        {%- endif -%}
+        <div class="ikt-testimonial-verified">{{ ti_label }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "settings": [
+    {
+      "type": "range",
+      "id": "rating",
+      "label": "Star rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Review quote",
+      "default": "The build quality is solid and everything fits perfectly. Worth every rupee — my kitchen feels so much more organised now."
+    },
+    {
+      "type": "text",
+      "id": "customer_name",
+      "label": "Customer name",
+      "default": "Priya S."
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified label",
+      "default": "Verified Buyer ✓"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar",
+      "label": "Customer photo (optional)"
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

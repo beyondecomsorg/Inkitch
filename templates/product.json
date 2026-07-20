@@ -181,6 +181,7 @@
         "item_7zwpKe",
         "item_TPUaMH"
       ],
+      "disabled": true,
       "name": "Infinite Marquee",
       "settings": {
         "speed": 24,
