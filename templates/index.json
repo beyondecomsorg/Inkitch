@@ -57,7 +57,7 @@
           "type": "slide",
           "settings": {
             "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM_1.webp",
-            "mobile_image": "shopify://shop_images/Untitled_design_83.png",
+            "mobile_image": "shopify://shop_images/Untitled_design_84.png",
             "heading": "",
             "button_label": "",
             "button_link": "shopify://collections/all"
@@ -74,7 +74,7 @@
         "autoplay_speed": 3,
         "show_arrows": true,
         "show_dots": true,
-        "banner_height": "adapt"
+        "banner_height": "medium"
       }
     },
     "177687342526c3aeca": {
