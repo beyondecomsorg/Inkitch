@@ -373,17 +373,20 @@
             </div>
 
             <div class="card-variant-picker-wrapper">
-              {%- if card_product.variants.size > 1 -%}
+              {%- unless card_product.has_only_default_variant -%}
                 <card-variant-picker data-product-id="{{ card_product.id }}">
                   <div class="card-variant-options">
                     {%- for option in card_product.options_with_values -%}
                       {%- assign option_name_lower = option.name | downcase -%}
+                      {%- assign option_idx = option.position | minus: 1 -%}
+                      {%- assign selected_val = card_product.selected_or_first_available_variant.options[option_idx] -%}
                       {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
-                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option_idx }}">
                           <span class="card-variant-options__label">{{ option.name }}:</span>
                           <div class="card-variant-options__list">
                             {%- for value in option.values -%}
                               {%- liquid
+                                assign value_title = value.name | default: value
                                 assign swatch_value = null
                                 if value.swatch.image
                                   assign image_url = value.swatch.image | image_url: width: 50
@@ -393,30 +396,42 @@
                                 else
                                   assign swatch_value = value | handle
                                 endif
+
+                                assign is_active = false
+                                if value.selected or value_title == selected_val or forloop.first
+                                  assign is_active = true
+                                endif
                               -%}
                               <button
                                 type="button"
-                                class="card-swatch-button{% if value.selected %} active{% endif %}"
-                                data-value="{{ value | escape }}"
+                                class="card-swatch-button{% if is_active %} active{% endif %}"
+                                data-value="{{ value_title | escape }}"
                                 style="{% if swatch_value contains 'rgb' or swatch_value contains 'url' %}background: {{ swatch_value }};{% else %}background-color: {{ swatch_value }};{% endif %}"
-                                title="{{ value }}"
+                                title="{{ value_title | escape }}"
                               >
-                                <span class="visually-hidden">{{ value }}</span>
+                                <span class="visually-hidden">{{ value_title | escape }}</span>
                               </button>
                             {%- endfor -%}
                           </div>
                         </div>
                       {%- else -%}
-                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option.position | minus: 1 }}">
+                        <div class="card-variant-options__row" data-option-name="{{ option.name }}" data-option-index="{{ option_idx }}">
                           <span class="card-variant-options__label">{{ option.name }}:</span>
                           <div class="card-variant-options__list">
                             {%- for value in option.values -%}
+                              {%- liquid
+                                assign value_title = value.name | default: value
+                                assign is_active = false
+                                if value.selected or value_title == selected_val or forloop.first
+                                  assign is_active = true
+                                endif
+                              -%}
                               <button
                                 type="button"
-                                class="card-pill-button{% if value.selected %} active{% endif %}"
-                                data-value="{{ value | escape }}"
+                                class="card-pill-button{% if is_active %} active{% endif %}"
+                                data-value="{{ value_title | escape }}"
                               >
-                                {{ value }}
+                                {{ value_title }}
                               </button>
                             {%- endfor -%}
                           </div>
@@ -431,7 +446,7 @@
                     {{ card_product.options_with_values | json }}
                   </script>
                 </card-variant-picker>
-              {%- endif -%}
+              {%- endunless -%}
             </div>
 
             {%- if card_product.quantity_price_breaks_configured? -%}

@@ -164,7 +164,6 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
-            "card_product": "",
             "card_label": "Better Materials"
           }
         },
@@ -172,7 +171,6 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
-            "card_product": "",
             "card_label": "Thoughtful Design"
           }
         },
@@ -180,7 +178,6 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
-            "card_product": "",
             "card_label": "Built to Last"
           }
         },

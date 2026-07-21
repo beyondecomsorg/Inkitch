@@ -38,7 +38,7 @@
     color: #ffffff !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
-    margin: 0 !important;
+    margin: 8px !important;
     line-height: 1.2 !important;
   }
 
@@ -109,20 +109,21 @@
     margin-bottom: 20px !important;
   }
 
-  .footer-block__brand-info .footer__list-social,
-  .footer-block__brand-info .list-social {
+  .footer-block .footer__list-social,
+  .footer-block .list-social {
     display: flex !important;
+    flex-wrap: wrap !important;
     gap: 10px !important;
     list-style: none !important;
     padding: 0 !important;
+    margin: 16px 0 0 0 !important;
+  }
+
+  .footer-block .list-social__item {
     margin: 0 !important;
   }
 
-  .footer-block__brand-info .list-social__item {
-    margin: 0 !important;
-  }
-
-  .footer-block__brand-info .list-social__link {
+  .footer-block .list-social__link {
     width: 36px !important;
     height: 36px !important;
     border-radius: 50% !important;
@@ -136,13 +137,21 @@
     padding: 0 !important;
   }
 
-  .footer-block__brand-info .list-social__link:hover {
+  .footer-block .list-social__link:hover {
     background: #E30613 !important;
     border-color: #E30613 !important;
     color: #ffffff !important;
   }
 
-  .footer-block__brand-info .list-social__link svg {
+  .footer-block .list-social__link .svg-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .footer-block .list-social__link svg {
     width: 16px !important;
     height: 16px !important;
     fill: currentColor !important;
@@ -441,7 +450,8 @@
                 {{ block.shopify_attributes }}
               >
                 {%- if block.settings.heading != blank -%}
-                  <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
+                  <h2 class="footer-block-heading-custom">{{- block.settings.heading -}}</h2>
+                  <div class="footer-block-accent-line-custom"></div>
                 {%- endif -%}
 
                 {%- case block.type -%}
@@ -541,30 +551,31 @@
                       </div>
                     {%- else -%}
                       <div class="footer-block__details-content rte">
-                        {%- assign clean_subtext = block.settings.subtext | replace: "blends functionality and durability to elevate your everyday living experience", "brings world-class quality back to Indian homes with steel, aluminium and more" | replace: "elevate", "enrich" -%}
-                        {{ clean_subtext }}
+                        {{ block.settings.subtext }}
                       </div>
                       {%- if block.settings.address != blank -%}
                         <div class="footer-block__details-content rte footer-address-custom" style="margin-top: 15px; font-size: var(--font-size-body); color: #aaaaaa; line-height: 1.8;">
                           {{ block.settings.address }}
                         </div>
                       {%- endif -%}
+                      {%- if has_social_icons -%}
+                        <div class="footer-social-icons-wrapper-custom">
+                          {%- render 'social-icons', class: 'footer__list-social' -%}
+                        </div>
+                      {%- endif -%}
                     {%- endif -%}
                   {%- when 'link_list' -%}
-                    {%- if block.settings.menu != blank -%}
-                      <ul class="footer-block__details-content list-unstyled">
+                    <ul class="footer-links-list-custom">
+                      {%- if block.settings.menu != blank -%}
                         {%- for link in block.settings.menu.links -%}
                           <li>
-                            <a
-                              href="{{ link.url }}"
-                              class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
-                            >
-                              {{ link.title | escape }}
+                            <a href="{{ link.url }}" class="footer-link-custom">
+                              <span class="footer-link-arrow-custom">&rarr;</span>{{ link.title | escape }}
                             </a>
                           </li>
                         {%- endfor -%}
-                      </ul>
-                    {%- endif -%}
+                      {%- endif -%}
+                    </ul>
                   {%- when 'brand_information' -%}
                     <div class="footer-block__brand-info">
                       {%- if settings.brand_image != blank -%}
@@ -619,62 +630,16 @@
                     </div>
                 {%- endcase -%}
               </div>
-
-              {%- if block.type == 'brand_information' or forloop.first -%}
-                <!-- Column 2 — Quick Links (Custom) -->
-                <div class="footer-block footer-column-custom quick-links-column-custom">
-                  <h2 class="footer-block-heading-custom">Quick Links</h2>
-                  <div class="footer-block-accent-line-custom"></div>
-                  <ul class="footer-links-list-custom">
-                    {%- assign quick_links = linklists.main-menu.links -%}
-                    {%- if quick_links.size > 0 -%}
-                      {%- for link in quick_links -%}
-                        <li>
-                          <a href="{{ link.url }}" class="footer-link-custom">
-                            <span class="footer-link-arrow-custom">&rarr;</span>{{ link.title | escape }}
-                          </a>
-                        </li>
-                      {%- endfor -%}
-                    {%- else -%}
-                      <li><a href="{{ routes.root_url }}" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Home</a></li>
-                      <li><a href="{{ routes.all_products_collection_url }}" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Shop</a></li>
-                      <li><a href="/pages/about-us" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>About Us</a></li>
-                      <li><a href="/blogs/news" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Blog</a></li>
-                      <li><a href="/pages/contact" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Contact</a></li>
-                    {%- endif -%}
-                  </ul>
-                </div>
-
-                <!-- Column 3 — Policies (Custom) -->
-                <div class="footer-block footer-column-custom policies-column-custom">
-                  <h2 class="footer-block-heading-custom">Policies</h2>
-                  <div class="footer-block-accent-line-custom"></div>
-                  <ul class="footer-links-list-custom">
-                    {%- assign policies_links = linklists.policies.links -%}
-                    {%- if policies_links.size > 0 -%}
-                      {%- for link in policies_links -%}
-                        <li>
-                          <a href="{{ link.url }}" class="footer-link-custom">
-                            <span class="footer-link-arrow-custom">&rarr;</span>{{ link.title | escape }}
-                          </a>
-                        </li>
-                      {%- endfor -%}
-                    {%- else -%}
-                      <li><a href="/policies/shipping-policy" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Shipping Policy</a></li>
-                      <li><a href="/policies/refund-policy" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Refund Policy</a></li>
-                      <li><a href="/policies/privacy-policy" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Privacy Policy</a></li>
-                      <li><a href="/policies/terms-of-service" class="footer-link-custom"><span class="footer-link-arrow-custom">&rarr;</span>Terms of Service</a></li>
-                    {%- endif -%}
-                  </ul>
-                </div>
-              {%- endif -%}
             {%- endfor -%}
 
             <!-- Column 4 — Newsletter (Custom) -->
             <div class="footer-block footer-column-custom newsletter-column-custom">
-              <h2 class="footer-block-heading-custom">Stay Updated</h2>
+              <h2 class="footer-block-heading-custom">{{ section.settings.newsletter_heading_custom | default: "Stay Updated" }}</h2>
               <div class="footer-block-accent-line-custom"></div>
-              <p class="footer-newsletter-subtitle-custom">Get exclusive deals & kitchen tips in your inbox</p>
+              {%- assign n_subtitle = section.settings.newsletter_subtitle | default: "Get exclusive deals & kitchen tips in your inbox" -%}
+              {%- if n_subtitle != blank -%}
+                <p class="footer-newsletter-subtitle-custom">{{ n_subtitle }}</p>
+              {%- endif -%}
               {%- form 'customer', id: 'ContactFooterCustom', class: 'footer__newsletter-custom' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="footer-newsletter-field-custom">
@@ -701,9 +666,12 @@
 
   <!-- Bottom Bar & Divider Custom -->
   <div class="footer-divider-custom"></div>
-  <div class="footer-tagline-strip-custom page-width">
-    ✦ INKITCH · Built Better for Everyday Use
-  </div>
+  {%- assign tagline = section.settings.tagline_text | default: "✦ INKITCH · Built Better for Everyday Use" -%}
+  {%- if tagline != blank -%}
+    <div class="footer-tagline-strip-custom page-width">
+      {{ tagline }}
+    </div>
+  {%- endif -%}
   <div class="footer-bottom-bar-custom page-width">
     <div class="footer-bottom-left-custom">
       &copy; {{ 'now' | date: '%Y' }} inKitch. All rights reserved.
@@ -722,7 +690,7 @@
     {%- endif -%}
 
     <div class="footer-bottom-right-custom">
-      Made with ❤️ in India
+      {{ section.settings.bottom_right_text | default: "Made with ❤️ in India" }}
     </div>
   </div>
 </footer>
@@ -926,6 +894,42 @@
       "default": true,
       "label": "t:sections.footer.settings.show_policy.label",
       "info": "t:sections.footer.settings.show_policy.info"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter Column"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "newsletter_heading_custom",
+      "default": "Stay Updated",
+      "label": "Newsletter Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "newsletter_subtitle",
+      "default": "Get exclusive deals & kitchen tips in your inbox",
+      "label": "Newsletter Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Footer Tagline Strip"
+    },
+    {
+      "type": "text",
+      "id": "tagline_text",
+      "default": "✦ INKITCH · Built Better for Everyday Use",
+      "label": "Tagline Text"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Bar"
+    },
+    {
+      "type": "text",
+      "id": "bottom_right_text",
+      "default": "Made with ❤️ in India",
+      "label": "Bottom Right Text"
     },
     {
       "type": "header",

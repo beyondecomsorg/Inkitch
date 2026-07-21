@@ -194,6 +194,20 @@
             "contact_hours": "Mon–Sat: 9:30am–6pm"
           }
         },
+        "link_list_quick_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Quick Links",
+            "menu": "footer-quick-links"
+          }
+        },
+        "link_list_policies": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Policies",
+            "menu": "policies"
+          }
+        },
         "text_36atdn": {
           "type": "text",
           "settings": {
@@ -209,6 +223,8 @@
       },
       "block_order": [
         "text_VJTfYb",
+        "link_list_quick_links",
+        "link_list_policies",
         "text_36atdn"
       ],
       "settings": {
@@ -228,6 +244,7 @@
     },
     "1779534794342502e7": {
       "type": "_blocks",
+      "disabled": true,
       "settings": {}
     }
   },
