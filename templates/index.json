@@ -714,10 +714,9 @@
               "type": "testimonial-item",
               "settings": {
                 "rating": 5,
-                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
-                "customer_name": "Ankit Agarwal",
-                "verified_label": "Verified Buyer ✓",
-                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+                "quote": "I have been using inKitch products since a year now & I am totally fan of it. Love their quality, just amazing.",
+                "customer_name": "Jyoti Prabha",
+                "verified_label": "Verified Buyer ✓"
               },
               "blocks": {}
             },
