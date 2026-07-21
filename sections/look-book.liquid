@@ -179,21 +179,23 @@
 
             {% if block.settings.card_image != blank %}
 
-              {{
+{% if block.settings.card_product != blank %}
+<a href="{{ block.settings.card_product.url }}">
+{% endif %}
 
-                block.settings.card_image
+{{
+block.settings.card_image
+| image_url: width: 700
+| image_tag:
+loading: 'lazy',
+class: 'wau-pcard__img'
+}}
 
-                | image_url: width: 700
+{% if block.settings.card_product != blank %}
+</a>
+{% endif %}
 
-                | image_tag:
-
-                  loading: 'lazy',
-
-                  class: 'wau-pcard__img'
-
-              }}
-
-            {% endif %}
+{% endif %}
 
 
 
