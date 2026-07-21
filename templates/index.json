@@ -46,7 +46,7 @@
         "slide_NFGGUj": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM_1.webp",
+            "desktop_image": "shopify://shop_images/perfect_lunch_box_16.png",
             "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
             "heading": "",
             "button_label": "",
@@ -56,7 +56,7 @@
         "slide_XywRg6": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_02_42_18_PM_1.webp",
+            "desktop_image": "shopify://shop_images/perfect_lunch_box_15.png",
             "mobile_image": "shopify://shop_images/Untitled_design_84.png",
             "heading": "",
             "button_label": "",
@@ -133,13 +133,13 @@
             "deal_1_number": "10",
             "deal_1_symbol": "%",
             "deal_1_description": "On Storage Containers",
-            "deal_1_image": "shopify://shop_images/ChatGPT_Image_May_22_2026_03_51_22_PM.png",
+            "deal_1_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_17_33_PM.png",
             "deal_1_link": "shopify://collections/storage-container",
             "deal_2_label": "SAVE",
             "deal_2_number": "10",
             "deal_2_symbol": "%",
             "deal_2_description": "On Lunch Boxes",
-            "deal_2_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_17_33_PM.png",
+            "deal_2_image": "shopify://shop_images/ChatGPT_Image_Jul_21_2026_12_19_23_PM.png",
             "deal_2_link": "shopify://collections/tiffin-or-lunch-box",
             "deal_3_label": "SAVE",
             "deal_3_number": "10",
@@ -163,24 +163,21 @@
         "card_Qc6LFx": {
           "type": "card",
           "settings": {
-            "card_image": "shopify://shop_images/Small_d3680f92-4985-4bdd-924c-13b0b4f0e6ec.png",
-            "card_product": "freshlock-airtight-round-steel-container",
+            "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
             "card_label": "Better Materials"
           }
         },
         "card_B3DAyB": {
           "type": "card",
           "settings": {
-            "card_image": "shopify://shop_images/7_81450b9e-21bc-45b6-aea2-0b428929aec0.png",
-            "card_product": "inkitch-aluminium-kadhai-for-cooking",
+            "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
             "card_label": "Thoughtful Design"
           }
         },
         "card_ChQQtp": {
           "type": "card",
           "settings": {
-            "card_image": "shopify://shop_images/ChatGPT_Image_May_5_2026_12_58_41_PM.png",
-            "card_product": "stainless-steel-chopping-board-heavy-duty-kitchen-cutting-board",
+            "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
             "card_label": "Built to Last"
           }
         },
@@ -718,10 +715,9 @@
               "type": "testimonial-item",
               "settings": {
                 "rating": 5,
-                "quote": "The quality is exceptional and the design is absolutely stunning. Perfect addition to my kitchen collection!",
-                "customer_name": "Ankit Agarwal",
-                "verified_label": "Verified Buyer ✓",
-                "avatar": "shopify://shop_images/WhatsApp_Image_2026-01-28_at_6.28.50_PM_1.jpg"
+                "quote": "I have been using inKitch products since a year now & I am totally fan of it. Love their quality, just amazing.",
+                "customer_name": "Jyoti Prabha",
+                "verified_label": "Verified Buyer ✓"
               },
               "blocks": {}
             },
