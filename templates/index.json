@@ -133,7 +133,7 @@
             "deal_1_number": "10",
             "deal_1_symbol": "%",
             "deal_1_description": "On Storage Containers",
-            "deal_1_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_17_33_PM.png",
+            "deal_1_image": "shopify://shop_images/Untitled_design_87.png",
             "deal_1_link": "shopify://collections/storage-container",
             "deal_2_label": "SAVE",
             "deal_2_number": "10",
@@ -164,6 +164,7 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/CopyofTulipBottle_3_911d3778-2bcf-4bac-8000-58c4e1bd6701.png",
+            "card_product": "",
             "card_label": "Better Materials"
           }
         },
@@ -171,6 +172,7 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/7_2abefdd0-6d7e-420c-bd8b-030bd68a9cae.jpg",
+            "card_product": "",
             "card_label": "Thoughtful Design"
           }
         },
@@ -178,6 +180,7 @@
           "type": "card",
           "settings": {
             "card_image": "shopify://shop_images/03_5_d0e85eb3-2668-4f8c-9791-3ab0d8b99e69.jpg",
+            "card_product": "",
             "card_label": "Built to Last"
           }
         },
