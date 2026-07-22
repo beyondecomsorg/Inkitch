@@ -291,12 +291,20 @@
       }
     }
     
-    .price--large .price-item--regular {
+    .price--on-sale .price-item--regular,
+    s.price-item {
       font-size: var(--font-size-small) !important;
       color: rgba(var(--color-foreground), 0.4) !important;
       text-decoration: line-through !important;
       margin-right: 0.8rem !important;
       font-weight: var(--font-weight-body) !important;
+    }
+    
+    .price__regular .price-item--regular {
+      text-decoration: none !important;
+      color: #E30613 !important;
+      font-size: 2.2rem !important;
+      font-weight: 700 !important;
     }
     
     .price-item--discount {

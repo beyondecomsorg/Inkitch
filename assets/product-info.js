@@ -28,11 +28,10 @@ if (!customElements.get('product-info')) {
         this.initQuantityHandlers();
         this.dispatchEvent(new CustomEvent('product-info:loaded', { bubbles: true }));
 
-        // Filter media gallery on load based on pre-selected variant
+        // Filter media gallery on load based on Color variant
         setTimeout(() => {
-          const packValue = this.getPackOptionValue();
-          if (packValue) {
-            this.filterMediaByVariantTag(packValue);
+          if (window.ProductGalleryColorFilter) {
+            window.ProductGalleryColorFilter.update();
           }
         }, 0);
       }
@@ -145,6 +144,37 @@ if (!customElements.get('product-info')) {
           });
       }
 
+      getMatchingVariantFromDOM() {
+        const variantsScript = this.querySelector('variant-selects [data-product-variants]') ||
+                               document.querySelector('variant-selects [data-product-variants]');
+        if (!variantsScript) return null;
+
+        try {
+          const variants = JSON.parse(variantsScript.textContent);
+          
+          const selectedInputs = Array.from(
+            this.querySelectorAll('variant-selects fieldset input:checked, variant-selects select')
+          );
+
+          if (!selectedInputs.length) return null;
+
+          const selectedOptionValues = selectedInputs.map(input => {
+            if (input.tagName === 'SELECT') {
+              return input.value;
+            }
+            return input.value || input.getAttribute('data-value');
+          }).filter(Boolean);
+
+          return variants.find(variant => {
+            return variant.options.every((optValue, index) => {
+              return String(selectedOptionValues[index]).trim().toLowerCase() === String(optValue).trim().toLowerCase();
+            });
+          });
+        } catch (e) {
+          return null;
+        }
+      }
+
       getSelectedVariant(productInfoNode) {
         const selectedVariant = productInfoNode.querySelector('variant-selects [data-selected-variant]')?.innerHTML;
         return !!selectedVariant ? JSON.parse(selectedVariant) : null;
@@ -154,6 +184,11 @@ if (!customElements.get('product-info')) {
         const params = [];
 
         !shouldFetchFullPage && params.push(`section_id=${this.sectionId}`);
+
+        const matchedVariant = this.getMatchingVariantFromDOM();
+        if (matchedVariant && matchedVariant.id) {
+          params.push(`variant=${matchedVariant.id}`);
+        }
 
         if (optionValues.length) {
           params.push(`option_values=${optionValues.join(',')}`);
@@ -217,12 +252,9 @@ if (!customElements.get('product-info')) {
             },
           });
 
-          // Filter media gallery when variant updates
-          const packValue = this.getPackOptionValue();
-          if (packValue) {
-            this.filterMediaByVariantTag(packValue);
-          } else {
-            this.showAllMedia();
+          // Filter media gallery when variant updates based on Color
+          if (window.ProductGalleryColorFilter) {
+            window.ProductGalleryColorFilter.update(null, variant);
           }
         };
       }

@@ -51,6 +51,31 @@
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
+  <script type="application/json" data-product-media-map>
+    [
+      {%- for media in product.media -%}
+        {
+          "id": {{ media.id }},
+          "alt": {{ media.alt | json }},
+          "variant_ids": {{ media.variants | map: 'id' | json }},
+          "variant_colors": [
+            {%- for variant in media.variants -%}
+              {%- assign color_val = null -%}
+              {%- for option in product.options_with_values -%}
+                {%- assign opt_name = option.name | downcase -%}
+                {%- if opt_name == 'color' or opt_name == 'colour' or opt_name == 'farbe' or opt_name == 'couleur' -%}
+                  {%- assign color_val = variant.options[forloop.index0] -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if color_val != null -%}
+                {{ color_val | json }}{%- unless forloop.last -%},{%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          ]
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
   <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
@@ -67,6 +92,7 @@
           id="Slide-{{ section.id }}-{{ featured_media.id }}"
           class="product__media-item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if featured_media.media_type != 'image' %} product__media-item--full{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
           data-media-id="{{ section.id }}-{{ featured_media.id }}"
+          data-shopify-media-id="{{ featured_media.id }}"
           data-variant-tag="{{ featured_media.alt | strip | escape }}"
         >
           {%- assign media_position = 1 -%}
@@ -100,6 +126,7 @@
             id="Slide-{{ section.id }}-{{ media.id }}"
             class="product__media-item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if product.selected_or_first_available_variant.featured_media == nil and forloop.index == 1 %} is-active{% endif %}{% if media.media_type != 'image' %} product__media-item--full{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
             data-media-id="{{ section.id }}-{{ media.id }}"
+            data-shopify-media-id="{{ media.id }}"
             data-variant-tag="{{ media.alt | strip | escape }}"
           >
             {%- liquid
@@ -227,6 +254,7 @@
             id="Slide-Thumbnails-{{ section.id }}-0"
             class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains featured_media.src %} thumbnail-list_item--variant{% endif %}"
             data-target="{{ section.id }}-{{ featured_media.id }}"
+            data-shopify-media-id="{{ featured_media.id }}"
             data-media-position="{{ media_index }}"
           >
             {%- capture thumbnail_id -%}
@@ -272,6 +300,7 @@
               id="Slide-Thumbnails-{{ section.id }}-{{ forloop.index }}"
               class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains media.src %} thumbnail-list_item--variant{% endif %}"
               data-target="{{ section.id }}-{{ media.id }}"
+              data-shopify-media-id="{{ media.id }}"
               data-media-position="{{ media_index }}"
             >
               {%- if media.media_type == 'model' -%}
