@@ -18,6 +18,7 @@
   {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
+<div class="utility-bar-wrapper">
 <div
   class="utility-bar color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator and section.blocks.size > 0 %} utility-bar--bottom-border{% elsif section.settings.show_line_separator and section.settings.show_social and social_icons%} utility-bar--bottom-border-social-only{% endif %}{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header-localization{% endif %}"
 >
@@ -126,10 +127,16 @@
     </div>
   </div>
 </div>
+</div>
 
 
 
 {% style %}
+.utility-bar-wrapper {
+  background-color: #ffffff;
+  padding-top: constant(safe-area-inset-top, 0px);
+  padding-top: env(safe-area-inset-top, 0px);
+}
 .announcement-marquee {
     width: 100%;
     overflow: hidden;
