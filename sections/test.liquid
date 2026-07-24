@@ -1,0 +1,459 @@
+<style>
+  /* Force full 100% width container for Our Story page */
+  .page-width--narrow {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .inkitch-story-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1f1f1f;
+    line-height: 1.8;
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+
+  .inkitch-story-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero Section */
+  .inkitch-story-hero {
+    text-align: center;
+    padding: 60px 0 40px 0;
+  }
+
+  .inkitch-story-title {
+    font-size: 52px;
+    font-weight: 800;
+    color: #111111;
+    letter-spacing: -0.5px;
+    margin: 0 0 12px 0;
+    line-height: 1.15;
+  }
+
+  .inkitch-story-subtitle {
+    font-size: 20px;
+    color: #666666;
+    font-weight: 500;
+    margin: 0 0 40px 0;
+  }
+
+  .inkitch-hero-banner-wrapper {
+    max-width: 1240px;
+    margin: 0 auto 80px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .inkitch-hero-banner-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+  }
+
+  .inkitch-hero-banner-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Alternating Feature Sections */
+  .inkitch-story-section {
+    padding: 90px 0;
+    transition: background-color 0.3s ease;
+  }
+
+  .inkitch-story-section.bg-light {
+    background-color: #faf8f5;
+  }
+
+  .inkitch-story-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 70px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .inkitch-story-grid.reverse {
+    flex-direction: row-reverse;
+  }
+
+  .inkitch-story-image-col {
+    flex: 1;
+    max-width: 540px;
+  }
+
+  .inkitch-story-image-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.07);
+    background-color: #ffffff;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .inkitch-story-image-card:hover {
+    transform: scale(1.025);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  }
+
+  .inkitch-story-image-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .inkitch-story-content-col {
+    flex: 1;
+    max-width: 540px;
+  }
+
+  .inkitch-story-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e30613;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .inkitch-story-heading {
+    font-size: 38px;
+    font-weight: 700;
+    color: #1f1f1f;
+    line-height: 1.25;
+    margin: 0 0 24px 0;
+  }
+
+  .inkitch-story-text p {
+    font-size: 17px;
+    line-height: 1.85;
+    color: #555555;
+    margin: 0 0 20px 0;
+  }
+
+  .inkitch-story-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Testimonial Quote Section */
+  .inkitch-quote-section {
+    padding: 100px 0;
+    background-color: #ffffff;
+  }
+
+  .inkitch-quote-card {
+    max-width: 960px;
+    margin: 0 auto;
+    background-color: #faf8f5;
+    border-radius: 24px;
+    padding: 60px 50px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .inkitch-quote-mark {
+    font-size: 64px;
+    line-height: 1;
+    color: #e30613;
+    font-family: Georgia, serif;
+    margin-bottom: -10px;
+    opacity: 0.85;
+  }
+
+  .inkitch-quote-text {
+    font-size: 26px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: #1f1f1f;
+    margin: 0 0 20px 0;
+  }
+
+  .inkitch-quote-text span.highlight {
+    color: #e30613;
+  }
+
+  /* Final CTA Section */
+  .inkitch-cta-section {
+    padding: 100px 24px 120px 24px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .inkitch-cta-heading {
+    font-size: 38px;
+    font-weight: 800;
+    color: #111111;
+    margin: 0 0 20px 0;
+  }
+
+  .inkitch-cta-text {
+    font-size: 18px;
+    line-height: 1.85;
+    color: #555555;
+    margin: 0;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 990px) {
+    .inkitch-story-title {
+      font-size: 40px;
+    }
+    .inkitch-story-grid {
+      gap: 40px;
+    }
+    .inkitch-story-heading {
+      font-size: 32px;
+    }
+    .inkitch-quote-text {
+      font-size: 22px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .inkitch-story-hero {
+      padding: 30px 0 20px 0;
+    }
+    .inkitch-story-title {
+      font-size: 32px;
+    }
+    .inkitch-story-subtitle {
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+    .inkitch-hero-banner-wrapper {
+      border-radius: 14px;
+      margin-bottom: 50px;
+    }
+    .inkitch-story-section {
+      padding: 50px 0;
+    }
+    .inkitch-story-grid,
+    .inkitch-story-grid.reverse {
+      flex-direction: column;
+      gap: 30px;
+    }
+    .inkitch-story-image-col,
+    .inkitch-story-content-col {
+      max-width: 100%;
+      width: 100%;
+    }
+    .inkitch-story-image-card {
+      border-radius: 14px;
+    }
+    .inkitch-story-heading {
+      font-size: 26px;
+      margin-bottom: 16px;
+    }
+    .inkitch-story-text p {
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .inkitch-quote-card {
+      padding: 40px 24px;
+      border-radius: 18px;
+    }
+    .inkitch-quote-text {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .inkitch-cta-section {
+      padding: 60px 20px 80px 20px;
+    }
+    .inkitch-cta-heading {
+      font-size: 28px;
+    }
+    .inkitch-cta-text {
+      font-size: 15px;
+    }
+  }
+</style>
+
+<div class="inkitch-story-wrapper">
+  <!-- Hero Section -->
+  <div class="inkitch-story-container">
+    <div class="inkitch-story-hero">
+      <h1 class="inkitch-story-title">The Story Behind inKitch</h1>
+      <p class="inkitch-story-subtitle">Built Better For Everyday Living.</p>
+    </div>
+
+    <div class="inkitch-hero-banner-wrapper">
+      <img
+        src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image.jpg?v=1784915589"
+        alt="The Story Behind inKitch Hero Banner"
+        loading="eager"
+      >
+    </div>
+  </div>
+
+  <!-- Section 1: Image Left | Content Right (White BG) -->
+  <section class="inkitch-story-section">
+    <div class="inkitch-story-container">
+      <div class="inkitch-story-grid">
+        <div class="inkitch-story-image-col">
+          <div class="inkitch-story-image-card">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image_1.jpg?v=1784915589"
+              alt="Our Beginnings"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <div class="inkitch-story-content-col">
+          <span class="inkitch-story-label">OUR BEGINNINGS</span>
+          <h2 class="inkitch-story-heading">It Began With a Simple Belief</h2>
+          <div class="inkitch-story-text">
+            <p>
+              Our journey didn't begin with a perfect business plan. It began with a simple belief that everyday home
+              essentials deserve to be better.
+            </p>
+            <p>
+              We come from a family with over 25 years in the steel and export business through Falcon International, a
+              Government Recognized Star Export House. Growing up around it, we understood the value of quality
+              materials, thoughtful craftsmanship and products built to last.
+            </p>
+            <p>
+              As global markets embraced durable, long-lasting essentials, we noticed a growing gap in India where many
+              everyday products were becoming increasingly disposable and short-lived. That never sat right with us.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Content Left | Image Right (Light Beige BG) -->
+  <section class="inkitch-story-section bg-light">
+    <div class="inkitch-story-container">
+      <div class="inkitch-story-grid reverse">
+        <div class="inkitch-story-image-col">
+          <div class="inkitch-story-image-card">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image_2.jpg?v=1784915589"
+              alt="Designed For Real Everyday Living"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <div class="inkitch-story-content-col">
+          <span class="inkitch-story-label">THE VISION</span>
+          <h2 class="inkitch-story-heading">World-Class Quality For Every Home</h2>
+          <div class="inkitch-story-text">
+            <p>
+              The products people use every single day — lunch boxes, storage containers, kitchen tools and home
+              essentials — should offer more than convenience.
+            </p>
+            <p>
+              They should be thoughtfully designed, made with premium materials and built to perform beautifully for
+              years.
+            </p>
+            <p>
+              That belief became inKitch. We wanted to bring the same world-class manufacturing standards that India
+              has proudly exported for decades into every modern Indian home.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Image Left | Content Right (White BG) -->
+  <section class="inkitch-story-section">
+    <div class="inkitch-story-container">
+      <div class="inkitch-story-grid">
+        <div class="inkitch-story-image-col">
+          <div class="inkitch-story-image-card">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image_3.jpg?v=1784915588"
+              alt="Everyday Home Essentials"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <div class="inkitch-story-content-col">
+          <span class="inkitch-story-label">EVERYDAY LIVING</span>
+          <h2 class="inkitch-story-heading">Designed For Real Everyday Living</h2>
+          <div class="inkitch-story-text">
+            <p>
+              Today every product is designed around real everyday living. Whether preparing meals, storing food or
+              organising your kitchen, every detail is created to simplify daily life while delivering reliability you
+              can trust.
+            </p>
+            <p>
+              Every curve, every finish and every material has a purpose. Because everyday products deserve
+              extraordinary attention.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Content Left | Image Right (Light Beige BG) -->
+  <section class="inkitch-story-section bg-light">
+    <div class="inkitch-story-container">
+      <div class="inkitch-story-grid reverse">
+        <div class="inkitch-story-image-col">
+          <div class="inkitch-story-image-card">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image_4.jpg?v=1784915625"
+              alt="The inKitch Philosophy"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <div class="inkitch-story-content-col">
+          <span class="inkitch-story-label">OUR PHILOSOPHY</span>
+          <h2 class="inkitch-story-heading">Simple Principles, Lasting Value</h2>
+          <div class="inkitch-story-text">
+            <p>
+              Our philosophy is simple. Use better materials. Design with intention. Create products that solve
+              everyday problems. Build quality that lasts.
+            </p>
+            <p>
+              Instead of chasing trends or unnecessary features, we focus on making products that genuinely improve
+              daily experiences.
+            </p>
+            <p>We believe trust is earned through consistency, quality and long-term value.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Quote Section -->
+  <section class="inkitch-quote-section">
+    <div class="inkitch-story-container">
+      <div class="inkitch-quote-card">
+        <div class="inkitch-quote-mark">❝</div>
+        <p class="inkitch-quote-text">
+          "inKitch is a brand of <span class="highlight">BranBilly Lifestyle LLP</span>, backed by Falcon International —
+          a Government Recognized Star Export House with over <span class="highlight">25+ years</span> of global
+          manufacturing expertise."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="inkitch-cta-section">
+    <h2 class="inkitch-cta-heading">Built Better For Everyday Living.</h2>
+    <p class="inkitch-cta-text">
+      Every product we create reflects our commitment to quality, thoughtful design and long-term durability. Our
+      mission is simple — to make everyday essentials that people can rely on, every single day.
+    </p>
+  </section>
+</div>

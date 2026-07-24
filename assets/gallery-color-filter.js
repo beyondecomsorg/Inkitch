@@ -1,39 +1,35 @@
 /**
  * Product Gallery Color Filter & Variant Sync
- * Synchronizes product gallery images with selected Color variant using:
- * 1. Shopify product.media variants array (data-product-media-map)
- * 2. Shopify native variant.featured_media.id / variant.featured_image.id
- * 3. Color-Number pattern Alt text matching (e.g., "Green-1", "Green 2", "green_3", "Green")
- *    - Matching color images appear FIRST in numeric order (Green-1 before Green-2)
- *    - Shared / untagged / general description images appear SECOND in product media order
- *    - Other color images (and their thumbnails) are hidden instantly
- * 4. Ignoring Pack / Size / non-color option changes
+ * Synchronizes product gallery images with selected Color variant using Alt Text matching:
+ * 1. Reads selected variant color name (e.g. Green, Gray, Black)
+ * 2. Compares selected color case-insensitively with each product media's Alt Text
+ * 3. Displays matching images (e.g. Alt Text: "Green", "Green-1", "Green 2")
+ * 4. Hides all media matching other variant colors (e.g. Gray, Black when Green is selected)
+ * 5. Re-indexes gallery, updates thumbnails, slider counter, and resets active media
+ * 6. Gracefully falls back to all images if no color match is found
  */
 
 (function () {
   'use strict';
 
-  // Inject CSS transition styles
+  // Inject CSS styles for hiding/showing filtered media
   const styleId = 'gallery-color-filter-styles';
   if (!document.getElementById(styleId)) {
     const styleTag = document.createElement('style');
     styleTag.id = styleId;
     styleTag.innerHTML = `
-      .g-color-filter-transition {
-        transition: opacity 200ms ease-in-out !important;
-      }
       .g-color-filter-hidden {
+        display: none !important;
         opacity: 0 !important;
         visibility: hidden !important;
-        position: absolute !important;
         pointer-events: none !important;
+        position: absolute !important;
         width: 0 !important;
         height: 0 !important;
         overflow: hidden !important;
         margin: 0 !important;
         padding: 0 !important;
         border: 0 !important;
-        display: none !important;
       }
       .g-color-filter-visible {
         opacity: 1 !important;
@@ -45,18 +41,21 @@
     document.head.appendChild(styleTag);
   }
 
-  // Regex to identify Color option names (ignoring Pack, Size, Quantity, etc.)
-  const COLOR_OPTION_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor)$/i;
+  const COLOR_NAME_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style)$/i;
 
   function normalizeString(str) {
     if (!str) return '';
     return String(str).trim().toLowerCase();
   }
 
+  function escapeRegexp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   function getMediaAltText(element) {
     if (!element) return '';
 
-    // 1. Check data-variant-tag / data-alt / data-media-alt
+    // 1. Check attributes on slide element
     let alt = element.getAttribute('data-variant-tag') ||
               element.getAttribute('data-alt') ||
               element.getAttribute('data-media-alt');
@@ -64,14 +63,14 @@
       return alt.trim();
     }
 
-    // 2. Check inner button data-variant-tag (Dawn thumbnails)
+    // 2. Check inner button data-variant-tag
     const button = element.querySelector('button[data-variant-tag]');
     if (button) {
       alt = button.getAttribute('data-variant-tag');
       if (alt !== null && alt !== undefined && alt.trim() !== '') return alt.trim();
     }
 
-    // 3. Check inner img alt
+    // 3. Check inner img alt attribute
     const img = element.querySelector('img');
     if (img) {
       alt = img.getAttribute('alt');
@@ -81,29 +80,63 @@
     return '';
   }
 
-  function parseAltTag(altText, availableColors = []) {
-    if (!altText || !altText.trim()) {
-      return { isShared: true, color: null, number: Infinity };
+  function matchMediaToColor(altText, selectedColor, availableColors) {
+    if (!selectedColor) {
+      return { isMatch: true, isOtherColor: false, isShared: true, number: 0 };
     }
 
-    const cleanAlt = altText.trim();
-    const match = cleanAlt.match(/^(.+?)[\s_-]*(\d+)?$/i);
+    const normSelected = selectedColor.trim().toLowerCase();
+    const normAlt = (altText || '').trim().toLowerCase();
 
-    if (match) {
-      const extractedColor = match[1].trim().toLowerCase();
-      const extractedNumber = match[2] ? parseInt(match[2], 10) : 1;
+    if (!normAlt) {
+      return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
+    }
 
-      if (availableColors.length > 0) {
-        const matchedColor = availableColors.find(c => c.toLowerCase() === extractedColor);
-        if (matchedColor) {
-          return { isShared: false, color: matchedColor.toLowerCase(), number: extractedNumber };
+    function clean(str) {
+      return str.replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    const cleanAlt = clean(normAlt);
+    const cleanSelected = clean(normSelected);
+
+    // Regex check for exact word match or pattern match (e.g. Green, Green-1, Green 2)
+    const selectedRegex = new RegExp('(?:^|[\\s_\\-\\(])' + escapeRegexp(normSelected) + '(?:[\\s_\\-\\)]|$|\\d+)', 'i');
+    const isSelectedMatch = normAlt === normSelected ||
+                            selectedRegex.test(normAlt) ||
+                            cleanAlt.split(' ').includes(cleanSelected) ||
+                            cleanAlt.startsWith(cleanSelected);
+
+    // Check if Alt Text matches ANY OTHER available color variant
+    let isOtherColorMatch = false;
+    if (availableColors && availableColors.length > 0) {
+      for (const color of availableColors) {
+        const normOther = color.trim().toLowerCase();
+        if (normOther !== normSelected) {
+          const cleanOther = clean(normOther);
+          const otherRegex = new RegExp('(?:^|[\\s_\\-\\(])' + escapeRegexp(normOther) + '(?:[\\s_\\-\\)]|$|\\d+)', 'i');
+          if (normAlt === normOther ||
+              otherRegex.test(normAlt) ||
+              cleanAlt.split(' ').includes(cleanOther) ||
+              cleanAlt.startsWith(cleanOther)) {
+            isOtherColorMatch = true;
+            break;
+          }
         }
-      } else {
-        return { isShared: false, color: extractedColor, number: extractedNumber };
       }
     }
 
-    return { isShared: true, color: null, number: Infinity };
+    const numMatch = normAlt.match(/\d+/);
+    const number = numMatch ? parseInt(numMatch[0], 10) : 1;
+
+    if (isSelectedMatch) {
+      return { isMatch: true, isOtherColor: false, isShared: false, number: number };
+    }
+
+    if (isOtherColorMatch) {
+      return { isMatch: false, isOtherColor: true, isShared: false, number: Infinity };
+    }
+
+    return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
   }
 
   class GalleryColorFilterInstance {
@@ -116,14 +149,12 @@
     }
 
     initCache() {
-      // Find main media list & items
       const mainList = this.container.querySelector('.product__media-list, .product-single__photos, .product__gallery, .product-slideshow, ul.slider') ||
                        this.container;
       
       const mainItems = Array.from(mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide'))
         .filter((item, index, self) => self.indexOf(item) === index);
 
-      // Find thumbnail list & items
       const thumbnailContainer = this.container.querySelector('.thumbnail-list, .product__thumb-item, .product-gallery__thumbnails, [id^="GalleryThumbnails"]') ||
                                  document.querySelector('.thumbnail-list, [id^="GalleryThumbnails"]');
       let thumbnailItems = [];
@@ -134,13 +165,12 @@
       this.mainList = mainList;
       this.thumbnailContainer = thumbnailContainer;
 
-      // Cache items with original relative index and explicit data-shopify-media-id
       this.mediaCache = mainItems.map((element, index) => {
         const altText = getMediaAltText(element);
         const shopifyMediaId = element.getAttribute('data-shopify-media-id');
         const mediaId = element.getAttribute('data-media-id') || element.getAttribute('id');
+        const cleanMediaId = mediaId ? mediaId.replace('Slide-', '').replace('MediaGallery-', '') : '';
 
-        // Match thumbnail by data-shopify-media-id or data-target
         let thumbnailElement = null;
         if (thumbnailItems.length > 0) {
           thumbnailElement = thumbnailItems.find(thumb => {
@@ -148,12 +178,13 @@
             if (shopifyMediaId && thumbShopifyId && shopifyMediaId === thumbShopifyId) {
               return true;
             }
-            const target = thumb.getAttribute('data-target') || thumb.getAttribute('data-media-id');
-            const buttonTarget = thumb.querySelector('button')?.getAttribute('data-target');
-            const cleanMediaId = mediaId ? mediaId.replace('Slide-', '').replace('MediaGallery-', '') : '';
-            return (target && cleanMediaId && target.includes(cleanMediaId)) ||
-                   (buttonTarget && cleanMediaId && buttonTarget.includes(cleanMediaId));
-          }) || thumbnailItems[index];
+            const target = thumb.getAttribute('data-target') || thumb.getAttribute('data-media-id') || '';
+            const buttonTarget = thumb.querySelector('button')?.getAttribute('data-target') || '';
+            return (cleanMediaId && (target.includes(cleanMediaId) || buttonTarget.includes(cleanMediaId)));
+          });
+          if (!thumbnailElement && index < thumbnailItems.length) {
+            thumbnailElement = thumbnailItems[index];
+          }
         }
 
         return {
@@ -188,20 +219,38 @@
     }
 
     getAllProductColors() {
-      const colors = [];
-      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form');
+      const colors = new Set();
+      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
+      
       for (const picker of pickers) {
-        const inputs = picker.querySelectorAll('input[type="radio"], select option, button[data-value]');
-        inputs.forEach(input => {
-          const val = input.value || input.getAttribute('data-value') || input.textContent.trim();
-          const parent = input.closest('fieldset, .product-form__input, .selector-wrapper, div');
-          const name = parent?.getAttribute('name') || parent?.getAttribute('data-option-name') || parent?.querySelector('legend, label')?.textContent || '';
-          if (COLOR_OPTION_REGEX.test(name.split(':')[0].trim()) && val && !colors.includes(val)) {
-            colors.push(val);
+        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
+        for (const fieldset of fieldsets) {
+          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
+          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
+          const optionName = (nameAttr || legendText).split(':')[0].trim();
+
+          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+            const inputs = fieldset.querySelectorAll('input[type="radio"], button[data-value], .swatch');
+            inputs.forEach(input => {
+              const val = input.value || input.getAttribute('data-value') || input.getAttribute('value') || input.textContent.trim();
+              if (val && val.length < 30) colors.add(val.trim());
+            });
           }
-        });
+        }
+
+        const selects = picker.querySelectorAll('select');
+        for (const select of selects) {
+          const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
+          const optionName = labelText.split(':')[0].trim();
+          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+            Array.from(select.options).forEach(opt => {
+              if (opt.value) colors.add(opt.value.trim());
+            });
+          }
+        }
       }
-      return colors;
+
+      return Array.from(colors);
     }
 
     detectSelectedColor() {
@@ -210,16 +259,24 @@
       for (const picker of pickers) {
         const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
         for (const fieldset of fieldsets) {
-          const nameOrLegend = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || fieldset.querySelector('legend, label')?.textContent || '';
-          const cleanedName = nameOrLegend.split(':')[0].trim();
-          if (COLOR_OPTION_REGEX.test(cleanedName)) {
+          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
+          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
+          const optionName = (nameAttr || legendText).split(':')[0].trim();
+
+          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
             const checkedRadio = fieldset.querySelector('input[type="radio"]:checked');
             if (checkedRadio) {
-              return checkedRadio.value || checkedRadio.getAttribute('data-value');
+              const val = checkedRadio.value || checkedRadio.getAttribute('data-value');
+              if (val) return val.trim();
             }
-            const activeSwatch = fieldset.querySelector('button.is-active, button[aria-checked="true"], .active');
+            const activeSwatch = fieldset.querySelector('button.is-active, button[aria-checked="true"], button.active, .swatch-input__input:checked');
             if (activeSwatch) {
-              return activeSwatch.getAttribute('data-value') || activeSwatch.getAttribute('value') || activeSwatch.textContent.trim();
+              const val = activeSwatch.getAttribute('data-value') || activeSwatch.getAttribute('value') || activeSwatch.value || activeSwatch.textContent.trim();
+              if (val) return val.trim();
+            }
+            const selectedSpan = fieldset.querySelector('[data-selected-value]');
+            if (selectedSpan && selectedSpan.textContent.trim()) {
+              return selectedSpan.textContent.trim();
             }
           }
         }
@@ -227,16 +284,16 @@
         const selects = picker.querySelectorAll('select');
         for (const select of selects) {
           const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
-          const cleanedLabel = labelText.split(':')[0].trim();
-          if (COLOR_OPTION_REGEX.test(cleanedLabel)) {
-            return select.value;
+          const optionName = labelText.split(':')[0].trim();
+          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+            if (select.value) return select.value.trim();
           }
         }
       }
 
       if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
         const options = window.ShopifyAnalytics.meta.product?.options || [];
-        const colorIndex = options.findIndex(opt => COLOR_OPTION_REGEX.test(opt));
+        const colorIndex = options.findIndex(opt => COLOR_NAME_REGEX.test(opt) || /color/i.test(opt));
         if (colorIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex]) {
           return window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex];
         }
@@ -258,13 +315,12 @@
       const mediaMap = this.getProductMediaMap();
       const availableColors = this.getAllProductColors();
 
-      const commonList = [];
       const matchList = [];
+      const commonList = [];
       const otherList = [];
 
       this.mediaCache.forEach(item => {
         const isFeaturedMedia = featuredMediaId && item.mediaId && item.mediaId.includes(String(featuredMediaId));
-        
         const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
         const mediaMeta = mediaMap[shopifyId] || {};
 
@@ -274,44 +330,31 @@
         const belongsToOtherColor = hasVariantColors && !belongsToSelectedColor;
 
         const altText = item.altText || mediaMeta.alt || '';
-        const parsed = parseAltTag(altText, availableColors);
+        const matchResult = matchMediaToColor(altText, selectedColor, availableColors);
 
-        if (isFeaturedMedia || belongsToSelectedColor) {
-          matchList.push({ ...item, number: -1 }); // Priority #-1
-        } else if (belongsToOtherColor) {
-          otherList.push(item); // Hide image & thumbnail if associated with another variant color in Admin
-        } else if (!parsed.isShared && parsed.color === normSelected) {
-          matchList.push({ ...item, number: parsed.number }); // Alt text tagged (e.g. Green-1)
-        } else if (parsed.isShared) {
-          commonList.push(item); // Shared untagged image
+        if (belongsToSelectedColor || matchResult.isMatch) {
+          matchList.push({ ...item, number: matchResult.number });
+        } else if (belongsToOtherColor || matchResult.isOtherColor) {
+          otherList.push(item);
+        } else if (isFeaturedMedia && !matchResult.isOtherColor) {
+          matchList.push({ ...item, number: -1 });
+        } else if (matchResult.isShared) {
+          commonList.push(item);
         } else {
           otherList.push(item);
         }
       });
 
-      // Log warning if color selected but no matching image found
-      if (selectedColor && matchList.length === 0 && !featuredMediaId) {
-        console.warn(
-          `[Variant Gallery Sync Warning] No image match found for Color "${selectedColor}". ` +
-          `Please assign a Media image directly to this variant in Shopify Admin or tag with "${selectedColor}-1".`
-        );
-      }
-
-      // Sort variant's own images by numeric index (Green-1 before Green-2)
       matchList.sort((a, b) => (a.number || 0) - (b.number || 0) || a.originalIndex - b.originalIndex);
-      // Sort shared images by original media list order
       commonList.sort((a, b) => a.originalIndex - b.originalIndex);
 
-      // Combined order: [Selected Variant Tagged Images in Number Order] + [Shared Images in Product Order]
       let visibleItems = [];
-      if (matchList.length > 0 && commonList.length > 0) {
-        visibleItems = [...matchList, ...commonList];
-      } else if (matchList.length > 0) {
+      if (matchList.length > 0) {
         visibleItems = [...matchList];
       } else if (commonList.length > 0) {
         visibleItems = [...commonList];
       } else {
-        visibleItems = [...this.mediaCache];
+        visibleItems = [...this.mediaCache]; // Graceful fallback if no matching images found
       }
 
       const visibleSet = new Set(visibleItems.map(i => i.element));
@@ -322,8 +365,6 @@
 
         [item.element, item.thumbnailElement].forEach(el => {
           if (!el) return;
-
-          el.classList.add('g-color-filter-transition');
 
           if (isVisible) {
             el.classList.remove('g-color-filter-hidden', 'hidden');
@@ -339,7 +380,7 @@
         });
       });
 
-      // Re-append nodes in exact order: Variant Tagged FIRST (in numeric order), then Shared
+      // Re-append nodes in exact order: Selected Variant Tagged Images FIRST (in number order), then Shared
       visibleItems.forEach(item => {
         if (item.element && this.mainList) {
           this.mainList.appendChild(item.element);
@@ -353,24 +394,43 @@
       // Update active slide and slider pagination/counters
       if (visibleItems.length > 0) {
         const firstItem = visibleItems[0];
+        const mediaId = firstItem.mediaId || firstItem.element.getAttribute('data-media-id');
         
         if (typeof this.container.setActiveMedia === 'function') {
-          const mediaId = firstItem.element.getAttribute('data-media-id');
           if (mediaId) {
             this.container.setActiveMedia(mediaId, false);
           }
         } else {
           this.mediaCache.forEach(i => {
             if (i.element) i.element.classList.remove('is-active', 'active');
-            if (i.thumbnailElement) i.thumbnailElement.classList.remove('is-active', 'active');
+            if (i.thumbnailElement) {
+              i.thumbnailElement.classList.remove('is-active', 'active');
+              i.thumbnailElement.querySelector('button')?.removeAttribute('aria-current');
+            }
           });
           if (firstItem.element) firstItem.element.classList.add('is-active');
-          if (firstItem.thumbnailElement) firstItem.thumbnailElement.classList.add('is-active');
+          if (firstItem.thumbnailElement) {
+            firstItem.thumbnailElement.classList.add('is-active');
+            firstItem.thumbnailElement.querySelector('button')?.setAttribute('aria-current', 'true');
+          }
+        }
+
+        if (this.mainList) {
+          this.mainList.scrollTo({ left: 0 });
+        }
+        if (this.thumbnailContainer) {
+          const thumbList = this.thumbnailContainer.querySelector('ul') || this.thumbnailContainer;
+          thumbList.scrollTo({ left: 0 });
         }
 
         const counterTotal = this.container.querySelector('.slider-counter--total');
         if (counterTotal) {
           counterTotal.textContent = visibleItems.length;
+        }
+
+        const counterCurrent = this.container.querySelector('.slider-counter--current');
+        if (counterCurrent) {
+          counterCurrent.textContent = '1';
         }
 
         if (this.container.elements?.viewer?.resetPages) {
@@ -409,12 +469,26 @@
   }
 
   function attachEventListeners() {
+    // PubSub events in Dawn theme
+    if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+      if (PUB_SUB_EVENTS.optionValueSelectionChange) {
+        subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, () => {
+          setTimeout(() => updateAllGalleries(), 0);
+        });
+      }
+      if (PUB_SUB_EVENTS.variantChange) {
+        subscribe(PUB_SUB_EVENTS.variantChange, (e) => {
+          updateAllGalleries(null, e.data?.variant);
+        });
+      }
+    }
+
     document.addEventListener('variant:change', (e) => {
       const variant = e.detail?.variant;
       if (variant) {
         const product = e.detail?.product || window.ShopifyAnalytics?.meta?.product;
         if (product?.options) {
-          const colorIdx = product.options.findIndex(opt => COLOR_OPTION_REGEX.test(opt));
+          const colorIdx = product.options.findIndex(opt => COLOR_NAME_REGEX.test(opt) || /color/i.test(opt));
           const colorVal = colorIdx !== -1 ? variant.options?.[colorIdx] : null;
           updateAllGalleries(colorVal, variant);
           return;
@@ -427,6 +501,7 @@
       const variant = e.detail?.variant;
       updateAllGalleries(null, variant);
     });
+
     document.addEventListener('option:change', () => updateAllGalleries());
 
     document.addEventListener('change', (e) => {
@@ -440,25 +515,39 @@
     });
 
     document.addEventListener('click', (e) => {
-      const button = e.target.closest('button, label, .swatch');
+      const button = e.target.closest('button, label, .swatch, input');
       if (button) {
         const picker = button.closest('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, .product-form');
         if (picker) {
           setTimeout(() => updateAllGalleries(), 10);
+          setTimeout(() => updateAllGalleries(), 100);
         }
       }
     });
+
+    const selectedValueSpans = document.querySelectorAll('[data-selected-value], legend');
+    selectedValueSpans.forEach(span => {
+      const observer = new MutationObserver(() => {
+        updateAllGalleries();
+      });
+      observer.observe(span, { childList: true, characterData: true, subtree: true });
+    });
+  }
+
+  function runInitialFilter() {
+    initGalleries();
+    attachEventListeners();
+    setTimeout(() => updateAllGalleries(), 20);
+    setTimeout(() => updateAllGalleries(), 150);
+    setTimeout(() => updateAllGalleries(), 400);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initGalleries();
-      attachEventListeners();
-    });
+    document.addEventListener('DOMContentLoaded', runInitialFilter);
   } else {
-    initGalleries();
-    attachEventListeners();
+    runInitialFilter();
   }
+  window.addEventListener('load', () => updateAllGalleries());
 
   window.ProductGalleryColorFilter = {
     init: initGalleries,

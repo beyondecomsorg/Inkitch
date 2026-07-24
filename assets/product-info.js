@@ -34,6 +34,12 @@ if (!customElements.get('product-info')) {
             window.ProductGalleryColorFilter.update();
           }
         }, 0);
+
+        subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+          if (event.data?.variant) {
+            this.updateVariantDescription(event.data.variant);
+          }
+        });
       }
 
       addPreProcessCallback(callback) {
@@ -244,6 +250,8 @@ if (!customElements.get('product-info')) {
             window.variantStrings.soldOut
           );
 
+          this.updateVariantDescription(variant);
+
           publish(PUB_SUB_EVENTS.variantChange, {
             data: {
               sectionId: this.sectionId,
@@ -257,6 +265,21 @@ if (!customElements.get('product-info')) {
             window.ProductGalleryColorFilter.update(null, variant);
           }
         };
+      }
+
+      updateVariantDescription(variant) {
+        if (!variant || !variant.id) return;
+        const jsonScript = this.querySelector(`script[id^="VariantDescriptions-"]`) || document.querySelector(`script[id^="VariantDescriptions-"]`);
+        if (!jsonScript) return;
+        try {
+          const descriptionsMap = JSON.parse(jsonScript.textContent);
+          const descContainer = this.querySelector(`[id^="ProductDescription-"]`) || document.querySelector(`[id^="ProductDescription-"]`);
+          if (descContainer && descriptionsMap[variant.id] !== undefined) {
+            descContainer.innerHTML = descriptionsMap[variant.id];
+          }
+        } catch (e) {
+          console.error('Error updating variant product description:', e);
+        }
       }
 
       updateVariantInputs(variantId) {

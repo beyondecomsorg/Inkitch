@@ -675,7 +675,17 @@
                   {%- endif -%}
                 </p>
               {%- when 'description' -%}
-                {%- if product.description != blank -%}
+                {%- assign current_v = product.selected_or_first_available_variant -%}
+                {%- assign initial_v_desc = current_v.metafields.custom.variant_product_description -%}
+                {%- capture initial_description_content -%}
+                  {%- if initial_v_desc != blank -%}
+                    {{ initial_v_desc | metafield_tag }}
+                  {%- else -%}
+                    {{ product.description }}
+                  {%- endif -%}
+                {%- endcapture -%}
+
+                {%- if initial_description_content != blank or product.description != blank -%}
                   <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
                     <details id="Details-Description-{{ section.id }}">
                       <summary style="padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
@@ -688,9 +698,24 @@
                         {{- 'icon-caret.svg' | inline_asset_content -}}
                       </summary>
                       <div class="accordion__content rte" id="ProductDescription-{{ section.id }}" style="padding-top: 1rem !important; padding-bottom: 2rem !important; font-size: var(--font-size-body) !important; line-height: 1.6 !important; color: #555555 !important;">
-                        {{ product.description }}
+                        {{ initial_description_content }}
                       </div>
                     </details>
+                    <script type="application/json" id="VariantDescriptions-{{ section.id }}">
+                      {
+                        {%- for variant in product.variants -%}
+                          {%- assign v_meta = variant.metafields.custom.variant_product_description -%}
+                          {%- capture v_content -%}
+                            {%- if v_meta != blank -%}
+                              {{ v_meta | metafield_tag }}
+                            {%- else -%}
+                              {{ product.description }}
+                            {%- endif -%}
+                          {%- endcapture -%}
+                          "{{ variant.id }}": {{ v_content | json }}{%- unless forloop.last -%},{%- endunless -%}
+                        {%- endfor -%}
+                      }
+                    </script>
                   </div>
                 {%- endif -%}
               {%- when 'description_video' -%}

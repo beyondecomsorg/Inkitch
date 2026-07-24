@@ -399,12 +399,14 @@ class: 'wau-pcard__img'
 
 #wau-{{ section.id }} .wau-heading {
   font-family: var(--font-heading-family) !important;
-  font-size: 32px !important;
-  font-weight: 700 !important;
+  font-size: 38px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
   color: #fff !important;
-  margin: 0 0 10px 0 !important;
+  margin: 0 0 16px 0 !important;
   position: relative !important;
   display: inline-block !important;
+  line-height: 1.2 !important;
 }
 
 #wau-{{ section.id }} .wau-body {
@@ -416,7 +418,33 @@ class: 'wau-pcard__img'
   max-width: 480px !important;
 }
 
+#wau-{{ section.id }} .wau-body h3 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  color: #ffffff !important;
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+  opacity: 0.95;
+}
+
+#wau-{{ section.id }} .wau-body h3::before {
+  content: '"';
+}
+
+#wau-{{ section.id }} .wau-body h3::after {
+  content: '"';
+}
+
 @media (max-width: 1024px) {
+  #wau-{{ section.id }} .wau-heading {
+    font-size: 28px !important;
+    margin-bottom: 14px !important;
+  }
+  #wau-{{ section.id }} .wau-body h3 {
+    font-size: 17px !important;
+    margin-bottom: 12px !important;
+  }
   #wau-{{ section.id }} .wau-body {
     margin-left: auto !important;
     margin-right: auto !important;

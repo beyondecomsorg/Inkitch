@@ -12,13 +12,13 @@
     "main": {
       "type": "main-page",
       "custom_css": [
-        "h1 {color: #000000 !important;}",
-        ".rte {color: #000000 !important;}",
-        ".rte p,.rte li,.rte span {color: #000000 !important;}"
+        ".page-width--narrow { max-width: 100% !important; padding-left: 0 !important; padding-right: 0 !important; }",
+        "h1.main-page-title { display: none !important; }",
+        ".rte { color: #000000 !important; }"
       ],
       "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },
