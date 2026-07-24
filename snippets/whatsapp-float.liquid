@@ -132,12 +132,23 @@
     pointer-events: none;
   }
 
-  .wa-float-wrapper:hover .wa-tooltip.wa-tooltip-hidden {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-    pointer-events: auto;
-  }
+  {%- if template.name != 'product' -%}
+    .wa-float-wrapper:hover .wa-tooltip.wa-tooltip-hidden {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+  {%- else -%}
+    /* On PDP pages, do not re-show WhatsApp tooltip text on hover */
+    .template-product .wa-tooltip.wa-tooltip-hidden,
+    .wa-float-wrapper:hover .wa-tooltip.wa-tooltip-hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      display: none !important;
+    }
+  {%- endif -%}
 
   .wa-tooltip span {
     font-size: 11px;

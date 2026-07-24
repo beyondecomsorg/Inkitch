@@ -282,6 +282,112 @@
     box-shadow: 0 6px 16px rgba(246, 0, 0, 0.3) !important;
     transform: translateY(-1px) !important;
   }
+  /* Empty Cart Drawer Redesign */
+  .drawer__inner-empty {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: calc(100vh - 120px) !important;
+    padding: 2rem 1.5rem !important;
+    text-align: center !important;
+  }
+
+  .cart-drawer__warnings {
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+    padding: 1rem 0 !important;
+  }
+
+  .cart-drawer__empty-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .cart-drawer__empty-icon-wrapper {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 auto 2rem auto !important;
+    background-color: #fff5f5 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 8px 24px rgba(227, 6, 19, 0.08) !important;
+  }
+
+  .cart__empty-text {
+    font-size: 2.2rem !important;
+    font-weight: 700 !important;
+    color: #111111 !important;
+    margin: 0 0 0.8rem 0 !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+  }
+
+  .cart__empty-subtext {
+    font-size: 1.4rem !important;
+    color: #666666 !important;
+    margin: 0 0 2.4rem 0 !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+  }
+
+  .cart__empty-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #e30613 !important;
+    color: #ffffff !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    padding: 1.4rem 3rem !important;
+    border-radius: 50px !important;
+    text-decoration: none !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 6px 20px rgba(227, 6, 19, 0.25) !important;
+    margin: 0 auto 2rem auto !important;
+    width: auto !important;
+    min-width: 200px !important;
+  }
+
+  .cart__empty-button:hover {
+    background-color: #c40410 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(227, 6, 19, 0.35) !important;
+    color: #ffffff !important;
+  }
+
+  .cart__login-container {
+    margin-top: 1.5rem !important;
+    padding-top: 1.5rem !important;
+    border-top: 1px dashed #e5e5e5 !important;
+    width: 100% !important;
+  }
+
+  .cart__login-title {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    color: #222222 !important;
+    margin-bottom: 0.4rem !important;
+    text-align: center !important;
+  }
+
+  .cart__login-paragraph {
+    font-size: 1.3rem !important;
+    color: #666666 !important;
+    text-align: center !important;
+  }
+
+  .cart__login-paragraph a {
+    color: #e30613 !important;
+    font-weight: 600 !important;
+    text-decoration: underline !important;
+  }
 </style>
 
 <cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
@@ -294,40 +400,6 @@
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
-      {%- if cart == empty -%}
-        <div class="drawer__inner-empty">
-          <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
-            <div class="cart-drawer__empty-content">
-              <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
-              <button
-                class="drawer__close"
-                type="button"
-                onclick="this.closest('cart-drawer').close()"
-                aria-label="{{ 'accessibility.close' | t }}"
-              >
-                <span class="svg-wrapper">
-                  {{- 'icon-close.svg' | inline_asset_content -}}
-                </span>
-              </button>
-              <a href="{{ routes.all_products_collection_url }}" class="button">
-                {{ 'general.continue_shopping' | t }}
-              </a>
-
-              {%- if shop.customer_accounts_enabled and customer == null -%}
-                <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
-                <p class="cart__login-paragraph">
-                  {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
-                </p>
-              {%- endif -%}
-            </div>
-          </div>
-          {%- if settings.cart_drawer_collection != blank -%}
-            <div class="cart-drawer__collection">
-              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
-            </div>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
       <div class="drawer__header">
         <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
         <button
@@ -341,6 +413,42 @@
           </span>
         </button>
       </div>
+
+      {%- if cart == empty -%}
+        <div class="drawer__inner-empty">
+          <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
+            <div class="cart-drawer__empty-content">
+              <div class="cart-drawer__empty-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e30613" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </div>
+              <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
+              <p class="cart__empty-subtext">Looks like you haven't added anything to your cart yet.</p>
+              <a href="{{ routes.all_products_collection_url }}" class="cart__empty-button button">
+                {{ 'general.continue_shopping' | t }}
+              </a>
+
+              {%- if shop.customer_accounts_enabled and customer == null -%}
+                <div class="cart__login-container">
+                  <p class="cart__login-title">{{ 'sections.cart.login.title' | t }}</p>
+                  <p class="cart__login-paragraph">
+                    {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+                  </p>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+          {%- if settings.cart_drawer_collection != blank -%}
+            <div class="cart-drawer__collection">
+              <h3 class="cart-drawer__collection-title">Best Sellers</h3>
+              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
       <cart-drawer-items
         {% if cart == empty %}
           class=" is-empty"
