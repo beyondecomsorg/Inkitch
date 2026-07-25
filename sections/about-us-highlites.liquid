@@ -1,0 +1,255 @@
+{%- style -%}
+.about-us-highlites-{{ section.id }} {
+  padding-top: {{ section.settings.padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  background-color: {{ section.settings.background_color }};
+  text-align: center;
+}
+
+@media screen and (max-width: 749px) {
+  .about-us-highlites-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+}
+
+.about-us-highlites__inner-{{ section.id }} {
+  max-width: {{ section.settings.content_max_width }}px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+.about-us-highlites__subtitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 1.2rem 0;
+  display: block;
+}
+
+.about-us-highlites__heading {
+  font-size: calc(var(--font-heading-scale, 1) * {{ section.settings.heading_size_desktop }}rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 2rem 0;
+}
+
+.about-us-highlites__text {
+  font-size: {{ section.settings.text_size_desktop }}rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.about-us-highlites__text strong {
+  color: {{ section.settings.highlight_color }};
+  font-weight: 700;
+}
+
+@media screen and (max-width: 749px) {
+  .about-us-highlites__heading {
+    font-size: {{ section.settings.heading_size_mobile }}rem;
+    margin: 0 0 1.6rem 0;
+  }
+  .about-us-highlites__text {
+    font-size: {{ section.settings.text_size_mobile }}rem;
+  }
+}
+{%- endstyle -%}
+
+<div class="about-us-highlites-{{ section.id }}">
+  <div class="about-us-highlites__inner-{{ section.id }}">
+    {%- if section.settings.subtitle != blank -%}
+      <span class="about-us-highlites__subtitle" style="color: {{ section.settings.subtitle_color }};">
+        {{ section.settings.subtitle | escape }}
+      </span>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="about-us-highlites__heading" style="color: {{ section.settings.heading_color }};">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <div class="about-us-highlites__text rte" style="color: {{ section.settings.text_color }};">
+        {{ section.settings.text }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Us Highlights",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Content Container Max Width",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Content settings"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built Better For Everyday Living."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description Text",
+      "default": "<p>Every product we create reflects our commitment to quality, thoughtful design and long-term durability. Our mission is simple — to make everyday essentials that people can rely on, every single day.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Typography Settings"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 1.5,
+      "max": 5.0,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Heading Size Desktop",
+      "default": 3.6
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 1.2,
+      "max": 3.2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Heading Size Mobile",
+      "default": 2.6
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "min": 1.2,
+      "max": 2.6,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Text Size Desktop",
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 1.0,
+      "max": 2.0,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Text Size Mobile",
+      "default": 1.4
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color (Highlight)",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#e62e2e"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Text Color (Bold)",
+      "default": "#e62e2e"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Desktop",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Desktop",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Mobile Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 28
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Highlights"
+    }
+  ]
+}
+{% endschema %}

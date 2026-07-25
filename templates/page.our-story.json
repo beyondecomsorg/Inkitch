@@ -11,18 +11,166 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "custom_css": [
-        ".page-width--narrow { max-width: 100% !important; padding-left: 0 !important; padding-right: 0 !important; }",
-        "h1.main-page-title { display: none !important; }",
-        ".rte { color: #000000 !important; }"
+        ".page-width--narrow {max-width: 100% !important; padding-left: 0 !important; padding-right: 0 !important;}",
+        "h1.main-page-title {display: none !important;}",
+        ".rte {color: #000000 !important;}"
       ],
       "settings": {
+        "show_title": false,
         "padding_top": 0,
         "padding_bottom": 0
+      }
+    },
+    "about_us_banner_CXit36": {
+      "type": "about-us-banner",
+      "name": "About Us Banner",
+      "settings": {
+        "image": "shopify://shop_images/shared_image.jpg",
+        "heading": "",
+        "heading_size": "h1",
+        "banner_height": "medium",
+        "text_alignment": "center",
+        "text_color": "#ffffff",
+        "overlay_opacity": 0
+      }
+    },
+    "about_us_section_swap_9b3rb6": {
+      "type": "about-us-section-swap",
+      "name": "About Us Swap Section",
+      "settings": {
+        "image": "shopify://shop_images/shared_image_2.jpg",
+        "desktop_image_alignment": "left",
+        "mobile_layout": "image_first",
+        "subtitle": "OUR BEGINNINGS",
+        "heading": "It Began With a Simple Belief",
+        "text": "<p>Our journey didn't begin with a perfect business plan. It began with a simple belief that everyday home essentials deserve to be better.</p><p>We come from a family with over 25 years in the steel and export business through Falcon International, a Government Recognized Star Export House. Growing up around it, we understood the value of quality materials, thoughtful craftsmanship and products built to last.</p>",
+        "background_color": "#ffffff",
+        "subtitle_color": "#ff0000",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "padding_top_desktop": 40,
+        "padding_bottom_desktop": 40,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "about_us_section_swap_9cwMEW": {
+      "type": "about-us-section-swap",
+      "name": "About Us Swap Section",
+      "settings": {
+        "image": "shopify://shop_images/shared_image_1.jpg",
+        "desktop_image_alignment": "right",
+        "mobile_layout": "image_first",
+        "subtitle": "THE VISION",
+        "heading": "World-Class Quality For Every Home",
+        "text": "<p>The products people use every single day — lunch boxes, storage containers, kitchen tools and home essentials — should offer more than convenience.</p><p>They should be thoughtfully designed, made with premium materials and built to perform beautifully for years.</p><p>That belief became inKitch. We wanted to bring the same world-class manufacturing standards that India has proudly exported for decades into every modern Indian home.</p>",
+        "background_color": "#ffffff",
+        "subtitle_color": "#ff0000",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "padding_top_desktop": 40,
+        "padding_bottom_desktop": 40,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "about_us_section_swap_WEWkig": {
+      "type": "about-us-section-swap",
+      "name": "About Us Swap Section",
+      "settings": {
+        "image": "shopify://shop_images/shared_image_3.jpg",
+        "desktop_image_alignment": "left",
+        "mobile_layout": "image_first",
+        "subtitle": "EVERYDAY LIVING",
+        "heading": "Designed For Real Everyday Living",
+        "text": "<p>Today every product is designed around real everyday living. Whether preparing meals, storing food or organising your kitchen, every detail is created to simplify daily life while delivering reliability you can trust.</p><p>Every curve, every finish and every material has a purpose. Because everyday products deserve extraordinary attention.</p>",
+        "background_color": "#ffffff",
+        "subtitle_color": "#ff0000",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "padding_top_desktop": 40,
+        "padding_bottom_desktop": 40,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "about_us_section_swap_MmD66Q": {
+      "type": "about-us-section-swap",
+      "name": "About Us Swap Section",
+      "settings": {
+        "image": "shopify://shop_images/shared_image_4.jpg",
+        "desktop_image_alignment": "right",
+        "mobile_layout": "image_first",
+        "subtitle": "OUR PHILOSOPHY",
+        "heading": "Simple Principles, Lasting Value",
+        "text": "<p>Our philosophy is simple. Use better materials. Design with intention. Create products that solve everyday problems. Build quality that lasts.</p><p>Instead of chasing trends or unnecessary features, we focus on making products that genuinely improve daily experiences.</p><p>We believe trust is earned through consistency, quality and long-term value.</p>",
+        "background_color": "#ffffff",
+        "subtitle_color": "#ff0000",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "padding_top_desktop": 40,
+        "padding_bottom_desktop": 40,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "about_us_block_kebWDM": {
+      "type": "about-us-block",
+      "name": "About Us Block",
+      "settings": {
+        "card_max_width": 850,
+        "border_radius": 16,
+        "show_shadow": true,
+        "card_padding_desktop": 55,
+        "card_padding_mobile": 30,
+        "text": "<p>\"inKitch is a brand of <strong>BranBilly Lifestyle LLP</strong>, backed by Falcon International — a Government Recognized Star Export House with over <strong>25+ years</strong> of global manufacturing expertise.\"</p>",
+        "text_size_desktop": 2,
+        "text_size_mobile": 1.6,
+        "background_color": "#ffffff",
+        "card_bg_color": "#faf8f6",
+        "quote_icon_color": "#e62e2e",
+        "text_color": "#222222",
+        "highlight_color": "#e62e2e",
+        "padding_top_desktop": 40,
+        "padding_bottom_desktop": 40,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "about_us_highlites_AVaXiM": {
+      "type": "about-us-highlites",
+      "name": "About Us Highlights",
+      "settings": {
+        "content_max_width": 800,
+        "subtitle": "",
+        "heading": "Built Better For Everyday Living.",
+        "text": "<p>Every product we create reflects our commitment to quality, thoughtful design and long-term durability. Our mission is simple — to make everyday essentials that people can rely on, every single day.</p>",
+        "heading_size_desktop": 3.6,
+        "heading_size_mobile": 2.6,
+        "text_size_desktop": 1.6,
+        "text_size_mobile": 1.4,
+        "background_color": "#faf8f6",
+        "subtitle_color": "#e62e2e",
+        "heading_color": "#121212",
+        "text_color": "#333333",
+        "highlight_color": "#e62e2e",
+        "padding_top_desktop": 48,
+        "padding_bottom_desktop": 48,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 28
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "about_us_banner_CXit36",
+    "about_us_section_swap_9b3rb6",
+    "about_us_section_swap_9cwMEW",
+    "about_us_section_swap_WEWkig",
+    "about_us_section_swap_MmD66Q",
+    "about_us_block_kebWDM",
+    "about_us_highlites_AVaXiM"
   ]
 }

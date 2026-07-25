@@ -41,7 +41,8 @@
     document.head.appendChild(styleTag);
   }
 
-  const COLOR_NAME_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style)$/i;
+  const COLOR_NAME_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style|shape|design|pattern|model|material|pack|size)$/i;
+  const TYPE_NAME_REGEX = /^(type|typ|art)$/i;
 
   function normalizeString(str) {
     if (!str) return '';
@@ -133,6 +134,76 @@
     }
 
     if (isOtherColorMatch) {
+      return { isMatch: false, isOtherColor: true, isShared: false, number: Infinity };
+    }
+
+    return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
+  }
+
+  function matchOptionPattern(altText, color, type = null) {
+    if (!altText || !color) return false;
+    const normAlt = altText.trim().toLowerCase();
+    const normColor = color.trim().toLowerCase();
+    
+    if (type) {
+      const normType = type.trim().toLowerCase();
+      const target = normColor + '-' + normType;
+      if (normAlt === target) return true;
+      const escapedTarget = escapeRegexp(target);
+      const regex = new RegExp('^' + escapedTarget + '(?:\\s*-\\s*\\d+|\\s+\\d+|\\d+)?$', 'i');
+      return regex.test(normAlt);
+    } else {
+      if (normAlt === normColor) return true;
+      const escapedColor = escapeRegexp(normColor);
+      const regex = new RegExp('^' + escapedColor + '(?:\\s*-\\s*\\d+|\\s+\\d+|\\d+)?$', 'i');
+      return regex.test(normAlt);
+    }
+  }
+
+  function matchMediaToColorType(altText, selectedColor, selectedType, availableColors, availableTypes) {
+    if (!selectedColor || !selectedType) {
+      return { isMatch: true, isOtherColor: false, isShared: true, number: 0 };
+    }
+
+    const normAlt = (altText || '').trim().toLowerCase();
+    if (!normAlt) {
+      return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
+    }
+
+    const isSelectedMatch = matchOptionPattern(normAlt, selectedColor, selectedType);
+
+    const numMatch = normAlt.match(/\d+$/);
+    const number = numMatch ? parseInt(numMatch[0], 10) : 1;
+
+    if (isSelectedMatch) {
+      return { isMatch: true, isOtherColor: false, isShared: false, number: number };
+    }
+
+    // Check if alt text matches any OTHER Color-Type combination
+    let isOtherMatch = false;
+    for (const color of availableColors) {
+      for (const type of availableTypes) {
+        if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase() || type.trim().toLowerCase() !== selectedType.trim().toLowerCase()) {
+          if (matchOptionPattern(normAlt, color, type)) {
+            isOtherMatch = true;
+            break;
+          }
+        }
+      }
+      if (isOtherMatch) break;
+    }
+
+    // Check if alt text matches any color-only combination
+    if (!isOtherMatch) {
+      for (const color of availableColors) {
+        if (matchOptionPattern(normAlt, color, null)) {
+          isOtherMatch = true;
+          break;
+        }
+      }
+    }
+
+    if (isOtherMatch) {
       return { isMatch: false, isOtherColor: true, isShared: false, number: Infinity };
     }
 
@@ -253,7 +324,33 @@
       return Array.from(colors);
     }
 
-    detectSelectedColor() {
+    getOptionIndexByName(regex, extraTest = null) {
+      const matchName = (name) => regex.test(name) || (extraTest && extraTest.test(name));
+      if (window.ShopifyAnalytics?.meta?.product?.options) {
+        const idx = window.ShopifyAnalytics.meta.product.options.findIndex(opt => matchName(opt));
+        if (idx !== -1) return idx;
+      }
+      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
+      for (const picker of pickers) {
+        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper, select');
+        const seenOptions = [];
+        for (const el of fieldsets) {
+          const nameAttr = el.getAttribute('name') || el.getAttribute('data-option-name') || '';
+          const legendText = el.querySelector('legend, label')?.textContent || '';
+          const labelText = el.previousElementSibling?.textContent || el.closest('div')?.querySelector('label')?.textContent || '';
+          const optionName = (nameAttr || legendText || labelText).split(':')[0].trim();
+          if (optionName && !seenOptions.includes(optionName)) {
+            seenOptions.push(optionName);
+          }
+        }
+        const idx = seenOptions.findIndex(opt => matchName(opt));
+        if (idx !== -1) return idx;
+      }
+      return -1;
+    }
+
+    detectSelectedOptionByName(regex, extraTest = null) {
+      const matchName = (name) => regex.test(name) || (extraTest && extraTest.test(name));
       const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
       
       for (const picker of pickers) {
@@ -263,7 +360,7 @@
           const legendText = fieldset.querySelector('legend, label')?.textContent || '';
           const optionName = (nameAttr || legendText).split(':')[0].trim();
 
-          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+          if (matchName(optionName)) {
             const checkedRadio = fieldset.querySelector('input[type="radio"]:checked');
             if (checkedRadio) {
               const val = checkedRadio.value || checkedRadio.getAttribute('data-value');
@@ -285,11 +382,32 @@
         for (const select of selects) {
           const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
           const optionName = labelText.split(':')[0].trim();
-          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+          if (matchName(optionName)) {
             if (select.value) return select.value.trim();
           }
         }
       }
+
+      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
+        const options = window.ShopifyAnalytics.meta.product?.options || [];
+        const optionIndex = options.findIndex(opt => matchName(opt));
+        if (optionIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[optionIndex]) {
+          return window.ShopifyAnalytics.meta.selectedVariant.options[optionIndex];
+        }
+      }
+
+      return null;
+    }
+
+    detectSelectedColor(variantObj = null) {
+      if (variantObj && variantObj.options) {
+        const colorIndex = this.getOptionIndexByName(COLOR_NAME_REGEX, /color/i);
+        if (colorIndex !== -1 && variantObj.options[colorIndex]) {
+          return variantObj.options[colorIndex].trim();
+        }
+      }
+      const valFromDom = this.detectSelectedOptionByName(COLOR_NAME_REGEX, /color/i);
+      if (valFromDom) return valFromDom;
 
       if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
         const options = window.ShopifyAnalytics.meta.product?.options || [];
@@ -302,10 +420,67 @@
       return null;
     }
 
+    detectSelectedType(variantObj = null) {
+      if (variantObj && variantObj.options) {
+        const typeIndex = this.getOptionIndexByName(TYPE_NAME_REGEX);
+        if (typeIndex !== -1 && variantObj.options[typeIndex]) {
+          return variantObj.options[typeIndex].trim();
+        }
+      }
+      const valFromDom = this.detectSelectedOptionByName(TYPE_NAME_REGEX);
+      if (valFromDom) return valFromDom;
+
+      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
+        const options = window.ShopifyAnalytics.meta.product?.options || [];
+        const typeIndex = options.findIndex(opt => TYPE_NAME_REGEX.test(opt));
+        if (typeIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[typeIndex]) {
+          return window.ShopifyAnalytics.meta.selectedVariant.options[typeIndex];
+        }
+      }
+
+      return null;
+    }
+
+    getAllProductTypes() {
+      const types = new Set();
+      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
+      
+      for (const picker of pickers) {
+        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
+        for (const fieldset of fieldsets) {
+          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
+          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
+          const optionName = (nameAttr || legendText).split(':')[0].trim();
+
+          if (TYPE_NAME_REGEX.test(optionName)) {
+            const inputs = fieldset.querySelectorAll('input[type="radio"], button[data-value], .swatch');
+            inputs.forEach(input => {
+              const val = input.value || input.getAttribute('data-value') || input.getAttribute('value') || input.textContent.trim();
+              if (val && val.length < 30) types.add(val.trim());
+            });
+          }
+        }
+
+        const selects = picker.querySelectorAll('select');
+        for (const select of selects) {
+          const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
+          const optionName = labelText.split(':')[0].trim();
+          if (TYPE_NAME_REGEX.test(optionName)) {
+            Array.from(select.options).forEach(opt => {
+              if (opt.value) types.add(opt.value.trim());
+            });
+          }
+        }
+      }
+
+      return Array.from(types);
+    }
+
     update(forceColor = null, variantObj = null) {
       this.initCache();
 
-      const selectedColor = forceColor || this.detectSelectedColor();
+      const selectedColor = forceColor || this.detectSelectedColor(variantObj);
+      const selectedType = this.detectSelectedType(variantObj);
       const featuredMediaId = variantObj?.featured_media?.id || variantObj?.featured_image?.id;
 
       const normSelected = normalizeString(selectedColor);
@@ -314,6 +489,15 @@
 
       const mediaMap = this.getProductMediaMap();
       const availableColors = this.getAllProductColors();
+      const availableTypes = this.getAllProductTypes();
+
+      // Check if specific Color-Type combination images exist in cache
+      const hasColorTypeImages = selectedColor && selectedType && this.mediaCache.some(item => {
+        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
+        const mediaMeta = mediaMap[shopifyId] || {};
+        const altText = item.altText || mediaMeta.alt || '';
+        return matchOptionPattern(altText, selectedColor, selectedType);
+      });
 
       const matchList = [];
       const commonList = [];
@@ -330,13 +514,30 @@
         const belongsToOtherColor = hasVariantColors && !belongsToSelectedColor;
 
         const altText = item.altText || mediaMeta.alt || '';
-        const matchResult = matchMediaToColor(altText, selectedColor, availableColors);
+        
+        let matchResult;
+        if (hasColorTypeImages) {
+          matchResult = matchMediaToColorType(altText, selectedColor, selectedType, availableColors, availableTypes);
+        } else {
+          matchResult = matchMediaToColor(altText, selectedColor, availableColors);
+        }
 
-        if (belongsToSelectedColor || matchResult.isMatch) {
+        let isMatch = false;
+        let isOtherColor = false;
+        
+        if (hasColorTypeImages) {
+          isMatch = matchResult.isMatch;
+          isOtherColor = matchResult.isOtherColor;
+        } else {
+          isMatch = belongsToSelectedColor || matchResult.isMatch;
+          isOtherColor = belongsToOtherColor || matchResult.isOtherColor;
+        }
+
+        if (isMatch) {
           matchList.push({ ...item, number: matchResult.number });
-        } else if (belongsToOtherColor || matchResult.isOtherColor) {
+        } else if (isOtherColor) {
           otherList.push(item);
-        } else if (isFeaturedMedia && !matchResult.isOtherColor) {
+        } else if (isFeaturedMedia && !isOtherColor) {
           matchList.push({ ...item, number: -1 });
         } else if (matchResult.isShared) {
           commonList.push(item);

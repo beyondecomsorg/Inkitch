@@ -1,0 +1,262 @@
+{%- style -%}
+.section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  background-color: {{ section.settings.background_color }};
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+}
+
+.about-us-block-container-{{ section.id }} {
+  max-width: {{ section.settings.card_max_width }}px;
+  margin: 0 auto;
+  padding: {{ section.settings.card_padding_desktop }}px;
+  background-color: {{ section.settings.card_bg_color }};
+  border-radius: {{ section.settings.border_radius }}px;
+  text-align: center;
+  box-sizing: border-box;
+  {%- if section.settings.show_shadow -%}
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  {%- endif -%}
+}
+
+@media screen and (max-width: 749px) {
+  .about-us-block-container-{{ section.id }} {
+    padding: {{ section.settings.card_padding_mobile }}px;
+  }
+}
+
+.about-us-block__icon-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  color: {{ section.settings.quote_icon_color }};
+}
+
+.about-us-block__icon {
+  width: 3.6rem;
+  height: 3.6rem;
+}
+
+.about-us-block__text {
+  font-size: {{ section.settings.text_size_desktop }}rem;
+  line-height: 1.6;
+  margin: 0;
+  color: {{ section.settings.text_color }};
+}
+
+.about-us-block__text strong {
+  color: {{ section.settings.highlight_color }};
+  font-weight: 700;
+}
+
+@media screen and (max-width: 749px) {
+  .about-us-block__text {
+    font-size: {{ section.settings.text_size_mobile }}rem;
+  }
+  .about-us-block__icon {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  <div class="page-width">
+    <div class="about-us-block-container-{{ section.id }}">
+      <div class="about-us-block__icon-wrapper">
+        <svg class="about-us-block__icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 5.5c-3.3 0-6 2.7-6 6v7h7v-7H6.5c0-1.7 1.3-3 3-3V5.5zm11 0c-3.3 0-6 2.7-6 6v7h7v-7h-4c0-1.7 1.3-3 3-3V5.5z"/>
+        </svg>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <div class="about-us-block__text rte">
+          {{ section.settings.text }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Us Block",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Card Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "card_max_width",
+      "min": 500,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Card Max Width",
+      "default": 850
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shadow",
+      "label": "Show Soft Shadow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_padding_desktop",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Inner Padding Desktop",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Inner Padding Mobile",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Quote Text",
+      "default": "<p>\"inKitch is a brand of <strong>BranBilly Lifestyle LLP</strong>, backed by Falcon International — a Government Recognized Star Export House with over <strong>25+ years</strong> of global manufacturing expertise.\"</p>"
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "min": 1.2,
+      "max": 3.0,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Text Size Desktop",
+      "default": 2.0
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 1.0,
+      "max": 2.2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Text Size Mobile",
+      "default": 1.6
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Outer Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "quote_icon_color",
+      "label": "Quote Icon Color",
+      "default": "#e62e2e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Color (Bold text)",
+      "default": "#e62e2e"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Desktop",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Desktop",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Mobile Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Block"
+    }
+  ]
+}
+{% endschema %}

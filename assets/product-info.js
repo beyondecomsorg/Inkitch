@@ -78,6 +78,20 @@ if (!customElements.get('product-info')) {
 
         this.resetProductFormState();
 
+        // Instantly update variant input and Add to Cart button state to avoid delay
+        const matchedVariant = this.getMatchingVariantFromDOM();
+        if (matchedVariant) {
+          this.updateVariantInputs(matchedVariant.id);
+          if (matchedVariant.available) {
+            this.productForm?.toggleSubmitButton(false);
+          } else {
+            this.productForm?.toggleSubmitButton(true, window.variantStrings.soldOut);
+          }
+        } else {
+          this.updateVariantInputs(null);
+          this.productForm?.toggleSubmitButton(true, window.variantStrings.unavailable);
+        }
+
         const productUrl = target.dataset.productUrl || this.pendingRequestUrl || this.dataset.url;
         this.pendingRequestUrl = productUrl;
         const shouldSwapProduct = this.dataset.url !== productUrl;
