@@ -16,6 +16,8 @@
     padding-bottom: 0px;
   }
 
+
+
   .ai-latest-deals__heading-wrapper-{{ ai_gen_id }} {
     text-align: center;
     margin-bottom: 40px;
@@ -120,8 +122,14 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+
     display: block;
+  }
+  @media only screen and (max-width: 767px){
+      .ai-latest-deals__image-{{ ai_gen_id }} {
+
+    object-fit: fill;
+  }
   }
 
   .ai-latest-deals__card-{{ ai_gen_id }}:hover .ai-latest-deals__image-{{ ai_gen_id }} {
