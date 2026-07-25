@@ -126,7 +126,7 @@
             "deal_text_color": "#ff0000",
             "label_size": 14,
             "number_size": 30,
-            "symbol_size": 30,
+            "symbol_size": 20,
             "off_size": 26,
             "description_size": 14,
             "deal_1_label": "SAVE",
