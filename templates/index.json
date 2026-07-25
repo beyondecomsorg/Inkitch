@@ -124,7 +124,7 @@
             "card_border_color": "#e0e0e0",
             "content_bg_color": "#ffffff",
             "deal_text_color": "#ff0000",
-            "label_size": 10,
+            "label_size": 14,
             "number_size": 30,
             "symbol_size": 30,
             "off_size": 26,
