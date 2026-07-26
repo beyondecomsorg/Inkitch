@@ -44,13 +44,18 @@
   const COLOR_NAME_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style|shape|design|pattern|model|material|pack|size)$/i;
   const TYPE_NAME_REGEX = /^(type|typ|art)$/i;
 
+  function normalizeForMatching(str) {
+    if (!str) return '';
+    return String(str)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/\s*-\s*/g, '-');
+  }
+
   function normalizeString(str) {
     if (!str) return '';
     return String(str).trim().toLowerCase();
-  }
-
-  function escapeRegexp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   function getMediaAltText(element) {
@@ -81,134 +86,7 @@
     return '';
   }
 
-  function matchMediaToColor(altText, selectedColor, availableColors) {
-    if (!selectedColor) {
-      return { isMatch: true, isOtherColor: false, isShared: true, number: 0 };
-    }
 
-    const normSelected = selectedColor.trim().toLowerCase();
-    const normAlt = (altText || '').trim().toLowerCase();
-
-    if (!normAlt) {
-      return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
-    }
-
-    function clean(str) {
-      return str.replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
-    }
-
-    const cleanAlt = clean(normAlt);
-    const cleanSelected = clean(normSelected);
-
-    // Regex check for exact word match or pattern match (e.g. Green, Green-1, Green 2)
-    const selectedRegex = new RegExp('(?:^|[\\s_\\-\\(])' + escapeRegexp(normSelected) + '(?:[\\s_\\-\\)]|$|\\d+)', 'i');
-    const isSelectedMatch = normAlt === normSelected ||
-                            selectedRegex.test(normAlt) ||
-                            cleanAlt.split(' ').includes(cleanSelected) ||
-                            cleanAlt.startsWith(cleanSelected);
-
-    // Check if Alt Text matches ANY OTHER available color variant
-    let isOtherColorMatch = false;
-    if (availableColors && availableColors.length > 0) {
-      for (const color of availableColors) {
-        const normOther = color.trim().toLowerCase();
-        if (normOther !== normSelected) {
-          const cleanOther = clean(normOther);
-          const otherRegex = new RegExp('(?:^|[\\s_\\-\\(])' + escapeRegexp(normOther) + '(?:[\\s_\\-\\)]|$|\\d+)', 'i');
-          if (normAlt === normOther ||
-              otherRegex.test(normAlt) ||
-              cleanAlt.split(' ').includes(cleanOther) ||
-              cleanAlt.startsWith(cleanOther)) {
-            isOtherColorMatch = true;
-            break;
-          }
-        }
-      }
-    }
-
-    const numMatch = normAlt.match(/\d+/);
-    const number = numMatch ? parseInt(numMatch[0], 10) : 1;
-
-    if (isSelectedMatch) {
-      return { isMatch: true, isOtherColor: false, isShared: false, number: number };
-    }
-
-    if (isOtherColorMatch) {
-      return { isMatch: false, isOtherColor: true, isShared: false, number: Infinity };
-    }
-
-    return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
-  }
-
-  function matchOptionPattern(altText, color, type = null) {
-    if (!altText || !color) return false;
-    const normAlt = altText.trim().toLowerCase();
-    const normColor = color.trim().toLowerCase();
-    
-    if (type) {
-      const normType = type.trim().toLowerCase();
-      const target = normColor + '-' + normType;
-      if (normAlt === target) return true;
-      const escapedTarget = escapeRegexp(target);
-      const regex = new RegExp('^' + escapedTarget + '(?:\\s*-\\s*\\d+|\\s+\\d+|\\d+)?$', 'i');
-      return regex.test(normAlt);
-    } else {
-      if (normAlt === normColor) return true;
-      const escapedColor = escapeRegexp(normColor);
-      const regex = new RegExp('^' + escapedColor + '(?:\\s*-\\s*\\d+|\\s+\\d+|\\d+)?$', 'i');
-      return regex.test(normAlt);
-    }
-  }
-
-  function matchMediaToColorType(altText, selectedColor, selectedType, availableColors, availableTypes) {
-    if (!selectedColor || !selectedType) {
-      return { isMatch: true, isOtherColor: false, isShared: true, number: 0 };
-    }
-
-    const normAlt = (altText || '').trim().toLowerCase();
-    if (!normAlt) {
-      return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
-    }
-
-    const isSelectedMatch = matchOptionPattern(normAlt, selectedColor, selectedType);
-
-    const numMatch = normAlt.match(/\d+$/);
-    const number = numMatch ? parseInt(numMatch[0], 10) : 1;
-
-    if (isSelectedMatch) {
-      return { isMatch: true, isOtherColor: false, isShared: false, number: number };
-    }
-
-    // Check if alt text matches any OTHER Color-Type combination
-    let isOtherMatch = false;
-    for (const color of availableColors) {
-      for (const type of availableTypes) {
-        if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase() || type.trim().toLowerCase() !== selectedType.trim().toLowerCase()) {
-          if (matchOptionPattern(normAlt, color, type)) {
-            isOtherMatch = true;
-            break;
-          }
-        }
-      }
-      if (isOtherMatch) break;
-    }
-
-    // Check if alt text matches any color-only combination
-    if (!isOtherMatch) {
-      for (const color of availableColors) {
-        if (matchOptionPattern(normAlt, color, null)) {
-          isOtherMatch = true;
-          break;
-        }
-      }
-    }
-
-    if (isOtherMatch) {
-      return { isMatch: false, isOtherColor: true, isShared: false, number: Infinity };
-    }
-
-    return { isMatch: false, isOtherColor: false, isShared: true, number: Infinity };
-  }
 
   class GalleryColorFilterInstance {
     constructor(galleryContainer) {
@@ -491,12 +369,21 @@
       const availableColors = this.getAllProductColors();
       const availableTypes = this.getAllProductTypes();
 
-      // Check if specific Color-Type combination images exist in cache
-      const hasColorTypeImages = selectedColor && selectedType && this.mediaCache.some(item => {
-        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
-        const mediaMeta = mediaMap[shopifyId] || {};
-        const altText = item.altText || mediaMeta.alt || '';
-        return matchOptionPattern(altText, selectedColor, selectedType);
+      // STRICT expected alt text logic
+      let expectedAlt = '';
+      if (selectedColor && selectedType) {
+        expectedAlt = `${selectedColor} - ${selectedType}`.trim().toLowerCase().replace(/\s+/g, ' ');
+      } else if (selectedColor) {
+        expectedAlt = selectedColor.trim().toLowerCase().replace(/\s+/g, ' ');
+      }
+
+      // Debug Logs as requested
+      console.log("Selected Color:", selectedColor);
+      console.log("Selected Type:", selectedType);
+      console.log("Expected:", expectedAlt);
+
+      this.mediaCache.forEach(img => {
+        console.log("Image Alt:", img.altText);
       });
 
       const matchList = [];
@@ -508,54 +395,78 @@
         const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
         const mediaMeta = mediaMap[shopifyId] || {};
 
-        const variantColors = mediaMeta.variantColors || [];
-        const hasVariantColors = variantColors.length > 0;
-        const belongsToSelectedColor = hasVariantColors && variantColors.includes(normSelected);
-        const belongsToOtherColor = hasVariantColors && !belongsToSelectedColor;
-
         const altText = item.altText || mediaMeta.alt || '';
-        
-        let matchResult;
-        if (hasColorTypeImages) {
-          matchResult = matchMediaToColorType(altText, selectedColor, selectedType, availableColors, availableTypes);
-        } else {
-          matchResult = matchMediaToColor(altText, selectedColor, availableColors);
-        }
+        const imageAlt = altText.trim().toLowerCase().replace(/\s+/g, ' ');
 
         let isMatch = false;
-        let isOtherColor = false;
-        
-        if (hasColorTypeImages) {
-          isMatch = matchResult.isMatch;
-          isOtherColor = matchResult.isOtherColor;
+        let isOther = false;
+
+        if (expectedAlt) {
+          if (imageAlt === expectedAlt) {
+            isMatch = true;
+          } else if (imageAlt.startsWith(expectedAlt)) {
+            // Guard with a boundary check to prevent partial matching (e.g. blueberry matching blue)
+            const nextChar = imageAlt.charAt(expectedAlt.length);
+            if (!nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' || (nextChar >= '0' && nextChar <= '9')) {
+              isMatch = true;
+            }
+          }
+
+          // Check if this alt text matches any OTHER option combination
+          if (!isMatch) {
+            if (selectedColor && selectedType) {
+              for (const color of availableColors) {
+                for (const type of availableTypes) {
+                  if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase() || type.trim().toLowerCase() !== selectedType.trim().toLowerCase()) {
+                    const otherExpected = `${color} - ${type}`.trim().toLowerCase().replace(/\s+/g, ' ');
+                    if (imageAlt === otherExpected || imageAlt.startsWith(otherExpected)) {
+                      isOther = true;
+                      break;
+                    }
+                  }
+                }
+                if (isOther) break;
+              }
+            } else if (selectedColor) {
+              for (const color of availableColors) {
+                if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase()) {
+                  const otherExpected = color.trim().toLowerCase().replace(/\s+/g, ' ');
+                  if (imageAlt === otherExpected || imageAlt.startsWith(otherExpected)) {
+                    isOther = true;
+                    break;
+                  }
+                }
+              }
+            }
+          }
         } else {
-          isMatch = belongsToSelectedColor || matchResult.isMatch;
-          isOtherColor = belongsToOtherColor || matchResult.isOtherColor;
+          // If no options are selected, everything matches
+          isMatch = true;
         }
 
+        const numMatch = imageAlt.match(/\d+/);
+        const number = numMatch ? parseInt(numMatch[0], 10) : 1;
+
         if (isMatch) {
-          matchList.push({ ...item, number: matchResult.number });
-        } else if (isOtherColor) {
+          matchList.push({ ...item, number: number });
+        } else if (isOther) {
           otherList.push(item);
-        } else if (isFeaturedMedia && !isOtherColor) {
+        } else if (isFeaturedMedia && !isOther) {
           matchList.push({ ...item, number: -1 });
-        } else if (matchResult.isShared) {
-          commonList.push(item);
         } else {
-          otherList.push(item);
+          commonList.push(item);
         }
       });
 
+      console.log("Matched Images:", matchList);
+
       matchList.sort((a, b) => (a.number || 0) - (b.number || 0) || a.originalIndex - b.originalIndex);
-      commonList.sort((a, b) => a.originalIndex - b.originalIndex);
 
       let visibleItems = [];
       if (matchList.length > 0) {
         visibleItems = [...matchList];
-      } else if (commonList.length > 0) {
-        visibleItems = [...commonList];
       } else {
-        visibleItems = [...this.mediaCache]; // Graceful fallback if no matching images found
+        visibleItems = [...this.mediaCache]; // Fallback to all images if no matches found
       }
 
       const visibleSet = new Set(visibleItems.map(i => i.element));

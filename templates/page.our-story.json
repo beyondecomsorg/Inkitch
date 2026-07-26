@@ -28,6 +28,7 @@
       "name": "About Us Banner",
       "settings": {
         "image": "shopify://shop_images/shared_image.jpg",
+        "image_mobile": "shopify://shop_images/Untitled.png",
         "heading": "",
         "heading_size": "h1",
         "banner_height": "medium",

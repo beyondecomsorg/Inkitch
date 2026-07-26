@@ -36,7 +36,7 @@
     font-size: var(--font-size-h3) !important;
     font-weight: var(--font-weight-heading) !important;
     color: #ffffff !important;
-    text-transform: uppercase !important;
+
     letter-spacing: 1px !important;
     margin: 0 0 8px 0 !important;
     padding: 0 !important;
@@ -412,6 +412,98 @@
     margin: 15px auto;
     font-family: var(--font-heading-family);
   }
+
+  /* Community Section Custom Styling */
+  .footer-community-section-custom {
+    margin-top: 30px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    padding-top: 25px !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .footer-community-heading-custom {
+    margin-bottom: 4px !important;
+  }
+
+  .footer-community-subtitle-custom {
+    margin-bottom: 20px !important;
+  }
+
+  .footer-community-buttons-custom {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .footer-community-btn-custom {
+    flex: 1 1 0% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    text-decoration: none !important;
+    color: #ffffff !important;
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), background-color 0.25s ease, box-shadow 0.25s ease !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+
+  /* WhatsApp Button: Green Accent */
+  .footer-community-btn-whatsapp {
+    background-color: #25D366 !important;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2) !important;
+  }
+
+  .footer-community-btn-whatsapp:hover {
+    background-color: #20ba59 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35) !important;
+    text-decoration: none !important;
+  }
+
+  /* Telegram Button: Blue Accent */
+  .footer-community-btn-telegram {
+    background-color: #0088cc !important;
+    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.2) !important;
+  }
+
+  .footer-community-btn-telegram:hover {
+    background-color: #0077b3 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(0, 136, 204, 0.35) !important;
+    text-decoration: none !important;
+  }
+
+  .footer-community-btn-custom svg {
+    flex-shrink: 0 !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Responsive Stacking for Buttons on Mobile / Small Screen */
+  @media screen and (max-width: 768px) {
+    .footer-community-buttons-custom {
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+    .footer-community-btn-custom {
+      width: 100% !important;
+      flex: none !important;
+      padding: 14px 20px !important; /* Larger tap target on mobile */
+      font-size: 1.3rem !important;
+    }
+  }
 {%- endstyle -%}
 
 <footer class="footer footer-wrapper-custom-glow color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
@@ -657,6 +749,36 @@
                   </button>
                 </div>
               {%- endform -%}
+
+              {%- if section.settings.whatsapp_community_url != blank or section.settings.telegram_channel_url != blank -%}
+                <div class="footer-community-section-custom">
+                  <h3 class="footer-block-heading-custom footer-community-heading-custom">Join Our Community</h3>
+                  <div class="footer-block-accent-line-custom"></div>
+                  <p class="footer-newsletter-subtitle-custom footer-community-subtitle-custom">
+                    Stay connected for updates & offers.
+                  </p>
+                  
+                  <div class="footer-community-buttons-custom">
+                    {%- if section.settings.whatsapp_community_url != blank -%}
+                      <a href="{{ section.settings.whatsapp_community_url }}" class="footer-community-btn-custom footer-community-btn-whatsapp" target="_blank" rel="noopener" aria-label="Join WhatsApp Community">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.454 5.709 1.455h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        <span>WhatsApp</span>
+                      </a>
+                    {%- endif -%}
+                    
+                    {%- if section.settings.telegram_channel_url != blank -%}
+                      <a href="{{ section.settings.telegram_channel_url }}" class="footer-community-btn-custom footer-community-btn-telegram" target="_blank" rel="noopener" aria-label="Join Telegram Channel">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.97-.74 3.79-1.65 6.32-2.73 7.58-3.25 3.61-1.48 4.36-1.74 4.85-1.75.11 0 .35.03.5.16.13.1.17.25.18.35-.01.07 0 .15-.02.22z"/>
+                        </svg>
+                        <span>Telegram</span>
+                      </a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
             </div>
           </div>
         {%- endif -%}
@@ -910,6 +1032,16 @@
       "id": "newsletter_subtitle",
       "default": "Get exclusive deals & kitchen tips in your inbox",
       "label": "Newsletter Subtitle"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_community_url",
+      "label": "WhatsApp Community URL"
+    },
+    {
+      "type": "url",
+      "id": "telegram_channel_url",
+      "label": "Telegram Channel URL"
     },
     {
       "type": "header",

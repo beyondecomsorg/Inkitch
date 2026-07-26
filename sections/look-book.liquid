@@ -168,55 +168,34 @@
     {% for block in section.blocks %}
 
       {% if block.type == 'card' %}
-
         <div class="wau-pcard wau-pcard--{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-
-
+          {%- if block.settings.card_link != blank or block.settings.card_product != blank -%}
+            {%- assign card_url = block.settings.card_link | default: block.settings.card_product.url -%}
+            <a href="{{ card_url }}" class="wau-pcard__link-wrapper">
+          {%- endif -%}
 
           <div class="wau-pcard__inner">
+            {%- if block.settings.card_image != blank -%}
+              {{
+                block.settings.card_image
+                | image_url: width: 700
+                | image_tag:
+                loading: 'lazy',
+                class: 'wau-pcard__img'
+              }}
+            {%- endif -%}
 
-
-
-            {% if block.settings.card_image != blank %}
-
-{% if block.settings.card_product != blank %}
-<a href="{{ block.settings.card_product.url }}">
-{% endif %}
-
-{{
-block.settings.card_image
-| image_url: width: 700
-| image_tag:
-loading: 'lazy',
-class: 'wau-pcard__img'
-}}
-
-{% if block.settings.card_product != blank %}
-</a>
-{% endif %}
-
-{% endif %}
-
-
-
-            {% if block.settings.card_label != blank %}
-
+            {%- if block.settings.card_label != blank -%}
               <div class="wau-pcard__caption">
-
                 {{ block.settings.card_label }}
-
               </div>
-
-            {% endif %}
-
-
-
+            {%- endif -%}
           </div>
 
-
-
+          {%- if block.settings.card_link != blank or block.settings.card_product != blank -%}
+            </a>
+          {%- endif -%}
         </div>
-
       {% endif %}
 
     {% endfor %}
@@ -653,6 +632,14 @@ class: 'wau-pcard__img'
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
+}
+
+#wau-{{ section.id }} .wau-pcard__link-wrapper {
+  text-decoration: none !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  color: inherit !important;
 }
 
 #wau-{{ section.id }} .wau-pcard__img {
@@ -1599,6 +1586,11 @@ class: 'wau-pcard__img'
   "type": "product",
   "id": "card_product",
   "label": "Select Product"
+},
+{
+  "type": "url",
+  "id": "card_link",
+  "label": "Card Custom Link"
 },
 {
   "type": "text",
