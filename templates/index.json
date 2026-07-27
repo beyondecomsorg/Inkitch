@@ -46,8 +46,8 @@
         "slide_NFGGUj": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/perfect_lunch_box_16.png",
-            "mobile_image": "shopify://shop_images/ChatGPT_Image_May_8_2026_05_54_00_PM.webp",
+            "desktop_image": "shopify://shop_images/Desktop_1st_Banner.png",
+            "mobile_image": "shopify://shop_images/Phone_1st_Banner.png",
             "heading": "",
             "button_label": "",
             "button_link": "shopify://collections/all"
@@ -56,8 +56,8 @@
         "slide_XywRg6": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/perfect_lunch_box_15.png",
-            "mobile_image": "shopify://shop_images/Untitled_design_84.png",
+            "desktop_image": "shopify://shop_images/Desktop_2nd_Banner.png",
+            "mobile_image": "shopify://shop_images/Phone_2nd_Banner.png",
             "heading": "",
             "button_label": "",
             "button_link": "shopify://collections/all"
@@ -133,19 +133,19 @@
             "deal_1_number": "10",
             "deal_1_symbol": "%",
             "deal_1_description": "On Storage Containers",
-            "deal_1_image": "shopify://shop_images/shared_image_6.jpg",
+            "deal_1_image": "shopify://shop_images/Final_-_Storage_Category.png",
             "deal_1_link": "shopify://collections/storage-container",
             "deal_2_label": "SAVE",
             "deal_2_number": "10",
             "deal_2_symbol": "%",
             "deal_2_description": "On Lunch Boxes",
-            "deal_2_image": "shopify://shop_images/shared_image_5.jpg",
+            "deal_2_image": "shopify://shop_images/Final_-_lunch_Box_Category.png",
             "deal_2_link": "shopify://collections/tiffin-or-lunch-box",
             "deal_3_label": "SAVE",
             "deal_3_number": "10",
             "deal_3_symbol": "%",
             "deal_3_description": "On Bottles & Flasks",
-            "deal_3_image": "shopify://shop_images/Untitled_design_89_84706f96-5ca5-4c76-85aa-1c37b4645f1d.png",
+            "deal_3_image": "shopify://shop_images/Final_-_Bottle_Category.png",
             "deal_3_link": "shopify://collections/stainless-steel-bottle"
           },
           "blocks": {}

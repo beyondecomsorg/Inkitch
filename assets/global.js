@@ -730,7 +730,7 @@ class SliderComponent extends HTMLElement {
     super();
     this.slider = this.querySelector('[id^="Slider-"]');
     this.sliderItems = this.querySelectorAll('[id^="Slide-"]');
-    this.enableSliderLooping = this.id && this.id.includes('GalleryViewer') ? true : false;
+    this.enableSliderLooping = this.id && (this.id.includes('GalleryViewer') || this.id.includes('GalleryThumbnails')) ? true : false;
     this.currentPageElement = this.querySelector('.slider-counter--current');
     this.pageTotalElement = this.querySelector('.slider-counter--total');
     this.prevButton = this.querySelector('button[name="previous"]');
@@ -757,8 +757,8 @@ class SliderComponent extends HTMLElement {
         const diffX = touchStartX - touchEndX;
         if (Math.abs(diffX) > 50 && this.sliderItemsToShow && this.sliderItemsToShow.length > 0) {
           const maxScrollLeft = this.slider.scrollWidth - this.slider.clientWidth;
-          const isAtStart = this.slider.scrollLeft <= 2;
-          const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 2;
+          const isAtStart = this.slider.scrollLeft <= 5;
+          const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 5;
 
           if (diffX > 50 && isAtEnd) {
             this.setSlidePosition(0);
@@ -841,8 +841,8 @@ class SliderComponent extends HTMLElement {
     
     if (this.enableSliderLooping && this.sliderItemsToShow && this.sliderItemsToShow.length > 0) {
       const maxScrollLeft = this.slider.scrollWidth - this.slider.clientWidth;
-      const isAtStart = this.slider.scrollLeft <= 2;
-      const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 2;
+      const isAtStart = this.slider.scrollLeft <= 5;
+      const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 5;
 
       if (event.currentTarget.name === 'next') {
         if (isAtEnd) {
