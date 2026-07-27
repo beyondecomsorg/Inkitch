@@ -60,6 +60,10 @@
             "show_gift_card_recipient": true
           }
         },
+        "delivery_info": {
+          "type": "delivery_info",
+          "settings": {}
+        },
         "trust_badges_strip": {
           "type": "trust_badges_strip",
           "settings": {}
@@ -96,6 +100,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "delivery_info",
         "trust_badges_strip",
         "shipping_estimate",
         "description",

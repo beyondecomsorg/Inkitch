@@ -1000,6 +1000,8 @@
                   section_id: section.id,
                   show_pickup_availability: true
                 -%}
+              {%- when 'delivery_info' -%}
+                {%- render 'delivery-info', block: block -%}
               {%- when 'trust_badges_strip' -%}
                 <div class="trust-badges-strip" {{ block.shopify_attributes }}>
                   <div class="trust-badge-item">
@@ -2669,6 +2671,90 @@
           "default": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.default",
           "label": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.label",
           "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
+        }
+      ]
+    },
+    {
+      "type": "delivery_info",
+      "name": "Delivery Information",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "prefix_text",
+          "default": "Receive by **[date]**",
+          "label": "Prefix Text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "suffix_text",
+          "default": "Free Shipping **IN**",
+          "label": "Suffix Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_icon",
+          "default": true,
+          "label": "Enable Icon"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "min": 12,
+          "max": 36,
+          "step": 2,
+          "unit": "px",
+          "default": 20,
+          "label": "Icon Size"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "default": "#555555",
+          "label": "Text Color"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "default": "#cca300",
+          "label": "Icon Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "default": "#f9f7f2",
+          "label": "Background Color"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "default": "#e3e0d8",
+          "label": "Border Color"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "min": 0,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 4,
+          "label": "Border Radius"
+        },
+        {
+          "type": "text",
+          "id": "padding",
+          "default": "12px 16px",
+          "label": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 14,
+          "label": "Font Size"
         }
       ]
     }

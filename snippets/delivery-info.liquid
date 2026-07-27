@@ -1,0 +1,172 @@
+{%- comment -%}
+  Renders delivery information block with dynamically calculated date.
+{%- endcomment -%}
+
+<div class="delivery-info-block-wrapper" {{ block.shopify_attributes }}>
+  <div class="delivery-info-container">
+    <div class="delivery-info-text delivery-info-prefix">
+      {{ block.settings.prefix_text }}
+    </div>
+    
+    <div class="delivery-info-track">
+      <div class="delivery-info-line"></div>
+      {%- if block.settings.enable_icon -%}
+        <div class="delivery-info-icon-wrapper">
+          <svg class="delivery-info-truck-svg" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 2h13v9H1z" />
+            <path d="M14 5h4l3 3v3h-7z" />
+            <circle cx="4.5" cy="13.5" r="1.5" />
+            <circle cx="16.5" cy="13.5" r="1.5" />
+          </svg>
+        </div>
+      {%- endif -%}
+    </div>
+    
+    <div class="delivery-info-text delivery-info-suffix">
+      {{ block.settings.suffix_text }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .delivery-info-block-wrapper {
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+  .delivery-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.padding }};
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.font_size }}px;
+    font-family: inherit;
+  }
+  .delivery-info-text {
+    flex-shrink: 0;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .delivery-info-text strong {
+    font-weight: 600;
+  }
+  .delivery-info-track {
+    position: relative;
+    flex-grow: 1;
+    height: calc({{ block.settings.icon_size }}px + 6px);
+    margin: 0 16px;
+    overflow: hidden;
+  }
+  .delivery-info-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    height: 0;
+    border-top: 1px dotted {{ block.settings.border_color }};
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  .delivery-info-icon-wrapper {
+    position: absolute;
+    bottom: 3px;
+    left: -{{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    color: {{ block.settings.icon_color }};
+    background-color: transparent;
+    box-sizing: border-box;
+    animation: moveTruck 7s linear infinite;
+  }
+  .delivery-info-icon-wrapper:hover {
+    animation-play-state: paused;
+  }
+  .delivery-info-truck-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  @keyframes moveTruck {
+    0% {
+      left: -{{ block.settings.icon_size }}px;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    .delivery-info-container {
+      padding: 10px 12px;
+      font-size: clamp(11px, 3vw, {{ block.settings.font_size }}px);
+    }
+    .delivery-info-track {
+      margin: 0 8px;
+      height: calc(clamp(14px, 4vw, {{ block.settings.icon_size }}px) + 6px);
+    }
+    .delivery-info-icon-wrapper {
+      width: clamp(14px, 4vw, {{ block.settings.icon_size }}px);
+      height: clamp(14px, 4vw, {{ block.settings.icon_size }}px);
+      left: -clamp(14px, 4vw, {{ block.settings.icon_size }}px);
+      animation: moveTruckMobile 7s linear infinite;
+    }
+  }
+
+  @keyframes moveTruckMobile {
+    0% {
+      left: -clamp(14px, 4vw, {{ block.settings.icon_size }}px);
+    }
+    100% {
+      left: 100%;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initDeliveryDate() {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 3);
+      
+      const dayName = days[deliveryDate.getDay()];
+      const monthName = months[deliveryDate.getMonth()];
+      const dateNum = deliveryDate.getDate();
+      
+      const formattedDate = `${dayName}, ${monthName} ${dateNum}`;
+      
+      document.querySelectorAll('.delivery-info-prefix').forEach(function(el) {
+        if (!el.dataset.originalHtml) {
+          el.dataset.originalHtml = el.innerHTML;
+        }
+        el.innerHTML = el.dataset.originalHtml.replace('[date]', formattedDate);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDeliveryDate);
+    } else {
+      initDeliveryDate();
+    }
+    
+    document.addEventListener('shopify:block:select', initDeliveryDate);
+    document.addEventListener('shopify:section:load', initDeliveryDate);
+    
+    if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+      subscribe(PUB_SUB_EVENTS.variantChange, function() {
+        setTimeout(initDeliveryDate, 50);
+      });
+    }
+  })();
+</script>

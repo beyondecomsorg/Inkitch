@@ -222,7 +222,7 @@
       "settings": {
         "heading": "ABOUT US",
         "body_text": "<h3 style=\"font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 12px;\">Everyday home essentials deserve to be better.</h3><p style=\"font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.8); margin: 0;\">Born from 25+ years of global export heritage, inKitch brings world-class quality back to Indian homes. Better materials. Modern design. Built to last.</p>",
-        "cta_text": "Read our story →",
+        "cta_text": "Read our story",
         "cta_url": "/pages/our-story",
         "section_font": "sans_serif_n4",
         "heading_color": "#ffffff",

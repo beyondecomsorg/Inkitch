@@ -430,11 +430,6 @@
   </div>
   
   {%- if section.blocks.size > 1 -%}
-    {%- if section.settings.show_arrows -%}
-      <button type="button" class="banner-slider__arrow banner-slider__arrow--prev" aria-label="Previous slide">&#10094;</button>
-      <button type="button" class="banner-slider__arrow banner-slider__arrow--next" aria-label="Next slide">&#10095;</button>
-    {%- endif -%}
-    
     {%- if section.settings.show_dots -%}
       <div class="banner-slider__dots">
         {%- for block in section.blocks -%}

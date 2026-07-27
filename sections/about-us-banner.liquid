@@ -1,4 +1,24 @@
 {%- style -%}
+.about-us-page-title-wrapper {
+  text-align: center;
+  padding: 5rem 2rem 3rem 2rem;
+}
+.about-us-page-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #121212;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+@media screen and (max-width: 749px) {
+  .about-us-page-title-wrapper {
+    padding: 3.5rem 1.5rem 2rem 1.5rem;
+  }
+  .about-us-page-title {
+    font-size: 28px;
+  }
+}
+
 #AboutUsBanner-{{ section.id }} {
   position: relative;
   width: 100%;
@@ -7,11 +27,10 @@
   align-items: center;
 }
 
-/* --- CHANGED: Adaptive height styling to prevent image cropping --- */
+/* --- Adaptive height styling to prevent image cropping --- */
 #AboutUsBanner-{{ section.id }}.height-adapt {
   display: block;
 }
-/* Render picture & image relatively so container height scales naturally with the aspect ratio */
 #AboutUsBanner-{{ section.id }}.height-adapt .about-us-banner__picture {
   position: relative;
   width: 100%;
@@ -25,9 +44,8 @@
   height: auto;
   display: block;
   z-index: 1;
-  object-fit: unset; /* Overrides object-fit: cover to prevent image cropping */
+  object-fit: unset;
 }
-/* Absolutely position the overlay and text content so they layer over the naturally scaling container */
 #AboutUsBanner-{{ section.id }}.height-adapt .about-us-banner__overlay {
   position: absolute;
   top: 0;
@@ -46,7 +64,8 @@
   display: flex;
   align-items: center;
 }
-/* --- END OF CHANGE --- */
+/* --- End of Change --- */
+
 #AboutUsBanner-{{ section.id }}.height-small {
   height: 350px;
 }
@@ -142,6 +161,12 @@
 }
 {%- endstyle -%}
 
+<div class="about-us-page-title-wrapper page-width">
+  <h1 class="about-us-page-title">
+    {{ section.settings.page_title | default: page.title | default: "The Story Behind inKitch" }}
+  </h1>
+</div>
+
 <div id="AboutUsBanner-{{ section.id }}" class="about-us-banner height-{{ section.settings.banner_height }}">
   <picture class="about-us-banner__picture">
     {%- if section.settings.image_mobile != blank -%}
@@ -161,9 +186,9 @@
   <div class="about-us-banner__overlay" style="background-color: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});"></div>
   <div class="about-us-banner__content alignment-{{ section.settings.text_alignment }}">
     <div class="page-width">
-      <h1 class="about-us-banner__heading {{ section.settings.heading_size }}" style="color: {{ section.settings.text_color }};">
+      <h2 class="about-us-banner__heading {{ section.settings.heading_size }}" style="color: {{ section.settings.text_color }};">
         {{ section.settings.heading | escape }}
-      </h1>
+      </h2>
     </div>
   </div>
 </div>
@@ -174,6 +199,12 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Page Title",
+      "default": "The Story Behind inKitch"
+    },
     {
       "type": "image_picker",
       "id": "image",
