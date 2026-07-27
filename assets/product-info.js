@@ -79,7 +79,7 @@ if (!customElements.get('product-info')) {
         this.resetProductFormState();
 
         // Instantly update variant input and Add to Cart button state to avoid delay
-        const matchedVariant = this.getMatchingVariantFromDOM();
+        const matchedVariant = this.getMatchingVariantFromDOM(target);
         if (matchedVariant) {
           this.updateVariantInputs(matchedVariant.id);
           if (matchedVariant.available) {
@@ -92,13 +92,19 @@ if (!customElements.get('product-info')) {
           this.productForm?.toggleSubmitButton(true, window.variantStrings.unavailable);
         }
 
+        let currentOptionValues = selectedOptionValues;
+        const variantSelects = this.querySelector('variant-selects');
+        if (variantSelects) {
+          currentOptionValues = variantSelects.selectedOptionValues || selectedOptionValues;
+        }
+
         const productUrl = target.dataset.productUrl || this.pendingRequestUrl || this.dataset.url;
         this.pendingRequestUrl = productUrl;
         const shouldSwapProduct = this.dataset.url !== productUrl;
         const shouldFetchFullPage = this.dataset.updateUrl === 'true' && shouldSwapProduct;
 
         this.renderProductInfo({
-          requestUrl: this.buildRequestUrlWithParams(productUrl, selectedOptionValues, shouldFetchFullPage),
+          requestUrl: this.buildRequestUrlWithParams(productUrl, currentOptionValues, shouldFetchFullPage),
           targetId: target.id,
           callback: shouldSwapProduct
             ? this.handleSwapProduct(productUrl, shouldFetchFullPage)
@@ -164,33 +170,139 @@ if (!customElements.get('product-info')) {
           });
       }
 
-      getMatchingVariantFromDOM() {
+      getMatchingVariantFromDOM(changedInput = null) {
         const variantsScript = this.querySelector('variant-selects [data-product-variants]') ||
                                document.querySelector('variant-selects [data-product-variants]');
-        if (!variantsScript) return null;
+        if (!variantsScript) {
+          console.log('[Variant Lookup] Reason if no variant is found: No variants script found.');
+          return null;
+        }
 
         try {
           const variants = JSON.parse(variantsScript.textContent);
-          
-          const selectedInputs = Array.from(
-            this.querySelectorAll('variant-selects fieldset input:checked, variant-selects select')
-          );
+          const optionContainers = Array.from(this.querySelectorAll('variant-selects .product-form__input'));
+          if (!optionContainers.length) {
+            console.log('[Variant Lookup] Reason if no variant is found: No option containers found.');
+            return null;
+          }
 
-          if (!selectedInputs.length) return null;
+          const cleanVal = (val) => {
+            if (!val) return '';
+            const doc = new DOMParser().parseFromString(val, 'text/html');
+            return doc.documentElement.textContent.trim().toLowerCase().replace(/\s+/g, ' ');
+          };
 
-          const selectedOptionValues = selectedInputs.map(input => {
+          // 1. Get raw selected option values from the DOM
+          const selectedOptionValues = optionContainers.map(container => {
+            const input = container.querySelector('input:checked, select');
+            if (!input) return '';
             if (input.tagName === 'SELECT') {
               return input.value;
             }
-            return input.value || input.getAttribute('data-value');
-          }).filter(Boolean);
+            return input.value || input.getAttribute('data-value') || '';
+          });
 
-          return variants.find(variant => {
+          // 2. Try to find exact match
+          let matchedVariant = variants.find(variant => {
             return variant.options.every((optValue, index) => {
-              return String(selectedOptionValues[index]).trim().toLowerCase() === String(optValue).trim().toLowerCase();
+              return cleanVal(selectedOptionValues[index]) === cleanVal(optValue);
             });
           });
+
+          // 3. Auto-adjust selections if exact match not found
+          if (!matchedVariant) {
+            // Determine which option changed
+            let changedOptionIndex = -1;
+            if (changedInput) {
+              changedOptionIndex = optionContainers.findIndex(container => container.contains(changedInput));
+            }
+
+            // Fallback: Default to first option
+            if (changedOptionIndex === -1) {
+              changedOptionIndex = 0;
+            }
+
+            const changedValue = selectedOptionValues[changedOptionIndex];
+            const candidates = variants.filter(variant => {
+              return cleanVal(variant.options[changedOptionIndex]) === cleanVal(changedValue);
+            });
+
+            if (candidates.length > 0) {
+              let bestCandidate = null;
+              let highestScore = -1;
+
+              candidates.forEach(variant => {
+                let score = 0;
+                variant.options.forEach((opt, idx) => {
+                  if (idx === changedOptionIndex) return;
+                  if (cleanVal(opt) === cleanVal(selectedOptionValues[idx])) {
+                    score += 1;
+                  }
+                });
+
+                // Prioritize available variant
+                if (variant.available) {
+                  score += 0.5;
+                }
+
+                if (score > highestScore) {
+                  highestScore = score;
+                  bestCandidate = variant;
+                }
+              });
+
+              if (bestCandidate) {
+                matchedVariant = bestCandidate;
+
+                // Update DOM inputs to match the best candidate options
+                optionContainers.forEach((container, idx) => {
+                  const targetValue = bestCandidate.options[idx];
+                  const select = container.querySelector('select');
+                  if (select) {
+                    select.value = targetValue;
+                    Array.from(select.options).forEach(opt => {
+                      if (cleanVal(opt.value) === cleanVal(targetValue)) {
+                        opt.setAttribute('selected', 'selected');
+                        opt.selected = true;
+                      } else {
+                        opt.removeAttribute('selected');
+                        opt.selected = false;
+                      }
+                    });
+                  } else {
+                    const radios = container.querySelectorAll('input[type="radio"]');
+                    radios.forEach(radio => {
+                      if (cleanVal(radio.value) === cleanVal(targetValue)) {
+                        radio.checked = true;
+                        radio.setAttribute('checked', 'checked');
+                      } else {
+                        radio.checked = false;
+                        radio.removeAttribute('checked');
+                      }
+                    });
+                  }
+
+                  // Update visible legend/label text
+                  const labelSpan = container.querySelector('[data-selected-value]');
+                  if (labelSpan) {
+                    labelSpan.textContent = targetValue;
+                  }
+                });
+              }
+            }
+          }
+
+          if (matchedVariant) {
+            console.log('[Variant Lookup] Selected options:', matchedVariant.options);
+            console.log('[Variant Lookup] Matched variant ID:', matchedVariant.id);
+            console.log('[Variant Lookup] Variant availability:', matchedVariant.available ? 'Available' : 'Sold Out');
+            return matchedVariant;
+          } else {
+            console.log('[Variant Lookup] Reason if no variant is found: No matching variant exists in Shopify for raw selected options:', selectedOptionValues);
+            return null;
+          }
         } catch (e) {
+          console.error('[Variant Lookup] Error matching variant:', e);
           return null;
         }
       }

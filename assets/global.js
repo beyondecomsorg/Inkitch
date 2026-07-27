@@ -730,7 +730,7 @@ class SliderComponent extends HTMLElement {
     super();
     this.slider = this.querySelector('[id^="Slider-"]');
     this.sliderItems = this.querySelectorAll('[id^="Slide-"]');
-    this.enableSliderLooping = false;
+    this.enableSliderLooping = this.id && this.id.includes('GalleryViewer') ? true : false;
     this.currentPageElement = this.querySelector('.slider-counter--current');
     this.pageTotalElement = this.querySelector('.slider-counter--total');
     this.prevButton = this.querySelector('button[name="previous"]');
@@ -745,6 +745,29 @@ class SliderComponent extends HTMLElement {
     this.slider.addEventListener('scroll', this.update.bind(this));
     this.prevButton.addEventListener('click', this.onButtonClick.bind(this));
     this.nextButton.addEventListener('click', this.onButtonClick.bind(this));
+
+    if (this.enableSliderLooping) {
+      let touchStartX = 0;
+      this.slider.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+
+      this.slider.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX;
+        if (Math.abs(diffX) > 50 && this.sliderItemsToShow && this.sliderItemsToShow.length > 0) {
+          const maxScrollLeft = this.slider.scrollWidth - this.slider.clientWidth;
+          const isAtStart = this.slider.scrollLeft <= 2;
+          const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 2;
+
+          if (diffX > 50 && isAtEnd) {
+            this.setSlidePosition(0);
+          } else if (diffX < -50 && isAtStart) {
+            this.setSlidePosition(this.sliderItemsToShow[this.sliderItemsToShow.length - 1].offsetLeft);
+          }
+        }
+      }, { passive: true });
+    }
   }
 
   initPages() {
@@ -787,7 +810,12 @@ class SliderComponent extends HTMLElement {
       );
     }
 
-    if (this.enableSliderLooping) return;
+    if (this.enableSliderLooping) {
+      // Keep both nav buttons always enabled for infinite looping
+      this.prevButton.removeAttribute('disabled');
+      this.nextButton.removeAttribute('disabled');
+      return;
+    }
 
     if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollLeft === 0) {
       this.prevButton.setAttribute('disabled', 'disabled');
@@ -809,11 +837,33 @@ class SliderComponent extends HTMLElement {
 
   onButtonClick(event) {
     event.preventDefault();
-    const step = event.currentTarget.dataset.step || 1;
-    this.slideScrollPosition =
-      event.currentTarget.name === 'next'
-        ? this.slider.scrollLeft + step * this.sliderItemOffset
-        : this.slider.scrollLeft - step * this.sliderItemOffset;
+    const step = parseInt(event.currentTarget.dataset.step || 1);
+    
+    if (this.enableSliderLooping && this.sliderItemsToShow && this.sliderItemsToShow.length > 0) {
+      const maxScrollLeft = this.slider.scrollWidth - this.slider.clientWidth;
+      const isAtStart = this.slider.scrollLeft <= 2;
+      const isAtEnd = this.slider.scrollLeft >= maxScrollLeft - 2;
+
+      if (event.currentTarget.name === 'next') {
+        if (isAtEnd) {
+          this.slideScrollPosition = 0;
+        } else {
+          this.slideScrollPosition = this.slider.scrollLeft + step * this.sliderItemOffset;
+        }
+      } else if (event.currentTarget.name === 'previous') {
+        if (isAtStart) {
+          this.slideScrollPosition = this.sliderItemsToShow[this.sliderItemsToShow.length - 1].offsetLeft;
+        } else {
+          this.slideScrollPosition = this.slider.scrollLeft - step * this.sliderItemOffset;
+        }
+      }
+    } else {
+      this.slideScrollPosition =
+        event.currentTarget.name === 'next'
+          ? this.slider.scrollLeft + step * this.sliderItemOffset
+          : this.slider.scrollLeft - step * this.sliderItemOffset;
+    }
+    
     this.setSlidePosition(this.slideScrollPosition);
   }
 

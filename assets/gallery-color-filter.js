@@ -41,7 +41,8 @@
     document.head.appendChild(styleTag);
   }
 
-  const COLOR_NAME_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style|shape|design|pattern|model|material|pack|size)$/i;
+  const STRICT_COLOR_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style)$/i;
+  const GENERIC_OPTION_REGEX = /^(shape|design|pattern|model|material|pack|size)$/i;
   const TYPE_NAME_REGEX = /^(type|typ|art)$/i;
 
   function normalizeForMatching(str) {
@@ -101,14 +102,21 @@
       const mainList = this.container.querySelector('.product__media-list, .product-single__photos, .product__gallery, .product-slideshow, ul.slider') ||
                        this.container;
       
-      const mainItems = Array.from(mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide'))
+      let mainItems = Array.from(mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide'))
         .filter((item, index, self) => self.indexOf(item) === index);
+      mainItems = mainItems.filter(item => {
+        return !mainItems.some(other => other !== item && other.contains(item));
+      });
 
       const thumbnailContainer = this.container.querySelector('.thumbnail-list, .product__thumb-item, .product-gallery__thumbnails, [id^="GalleryThumbnails"]') ||
                                  document.querySelector('.thumbnail-list, [id^="GalleryThumbnails"]');
       let thumbnailItems = [];
       if (thumbnailContainer) {
-        thumbnailItems = Array.from(thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item'));
+        thumbnailItems = Array.from(thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item'))
+          .filter((item, index, self) => self.indexOf(item) === index);
+        thumbnailItems = thumbnailItems.filter(item => {
+          return !thumbnailItems.some(other => other !== item && other.contains(item));
+        });
       }
 
       this.mainList = mainList;
@@ -178,7 +186,7 @@
           const legendText = fieldset.querySelector('legend, label')?.textContent || '';
           const optionName = (nameAttr || legendText).split(':')[0].trim();
 
-          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+          if (STRICT_COLOR_REGEX.test(optionName) || /color/i.test(optionName) || GENERIC_OPTION_REGEX.test(optionName)) {
             const inputs = fieldset.querySelectorAll('input[type="radio"], button[data-value], .swatch');
             inputs.forEach(input => {
               const val = input.value || input.getAttribute('data-value') || input.getAttribute('value') || input.textContent.trim();
@@ -191,7 +199,7 @@
         for (const select of selects) {
           const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
           const optionName = labelText.split(':')[0].trim();
-          if (COLOR_NAME_REGEX.test(optionName) || /color/i.test(optionName)) {
+          if (STRICT_COLOR_REGEX.test(optionName) || /color/i.test(optionName) || GENERIC_OPTION_REGEX.test(optionName)) {
             Array.from(select.options).forEach(opt => {
               if (opt.value) colors.add(opt.value.trim());
             });
@@ -279,17 +287,25 @@
 
     detectSelectedColor(variantObj = null) {
       if (variantObj && variantObj.options) {
-        const colorIndex = this.getOptionIndexByName(COLOR_NAME_REGEX, /color/i);
+        const colorIndex = this.getOptionIndexByName(STRICT_COLOR_REGEX, /color/i);
         if (colorIndex !== -1 && variantObj.options[colorIndex]) {
           return variantObj.options[colorIndex].trim();
         }
+        // Fallback to generic option if no strict color is found
+        const genericIndex = this.getOptionIndexByName(GENERIC_OPTION_REGEX);
+        if (genericIndex !== -1 && variantObj.options[genericIndex]) {
+          return variantObj.options[genericIndex].trim();
+        }
       }
-      const valFromDom = this.detectSelectedOptionByName(COLOR_NAME_REGEX, /color/i);
+      const valFromDom = this.detectSelectedOptionByName(STRICT_COLOR_REGEX, /color/i) || this.detectSelectedOptionByName(GENERIC_OPTION_REGEX);
       if (valFromDom) return valFromDom;
 
       if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
         const options = window.ShopifyAnalytics.meta.product?.options || [];
-        const colorIndex = options.findIndex(opt => COLOR_NAME_REGEX.test(opt) || /color/i.test(opt));
+        let colorIndex = options.findIndex(opt => STRICT_COLOR_REGEX.test(opt) || /color/i.test(opt));
+        if (colorIndex === -1) {
+          colorIndex = options.findIndex(opt => GENERIC_OPTION_REGEX.test(opt));
+        }
         if (colorIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex]) {
           return window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex];
         }
@@ -381,97 +397,113 @@
       console.log("Selected Color:", selectedColor);
       console.log("Selected Type:", selectedType);
       console.log("Expected:", expectedAlt);
-
       this.mediaCache.forEach(img => {
         console.log("Image Alt:", img.altText);
       });
 
-      const matchList = [];
-      const commonList = [];
-      const otherList = [];
+      const matchingImages = [];
+      const defaultImages = [];
+      const otherColorImages = [];
+
+      const matchesColor = (imageAlt, color) => {
+        const normColor = color.trim().toLowerCase().replace(/\s+/g, ' ');
+        if (imageAlt === normColor) return true;
+        if (imageAlt.startsWith(normColor)) {
+          const nextChar = imageAlt.charAt(normColor.length);
+          if (!nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' || (nextChar >= '0' && nextChar <= '9')) {
+            return true;
+          }
+        }
+        return false;
+      };
 
       this.mediaCache.forEach(item => {
-        const isFeaturedMedia = featuredMediaId && item.mediaId && item.mediaId.includes(String(featuredMediaId));
         const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
         const mediaMeta = mediaMap[shopifyId] || {};
-
         const altText = item.altText || mediaMeta.alt || '';
         const imageAlt = altText.trim().toLowerCase().replace(/\s+/g, ' ');
 
-        let isMatch = false;
-        let isOther = false;
-
-        if (expectedAlt) {
-          if (imageAlt === expectedAlt) {
-            isMatch = true;
-          } else if (imageAlt.startsWith(expectedAlt)) {
-            // Guard with a boundary check to prevent partial matching (e.g. blueberry matching blue)
-            const nextChar = imageAlt.charAt(expectedAlt.length);
-            if (!nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' || (nextChar >= '0' && nextChar <= '9')) {
-              isMatch = true;
-            }
-          }
-
-          // Check if this alt text matches any OTHER option combination
-          if (!isMatch) {
-            if (selectedColor && selectedType) {
-              for (const color of availableColors) {
-                for (const type of availableTypes) {
-                  if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase() || type.trim().toLowerCase() !== selectedType.trim().toLowerCase()) {
-                    const otherExpected = `${color} - ${type}`.trim().toLowerCase().replace(/\s+/g, ' ');
-                    if (imageAlt === otherExpected || imageAlt.startsWith(otherExpected)) {
-                      isOther = true;
-                      break;
-                    }
-                  }
-                }
-                if (isOther) break;
-              }
-            } else if (selectedColor) {
-              for (const color of availableColors) {
-                if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase()) {
-                  const otherExpected = color.trim().toLowerCase().replace(/\s+/g, ' ');
-                  if (imageAlt === otherExpected || imageAlt.startsWith(otherExpected)) {
-                    isOther = true;
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        } else {
-          // If no options are selected, everything matches
-          isMatch = true;
+        // Videos, external videos, and 3D models should NEVER be excluded by color filtering.
+        // They have no color-specific alt text and must always remain visible.
+        const isNonImageMedia = !!item.element.querySelector('deferred-media, .deferred-media, product-model') ||
+                                item.element.classList.contains('product__media-item--full');
+        if (isNonImageMedia) {
+          defaultImages.push(item);
+          return;
         }
 
-        const numMatch = imageAlt.match(/\d+/);
-        const number = numMatch ? parseInt(numMatch[0], 10) : 1;
-
-        if (isMatch) {
-          matchList.push({ ...item, number: number });
-        } else if (isOther) {
-          otherList.push(item);
-        } else if (isFeaturedMedia && !isOther) {
-          matchList.push({ ...item, number: -1 });
-        } else {
-          commonList.push(item);
+        if (!selectedColor) {
+          // If no color selected, treat everything as matching
+          matchingImages.push(item);
+          return;
         }
+
+        // Check if it matches the selected color
+        if (matchesColor(imageAlt, selectedColor)) {
+          matchingImages.push(item);
+          return;
+        }
+
+        // Check if it belongs to any OTHER available colors of the product
+        let belongsToOtherColor = false;
+        for (const color of availableColors) {
+          if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase()) {
+            if (matchesColor(imageAlt, color)) {
+              belongsToOtherColor = true;
+              break;
+            }
+          }
+        }
+
+        if (belongsToOtherColor) {
+          otherColorImages.push(item);
+          return;
+        }
+
+        // Otherwise, it's a default/untagged image
+        defaultImages.push(item);
       });
 
-      console.log("Matched Images:", matchList);
-
-      matchList.sort((a, b) => (a.number || 0) - (b.number || 0) || a.originalIndex - b.originalIndex);
+      // Maintain original index ordering within each group
+      matchingImages.sort((a, b) => a.originalIndex - b.originalIndex);
+      defaultImages.sort((a, b) => a.originalIndex - b.originalIndex);
 
       let visibleItems = [];
-      if (matchList.length > 0) {
-        visibleItems = [...matchList];
+      if (matchingImages.length > 0) {
+        visibleItems = [...matchingImages, ...defaultImages];
       } else {
-        visibleItems = [...this.mediaCache]; // Fallback to all images if no matches found
+        visibleItems = [...defaultImages];
+      }
+
+      console.log("Matching Color Images:", matchingImages);
+      console.log("Default/Untagged Images:", defaultImages);
+      console.log("Other Color Images (Excluded):", otherColorImages);
+
+      // 1. Hide all thumbnails first, to ensure orphaned thumbnails from other variants are hidden
+      if (this.thumbnailContainer) {
+        const allThumbs = this.thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item');
+        allThumbs.forEach(thumb => {
+          thumb.classList.remove('g-color-filter-visible');
+          thumb.classList.add('g-color-filter-hidden');
+          thumb.style.display = 'none';
+          thumb.style.opacity = '0';
+        });
+      }
+
+      // 2. Hide all main slide elements first
+      if (this.mainList) {
+        const allSlides = this.mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide');
+        allSlides.forEach(slide => {
+          slide.classList.remove('g-color-filter-visible');
+          slide.classList.add('g-color-filter-hidden');
+          slide.style.display = 'none';
+          slide.style.opacity = '0';
+        });
       }
 
       const visibleSet = new Set(visibleItems.map(i => i.element));
 
-      // Synchronize visibility of BOTH Main Media slides and Thumbnail items
+      // 3. Synchronize visibility of the filtered main media slides and thumbnails
       this.mediaCache.forEach(item => {
         const isVisible = visibleSet.has(item.element);
 
@@ -492,7 +524,7 @@
         });
       });
 
-      // Re-append nodes in exact order: Selected Variant Tagged Images FIRST (in number order), then Shared
+      // 4. Re-append nodes in exact order: Selected Variant Tagged Images FIRST, then Shared
       visibleItems.forEach(item => {
         if (item.element && this.mainList) {
           this.mainList.appendChild(item.element);
@@ -503,7 +535,7 @@
         }
       });
 
-      // Update active slide and slider pagination/counters
+      // 5. Update active slide and slider pagination/counters
       if (visibleItems.length > 0) {
         const firstItem = visibleItems[0];
         const mediaId = firstItem.mediaId || firstItem.element.getAttribute('data-media-id');
@@ -527,12 +559,15 @@
           }
         }
 
+        // 6. Reset slider scroll positions to 0 (start from beginning)
         if (this.mainList) {
           this.mainList.scrollTo({ left: 0 });
+          this.mainList.scrollLeft = 0;
         }
         if (this.thumbnailContainer) {
           const thumbList = this.thumbnailContainer.querySelector('ul') || this.thumbnailContainer;
           thumbList.scrollTo({ left: 0 });
+          thumbList.scrollLeft = 0;
         }
 
         const counterTotal = this.container.querySelector('.slider-counter--total');
@@ -545,11 +580,26 @@
           counterCurrent.textContent = '1';
         }
 
+        // 7. Refresh pagination on Dawn's standard slider-components
         if (this.container.elements?.viewer?.resetPages) {
           this.container.elements.viewer.resetPages();
         }
         if (this.container.elements?.thumbnails?.resetPages) {
           this.container.elements.thumbnails.resetPages();
+        }
+
+        // 8. Reinitialize or refresh custom slider libraries if present
+        if (this.container.swiper && typeof this.container.swiper.update === 'function') {
+          this.container.swiper.update();
+          this.container.swiper.slideTo(0, 0);
+        }
+        if (this.container.flickity && typeof this.container.flickity.resize === 'function') {
+          this.container.flickity.resize();
+          this.container.flickity.select(0, false, true);
+        }
+        if (this.container.splide && typeof this.container.splide.refresh === 'function') {
+          this.container.splide.refresh();
+          this.container.splide.go(0);
         }
       }
     }
@@ -600,7 +650,10 @@
       if (variant) {
         const product = e.detail?.product || window.ShopifyAnalytics?.meta?.product;
         if (product?.options) {
-          const colorIdx = product.options.findIndex(opt => COLOR_NAME_REGEX.test(opt) || /color/i.test(opt));
+          let colorIdx = product.options.findIndex(opt => STRICT_COLOR_REGEX.test(opt) || /color/i.test(opt));
+          if (colorIdx === -1) {
+            colorIdx = product.options.findIndex(opt => GENERIC_OPTION_REGEX.test(opt));
+          }
           const colorVal = colorIdx !== -1 ? variant.options?.[colorIdx] : null;
           updateAllGalleries(colorVal, variant);
           return;

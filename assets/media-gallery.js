@@ -29,16 +29,42 @@ if (!customElements.get('media-gallery')) {
       }
 
       setActiveMedia(mediaId, prepend) {
-        const activeMedia =
+        console.log('[MediaGallery] Clicked media ID:', mediaId);
+        
+        let activeMedia =
           this.elements.viewer.querySelector(`[data-media-id="${mediaId}"]`) ||
           this.elements.viewer.querySelector('[data-media-id]');
         if (!activeMedia) {
+          console.warn('[MediaGallery] No slide found for media ID:', mediaId);
           return;
         }
-        this.elements.viewer.querySelectorAll('[data-media-id]').forEach((element) => {
-          element.classList.remove('is-active');
-        });
-        activeMedia?.classList?.add('is-active');
+
+        // Detect media type for logging
+        const isVideo = !!activeMedia.querySelector('.deferred-media:not(product-model)');
+        const isModel = !!activeMedia.querySelector('product-model');
+        const mediaType = isModel ? 'model' : isVideo ? 'video/external_video' : 'image';
+        console.log('[MediaGallery] Media type:', mediaType);
+
+        // If the targeted media is hidden by our color filter, redirect to the first visible one.
+        // EXCEPTION: never redirect away from video or model slides — they should always be clickable.
+        if (activeMedia.classList.contains('g-color-filter-hidden') && !isVideo && !isModel) {
+          const firstVisible = this.elements.viewer.querySelector('[data-media-id]:not(.g-color-filter-hidden)');
+          if (firstVisible) {
+            activeMedia = firstVisible;
+            mediaId = activeMedia.getAttribute('data-media-id') || activeMedia.getAttribute('id');
+            console.log('[MediaGallery] Redirected to first visible media ID:', mediaId);
+          }
+        }
+
+         this.elements.viewer.querySelectorAll('[data-media-id]')
+           .forEach((element) => element.classList.remove('is-active'));
+         // Add active class to the new slide
+         activeMedia?.classList?.add('is-active');
+         // Ensure hidden filter class does not prevent rendering of video/model slides
+         if (activeMedia?.classList?.contains('g-color-filter-hidden')) {
+           activeMedia.classList.remove('g-color-filter-hidden');
+         }
+         console.log('[MediaGallery] Active slide classes:', activeMedia?.className);
 
         if (prepend) {
           activeMedia.parentElement.firstChild !== activeMedia && activeMedia.parentElement.prepend(activeMedia);
@@ -51,7 +77,47 @@ if (!customElements.get('media-gallery')) {
           if (this.elements.viewer.slider) this.elements.viewer.resetPages();
         }
 
-        this.preventStickyHeader();
+         this.preventStickyHeader();
+         // Restore any previously modified modal-opener content on all slides
+         this.elements.viewer.querySelectorAll('modal-opener').forEach((opener) => {
+           if (opener.dataset.originalContent) {
+             opener.innerHTML = opener.dataset.originalContent;
+             delete opener.dataset.originalContent;
+           }
+         });
+          // Inline video handling: replace modal opener with actual video content and autoplay
+          const isVideoInline = !!activeMedia.querySelector('.deferred-media');
+         if (isVideoInline) {
+           const modalOpener = activeMedia.querySelector('modal-opener');
+           const deferred = activeMedia.querySelector('.deferred-media');
+           if (modalOpener && deferred) {
+             // Unhide deferred media element
+             deferred.classList.remove('g-color-filter-hidden');
+             deferred.style.display = '';
+             deferred.style.opacity = '';
+             console.log('[MediaGallery] deferredMedia class:', deferred.className, 'style:', deferred.style.cssText);
+             // Load the video/template content (may be synchronous)
+             deferred.loadContent(false);
+             // Preserve original markup for restoration later
+             if (!modalOpener.dataset.originalContent) {
+               modalOpener.dataset.originalContent = modalOpener.innerHTML;
+             }
+             // Inject the loaded video HTML
+             modalOpener.innerHTML = deferred.innerHTML;
+             const video = modalOpener.querySelector('video');
+             if (video) {
+               video.muted = true;
+               video.playsInline = true;
+               video.play().catch(err => console.warn('[MediaGallery] Inline video play error:', err));
+             }
+           }
+         }
+
+        // Ensure the slider scrolls to bring the active slide into view
+        if (this.elements.viewer.slider) {
+          this.elements.viewer.slider.scrollTo({ left: activeMedia.offsetLeft, behavior: 'smooth' });
+          console.log('[MediaGallery] Slider scrollLeft after switch:', this.elements.viewer.slider.scrollLeft);
+        }
         window.setTimeout(() => {
           if (!this.mql.matches || this.elements.thumbnails) {
             activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
@@ -62,6 +128,7 @@ if (!customElements.get('media-gallery')) {
           const top = activeMediaRect.top + window.scrollY;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
+        console.log('[MediaGallery] Active media ID after switching:', mediaId);
         this.playActiveMedia(activeMedia);
 
         if (!this.elements.thumbnails) return;
@@ -95,11 +162,12 @@ if (!customElements.get('media-gallery')) {
         image.src = image.src;
       }
 
-      playActiveMedia(activeItem) {
-        window.pauseAllMedia();
-        const deferredMedia = activeItem.querySelector('.deferred-media');
-        if (deferredMedia) deferredMedia.loadContent(false);
-      }
+        playActiveMedia(activeItem) {
+          // Pause any playing media first
+          window.pauseAllMedia();
+          // Video playback is now handled directly in setActiveMedia when a video slide becomes active.
+          // No additional loading or playback needed here.
+        }
 
       preventStickyHeader() {
         this.stickyHeader = this.stickyHeader || document.querySelector('sticky-header');

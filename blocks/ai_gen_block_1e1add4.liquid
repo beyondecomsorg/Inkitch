@@ -103,17 +103,32 @@
 
   }
 
+  .ai-latest-deals__badge-row-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .ai-latest-deals__badge-row-{{ ai_gen_id }} .ai-latest-deals__label-{{ ai_gen_id }} {
+    margin: 0 !important;
+  }
+
+  .ai-latest-deals__badge-row-{{ ai_gen_id }} .ai-latest-deals__badge-{{ ai_gen_id }} {
+    margin: 0 !important;
+  }
+
   .ai-latest-deals__badge-{{ ai_gen_id }} {
-    position: absolute;
-    top: 12px;
-    left: 12px;
+    display: inline-block;
     background-color: #E30613;
     color: #ffffff;
     font-weight: 700;
     font-size: 12px;
     border-radius: 6px;
     padding: 5px 10px;
-    z-index: 2;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -152,7 +167,7 @@
   }
 
   .ai-latest-deals__card-content-{{ ai_gen_id }} {
-    padding: 20px;
+    padding: 16px 20px 20px 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -337,7 +352,6 @@
       {% endif %}
 
         <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
-          <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
           {% if image %}
             <img
               src="{{ image | image_url: width: 600 }}"
@@ -355,9 +369,12 @@
         </div>
 
         <div class="ai-latest-deals__card-content-{{ ai_gen_id }}">
-          {% if label != blank %}
-            <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
-          {% endif %}
+          <div class="ai-latest-deals__badge-row-{{ ai_gen_id }}">
+            {% if label != blank %}
+              <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
+            {% endif %}
+            <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
+          </div>
 
           <div class="ai-latest-deals__discount-wrapper-{{ ai_gen_id }}">
             {% if number != blank %}
@@ -420,7 +437,6 @@
         {% endif %}
 
           <div class="ai-latest-deals__image-wrapper-{{ ai_gen_id }}">
-            <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
             {% if image %}
               <img
                 src="{{ image | image_url: width: 600 }}"
@@ -438,9 +454,12 @@
           </div>
 
           <div class="ai-latest-deals__card-content-{{ ai_gen_id }}">
-            {% if label != blank %}
-              <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
-            {% endif %}
+            <div class="ai-latest-deals__badge-row-{{ ai_gen_id }}">
+              {% if label != blank %}
+                <div class="ai-latest-deals__label-{{ ai_gen_id }}">{{ label }}</div>
+              {% endif %}
+              <span class="ai-latest-deals__badge-{{ ai_gen_id }}">LIMITED OFFER</span>
+            </div>
 
             <div class="ai-latest-deals__discount-wrapper-{{ ai_gen_id }}">
               {% if number != blank %}
