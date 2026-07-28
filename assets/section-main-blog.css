@@ -362,10 +362,12 @@
 
 @media screen and (max-width: 989px) {
   .ik-featured-blog__title a,
-  .ik-featured-blog__excerpt,
-  .ik-blog-card__title a,
-  .ik-blog-card__excerpt{
+  .ik-blog-card__title a{
     font-size: 12px !important;
+  }
+  .ik-blog-card__excerpt,
+  .ik-featured-blog__excerpt{
+   font-size: 10px;
   }
   .ik-btn-pill{
         padding: 10px;
