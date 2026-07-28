@@ -392,8 +392,6 @@ a.product__text {
     width: calc(100% + 4rem);
   }
 
-
-
   .slider.product__media-list::-webkit-scrollbar {
     height: 0.2rem;
     width: 0.2rem;
@@ -407,6 +405,33 @@ a.product__text {
     background-color: rgba(var(--color-foreground), 0.2);
   }
 
+  /* ── Product gallery: each slide must fill the full gallery width ──
+   *
+   * ROOT CAUSE: product-media-gallery.liquid adds the class "grid--peek"
+   * to .product__media-list. base.css then applies:
+   *   .grid--peek .grid__item { width: calc(50% - var(...) - 3rem) }
+   * making each slide ~46% wide and revealing the next image (the peek).
+   *
+   * FIX: Use the more-specific selector
+   *   .product__media-list.grid--peek .product__media-item
+   * to override width back to 100% only for product gallery slides,
+   * leaving grid--peek intact for all other sliders (article cards, etc.).
+   * ─────────────────────────────────────────────────────────────────── */
+  .product__media-list.grid--peek .product__media-item,
+  .product__media-list.grid--peek.grid--peek .grid__item {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* Also cancel the first-child left offset that grid--peek adds */
+  .product__media-list.grid--peek .grid__item:first-of-type {
+    margin-left: 0 !important;
+  }
+
+  /* Original rule for non-peek fallback */
   .product__media-list .product__media-item {
     width: calc(100% - 3rem - var(--grid-mobile-horizontal-spacing));
   }
@@ -415,6 +440,7 @@ a.product__text {
     width: calc(50% - 1.5rem - var(--grid-mobile-horizontal-spacing));
   }
 }
+
 
 @media screen and (min-width: 750px) {
   .product--thumbnail .product__media-list,
@@ -1489,3 +1515,37 @@ a.product__text {
     border: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE GALLERY — show full product image without cropping
+   Only applies ≤749px (mobile). Desktop is completely unaffected.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 749px) {
+
+  /* Main gallery slide images: switch from cover → contain so the
+     full product is always visible inside its container.            */
+  .product__media-list .media > img,
+  .product-media-container .media > img {
+    object-fit: contain !important;
+    object-position: center center;
+    background: rgb(var(--color-background)); /* fills letterbox gaps */
+  }
+
+  /* Allow the media container to flex around the image height when
+     the media-fit-cover layout is used on mobile.                   */
+  .product-media-container.media-fit-cover {
+    display: block;
+    align-self: auto;
+  }
+
+  .product-media-container.media-fit-cover .media {
+    position: relative; /* restore padding-top ratio behaviour */
+  }
+
+  /* Thumbnails keep object-fit:cover — they should remain neatly cropped */
+  .thumbnail img {
+    object-fit: cover !important;
+  }
+
+}
+

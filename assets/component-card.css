@@ -381,32 +381,43 @@
   outline: 0;
 }
 
-@media screen and (min-width: 990px) {
-  .card .media.media--hover-effect > img:only-child,
-  .card-wrapper .media.media--hover-effect > img:only-child {
-    transition: transform var(--duration-long) ease;
-  }
+/* ── Hover image swap: all screen sizes (homepage, collection, PDP) ── */
 
-  .card:hover .media.media--hover-effect > img:first-child:only-child,
-  .card-wrapper:hover .media.media--hover-effect > img:first-child:only-child {
-    transform: scale(1.03);
-  }
-
-  .card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child) {
-    opacity: 0;
-  }
-
-  .card-wrapper:hover .media.media--hover-effect > img + img {
-    opacity: 1;
-    transition: transform var(--duration-long) ease;
-    transform: scale(1.03);
-  }
-
-  .underline-links-hover:hover a {
-    text-decoration: underline;
-    text-underline-offset: 0.3rem;
-  }
+/* Smooth transition on both images at all widths */
+.card .media.media--hover-effect > img,
+.card-wrapper .media.media--hover-effect > img {
+  transition: opacity 0.4s ease-in-out, transform var(--duration-long) ease;
 }
+
+/* Single-image cards: subtle zoom only */
+.card .media.media--hover-effect > img:only-child,
+.card-wrapper .media.media--hover-effect > img:only-child {
+  transition: transform var(--duration-long) ease;
+}
+
+.card:hover .media.media--hover-effect > img:first-child:only-child,
+.card-wrapper:hover .media.media--hover-effect > img:first-child:only-child {
+  transform: scale(1.03);
+}
+
+/* Multi-image cards: crossfade to second image on hover */
+.card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child),
+.card:hover .media.media--hover-effect > img:first-child:not(:only-child) {
+  opacity: 0;
+}
+
+.card-wrapper:hover .media.media--hover-effect > img + img,
+.card:hover .media.media--hover-effect > img + img {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+/* Underline links on card hover */
+.underline-links-hover:hover a {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
 
 .card--standard.card--media .card__inner .card__information,
 .card--standard.card--text:not(.card--horizontal) > .card__content .card__heading:not(.card__heading--placeholder),

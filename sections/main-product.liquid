@@ -233,6 +233,146 @@
       font-weight: var(--font-weight-body);
     }
 
+    /* ── Interactive badge shared base ── */
+    .trust-badge-btn,
+    .trust-badge-link {
+      /* Full reset so they look exactly like a plain badge item */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 6px 6px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      /* Smooth all transitions */
+      transition: background 0.28s ease, transform 0.25s ease, color 0.25s ease;
+      outline: none;
+      width: 100%;
+      text-align: center;
+      /* Ensure the underline animation wrapper works correctly */
+      position: relative;
+    }
+
+    /* Hover / focus: subtle lift + light background highlight */
+    .trust-badge-btn:hover,
+    .trust-badge-btn:focus-visible,
+    .trust-badge-link:hover,
+    .trust-badge-link:focus-visible {
+      background: #f4f4f4;
+      transform: translateY(-2px);
+    }
+
+    /* Keyboard focus ring (accessible but clean) */
+    .trust-badge-btn:focus-visible,
+    .trust-badge-link:focus-visible {
+      outline: 2px solid rgba(var(--color-foreground), 0.3);
+      outline-offset: 2px;
+    }
+
+    /* Mobile tap feedback */
+    .trust-badge-btn:active,
+    .trust-badge-link:active {
+      transform: scale(0.96);
+      background: #ebebeb;
+    }
+
+    /* ── Icon inside interactive badges — transitions only (colors above) ── */
+    .trust-badge-btn svg,
+    .trust-badge-link svg {
+      transition: stroke 0.25s ease, fill 0.25s ease, transform 0.25s ease;
+    }
+
+    /* Scale up icon on hover */
+    .trust-badge-btn:hover svg,
+    .trust-badge-btn:focus-visible svg,
+    .trust-badge-link:hover svg,
+    .trust-badge-link:focus-visible svg {
+      transform: scale(1.08);
+    }
+
+    /* ── Interactive badge default: light red ── */
+    .trust-badge-btn svg.icon-shield-check {
+      stroke: rgba(227, 6, 19, 0.72);
+    }
+    .trust-badge-link svg:not(.icon-shield-check) {
+      fill: rgba(227, 6, 19, 0.72);
+    }
+
+    /* ── Animated underline on the badge text ── */
+    .trust-badge-btn .tb-label,
+    .trust-badge-link .tb-label {
+      position: relative;
+      display: inline-block;
+      font-size: var(--font-size-small);
+      line-height: 1.3;
+      color: rgba(227, 6, 19, 0.80);   /* light red default */
+      font-weight: var(--font-weight-body);
+      transition: color 0.25s ease;
+    }
+
+    /* Sliding underline pseudo-element */
+    .trust-badge-btn .tb-label::after,
+    .trust-badge-link .tb-label::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: #E30613;
+      transition: width 0.28s ease;
+    }
+
+    /* Slide underline in on hover/focus */
+    .trust-badge-btn:hover .tb-label::after,
+    .trust-badge-btn:focus-visible .tb-label::after,
+    .trust-badge-link:hover .tb-label::after,
+    .trust-badge-link:focus-visible .tb-label::after {
+      width: 100%;
+    }
+
+    /* Deepen text to full red on hover */
+    .trust-badge-btn:hover .tb-label,
+    .trust-badge-btn:focus-visible .tb-label,
+    .trust-badge-link:hover .tb-label,
+    .trust-badge-link:focus-visible .tb-label {
+      color: #E30613;
+    }
+
+    /* Deepen icon on hover */
+    .trust-badge-btn:hover svg.icon-shield-check,
+    .trust-badge-btn:focus-visible svg.icon-shield-check {
+      stroke: #E30613;
+    }
+    .trust-badge-link:hover svg:not(.icon-shield-check),
+    .trust-badge-link:focus-visible svg:not(.icon-shield-check) {
+      fill: #E30613;
+    }
+
+    /* ── Small chevron indicator ── */
+    .tb-arrow {
+      display: inline-block;
+      margin-left: 3px;
+      opacity: 0.45;
+      font-size: 0.75em;
+      vertical-align: middle;
+      line-height: 1;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      /* chevron character: › */
+    }
+    .trust-badge-btn:hover .tb-arrow,
+    .trust-badge-btn:focus-visible .tb-arrow,
+    .trust-badge-link:hover .tb-arrow,
+    .trust-badge-link:focus-visible .tb-arrow {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
     @media screen and (max-width: 749px) {
       .trust-badges-strip {
         padding: 12px 0;
@@ -246,6 +386,11 @@
         height: 18px;
       }
       /* font-size inherited responsively from var(--font-size-small) */
+      .trust-badge-btn,
+      .trust-badge-link {
+        padding: 6px 4px 4px;
+        gap: 6px;
+      }
     }
 
     /* Redesign Styles Override */
@@ -1004,8 +1149,9 @@
                 {%- render 'delivery-info', block: block -%}
               {%- when 'trust_badges_strip' -%}
                 <div class="trust-badges-strip" {{ block.shopify_attributes }}>
+
+                  <!-- ① FDA Approved — unchanged -->
                   <div class="trust-badge-item">
-                    <!-- FDA Icon -->
                     <svg viewBox="0 0 48 24" class="icon icon-fda">
                       <path d="M 4 6 L 16 6 L 16 8 L 8 8 L 8 11 L 14 11 L 14 13 L 8 13 L 8 18 L 4 18 Z" />
                       <path d="M 18 6 L 24 6 C 27 6 29 8 29 12 C 29 16 27 18 24 18 L 18 18 Z M 22 8 L 22 16 L 24 16 C 25.5 16 26.5 15 26.5 12 C 26.5 9 25.5 8 24 8 Z" />
@@ -1013,25 +1159,431 @@
                     </svg>
                     <span>FDA Approved</span>
                   </div>
+
+                  <!-- ② Free Shipping — unchanged -->
                   <div class="trust-badge-item">
-                    <!-- Free Shipping Box Icon -->
                     {{- 'icon-box.svg' | inline_asset_content -}}
                     <span>Free Shipping</span>
                   </div>
+
+                  <!-- ③ 6 Months Warranty* — opens modal -->
                   <div class="trust-badge-item">
-                    <!-- Warranty Shield Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-shield-check" viewBox="0 0 24 24">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                      <path d="m9 11 2 2 4-4"/>
-                    </svg>
-                    <span>6 Months Warranty*</span>
+                    <button
+                      type="button"
+                      class="trust-badge-btn"
+                      id="warranty-badge-btn"
+                      aria-haspopup="dialog"
+                      aria-label="View 6-Month Warranty details"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-shield-check" viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 11 2 2 4-4"/>
+                      </svg>
+                      <span class="tb-label">6 Months Warranty*<span class="tb-arrow" aria-hidden="true">›</span></span>
+                    </button>
                   </div>
+
+                  <!-- ④ Easy 10 Day Return — refund policy link -->
                   <div class="trust-badge-item">
-                    <!-- Easy 10 Day Return Icon -->
-                    {{- 'icon-return.svg' | inline_asset_content -}}
-                    <span>Easy 10 Day Return</span>
+                    <a
+                      href="/policies/refund-policy"
+                      class="trust-badge-link"
+                      aria-label="View Easy 10-Day Return policy"
+                    >
+                      {{- 'icon-return.svg' | inline_asset_content -}}
+                      <span class="tb-label">Easy 5 Day Return<span class="tb-arrow" aria-hidden="true">›</span></span>
+                    </a>
                   </div>
-                </div>
+
+                </div> 
+
+                <!-- ═══════════════════════════════════════════
+                     WARRANTY MODAL TEMPLATE
+                     JS will move this to <body> on load so it
+                     is never trapped inside any overflow parent
+                     ═══════════════════════════════════════════ -->
+                <template id="warranty-modal-tpl">
+                  <div
+                    id="warranty-modal"
+                    class="wm-overlay"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="wm-title"
+                    aria-describedby="wm-body"
+                  >
+                    <div class="wm-card" tabindex="-1">
+
+                      <!-- Coloured header -->
+                      <div class="wm-header">
+                        <div class="wm-header-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 11 2 2 4-4"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <p class="wm-header-label">Inkitch Promise</p>
+                          <h2 class="wm-title" id="wm-title">6-Month Warranty</h2>
+                        </div>
+                        <button type="button" class="wm-close" id="wm-close-btn" aria-label="Close">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
+                        </button>
+                      </div>
+
+                      <!-- Body -->
+                      <div class="wm-body" id="wm-body">
+
+                        <p class="wm-intro">
+                          Every <strong>Inkitch</strong> product is covered by a 6-month warranty against manufacturing defects.
+                        </p>
+
+                        <!-- Covered -->
+                        <div class="wm-section wm-section--green">
+                          <div class="wm-section-head">
+                            <span class="wm-section-icon wm-icon-green">
+                              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <path d="M4 10l4 4 8-8" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </span>
+                            <h3 class="wm-section-title wm-green">Covered Under Warranty</h3>
+                          </div>
+                          <ul class="wm-list">
+                            <li>Manufacturing defects in material or workmanship.</li>
+                          </ul>
+                        </div>
+
+                        <!-- Not covered -->
+                        <div class="wm-section wm-section--red">
+                          <div class="wm-section-head">
+                            <span class="wm-section-icon wm-icon-red">
+                              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <path d="M5 5l10 10M15 5L5 15" stroke="#C62828" stroke-width="2.2" stroke-linecap="round"/>
+                              </svg>
+                            </span>
+                            <h3 class="wm-section-title wm-red">Not Covered Under Warranty</h3>
+                          </div>
+                          <ul class="wm-list">
+                            <li>Accessories such as handles, knobs and lids.</li>
+                            <li>Damage caused by misuse, drops, impact or accidents.</li>
+                            <li>Normal wear and tear.</li>
+                            <li>Scratches, dents or discoloration.</li>
+                            <li>Damage caused by improper cleaning or handling.</li>
+                          </ul>
+                        </div>
+
+                        <!-- How to claim -->
+                        <div class="wm-claim-box">
+                          <span class="wm-claim-icon">📞</span>
+                          <div>
+                            <p class="wm-claim-title">How to Claim</p>
+                            <p class="wm-claim-text">Call our customer support team and they will guide you through the warranty process.</p>
+                          </div>
+                        </div>
+
+                      </div><!-- /wm-body -->
+                    </div><!-- /wm-card -->
+                  </div><!-- /wm-overlay -->
+                </template>
+
+                <!-- ═══════════════════════════════════════════
+                     STYLES  — all prefixed wm- to avoid clashes
+                     ═══════════════════════════════════════════ -->
+                <style>
+                  /* ── Badge buttons & links — reset only; real styles in main <style> block ── */
+                  /* These rules handle things that must override the inline <style> position */
+                  .trust-badge-btn,
+                  .trust-badge-link {
+                    /* Ensure the border-right on trust-badge-item still shows through */
+                    box-sizing: border-box;
+                  }
+
+                  /* ── Overlay (backdrop) — starts hidden ── */
+                  .wm-overlay {
+                    display: none;          /* hidden by default */
+                    position: fixed;
+                    inset: 0;
+                    z-index: 2147483647;    /* max z-index */
+                    background: rgba(0, 0, 0, 0.52);
+                    backdrop-filter: blur(3px);
+                    -webkit-backdrop-filter: blur(3px);
+                    align-items: center;
+                    justify-content: center;
+                    padding: 16px;
+                    box-sizing: border-box;
+                  }
+
+                  /* When open, switch to flex */
+                  .wm-overlay.wm-overlay--open {
+                    display: flex;
+                    animation: wm-fade-in 0.2s ease both;
+                  }
+
+                  @keyframes wm-fade-in {
+                    from { opacity: 0; }
+                    to   { opacity: 1; }
+                  }
+
+                  /* ── Card ── */
+                  .wm-card {
+                    background: #ffffff;
+                    border-radius: 16px;
+                    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+                    width: 100%;
+                    max-width: 500px;
+                    max-height: 88vh;
+                    overflow-y: auto;
+                    outline: none;
+                    animation: wm-slide-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+                  }
+
+                  @keyframes wm-slide-up {
+                    from { opacity: 0; transform: translateY(28px) scale(0.97); }
+                    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+                  }
+
+                  /* ── Header (red accent bar) ── */
+                  .wm-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 22px 22px 20px;
+                    background: linear-gradient(135deg, #E30613 0%, #b8000f 100%);
+                    border-radius: 16px 16px 0 0;
+                    position: sticky;
+                    top: 0;
+                  }
+
+                  .wm-header-icon {
+                    width: 44px;
+                    height: 44px;
+                    background: rgba(255,255,255,0.18);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                  }
+                  .wm-header-icon svg { width: 24px; height: 24px; }
+
+                  .wm-header-label {
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: rgba(255,255,255,0.75);
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    margin: 0 0 2px;
+                  }
+
+                  .wm-title {
+                    font-size: 19px;
+                    font-weight: 700;
+                    color: #ffffff;
+                    margin: 0;
+                    line-height: 1.2;
+                  }
+
+                  .wm-close {
+                    margin-left: auto;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(255,255,255,0.18);
+                    border: none;
+                    border-radius: 50%;
+                    width: 34px;
+                    height: 34px;
+                    color: #ffffff;
+                    cursor: pointer;
+                    flex-shrink: 0;
+                    transition: background 0.18s ease;
+                  }
+                  .wm-close:hover { background: rgba(255,255,255,0.35); }
+
+                  /* ── Body ── */
+                  .wm-body {
+                    padding: 22px 22px 26px;
+                  }
+
+                  .wm-intro {
+                    font-size: 14px;
+                    color: #444;
+                    line-height: 1.65;
+                    margin: 0 0 20px;
+                    padding: 14px 16px;
+                    background: #f9f9f9;
+                    border-radius: 10px;
+                    border-left: 3px solid #E30613;
+                  }
+
+                  /* ── Sections ── */
+                  .wm-section {
+                    border-radius: 10px;
+                    padding: 14px 16px;
+                    margin-bottom: 12px;
+                  }
+                  .wm-section--green { background: #f0faf0; border: 1px solid #c8e6c9; }
+                  .wm-section--red   { background: #fff5f5; border: 1px solid #ffcdd2; }
+
+                  .wm-section-head {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 10px;
+                  }
+
+                  .wm-section-icon {
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                  }
+                  .wm-icon-green { background: #e8f5e9; }
+                  .wm-icon-red   { background: #ffebee; }
+
+                  .wm-section-title {
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin: 0;
+                  }
+                  .wm-green { color: #2e7d32; }
+                  .wm-red   { color: #C62828; }
+
+                  .wm-list {
+                    margin: 0;
+                    padding-left: 18px;
+                    color: #555;
+                    font-size: 13.5px;
+                    line-height: 1.75;
+                  }
+
+                  /* ── How to claim box ── */
+                  .wm-claim-box {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 14px;
+                    padding: 16px;
+                    background: #fff8e1;
+                    border-radius: 10px;
+                    border: 1px solid #ffe082;
+                    margin-top: 14px;
+                  }
+                  .wm-claim-icon { font-size: 24px; line-height: 1; flex-shrink: 0; }
+                  .wm-claim-title {
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #7b5800;
+                    margin: 0 0 4px;
+                  }
+                  .wm-claim-text {
+                    font-size: 13.5px;
+                    color: #555;
+                    line-height: 1.6;
+                    margin: 0;
+                  }
+
+                  /* ── Scroll lock ── */
+                  body.wm-no-scroll { overflow: hidden !important; }
+
+                  /* ── Mobile: slide-up sheet ── */
+                  @media (max-width: 600px) {
+                    .wm-overlay {
+                      align-items: flex-end;
+                      padding: 0;
+                    }
+                    .wm-card {
+                      border-radius: 20px 20px 0 0;
+                      max-height: 90vh;
+                      animation: wm-sheet-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+                    }
+                    @keyframes wm-sheet-up {
+                      from { transform: translateY(100%); opacity: 0.6; }
+                      to   { transform: translateY(0);    opacity: 1;   }
+                    }
+                  }
+                </style>
+
+                <!-- ═══════════════════════════════════════════
+                     JAVASCRIPT — self-contained IIFE
+                     ═══════════════════════════════════════════ -->
+                <script>
+                  (function () {
+                    'use strict';
+
+                    var openBtn  = document.getElementById('warranty-badge-btn');
+                    var tpl      = document.getElementById('warranty-modal-tpl');
+                    if (!openBtn || !tpl) return;
+
+                    /* Clone from <template> and append to <body>
+                       so it is NEVER inside an overflow:hidden or
+                       transform ancestor (Shopify product column) */
+                    var frag    = tpl.content.cloneNode(true);
+                    document.body.appendChild(frag);
+
+                    var overlay  = document.getElementById('warranty-modal');
+                    var card     = overlay.querySelector('.wm-card');
+                    var closeBtn = overlay.querySelector('#wm-close-btn');
+
+                    /* ── Focusable elements for focus-trap ── */
+                    function focusable() {
+                      return Array.from(card.querySelectorAll(
+                        'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])'
+                      ));
+                    }
+
+                    /* ── Open ── */
+                    function open() {
+                      overlay.classList.add('wm-overlay--open');
+                      document.body.classList.add('wm-no-scroll');
+                      card.focus();
+                    }
+
+                    /* ── Close ── */
+                    function close() {
+                      overlay.classList.remove('wm-overlay--open');
+                      document.body.classList.remove('wm-no-scroll');
+                      openBtn.focus();
+                    }
+
+                    /* ── Events ── */
+                    openBtn.addEventListener('click', open);
+                    closeBtn.addEventListener('click', close);
+
+                    /* Backdrop click */
+                    overlay.addEventListener('click', function (e) {
+                      if (e.target === overlay) close();
+                    });
+
+                    /* ESC + focus-trap */
+                    document.addEventListener('keydown', function (e) {
+                      if (!overlay.classList.contains('wm-overlay--open')) return;
+
+                      if (e.key === 'Escape') { close(); return; }
+
+                      if (e.key === 'Tab') {
+                        var els   = focusable();
+                        var first = els[0];
+                        var last  = els[els.length - 1];
+                        if (e.shiftKey && document.activeElement === first) {
+                          e.preventDefault(); last.focus();
+                        } else if (!e.shiftKey && document.activeElement === last) {
+                          e.preventDefault(); first.focus();
+                        }
+                      }
+                    });
+
+                  })();
+                </script>
+
+
               {%- when 'rating' -%}
                 {%- if product.metafields.reviews.rating.value != blank -%}
                   <div class="rating-wrapper">

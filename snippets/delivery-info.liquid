@@ -23,12 +23,16 @@
     </div>
     
     <div class="delivery-info-text delivery-info-suffix">
-      {{ block.settings.suffix_text }}
-    </div>
+      {{ block.settings.suffix_text }} <span><img src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/images_1.jpg?v=1785253774"/></span>
+
   </div>
 </div>
 
 <style>
+  .delivery-info-text.delivery-info-suffix img{
+    height: 15px;
+    width: 15px;
+  }
   .delivery-info-block-wrapper {
     margin: 1.5rem 0;
     width: 100%;
@@ -51,6 +55,9 @@
     flex-shrink: 0;
     white-space: nowrap;
     line-height: 1.2;
+        display: flex;
+    align-items: center;
+    gap: 5px;
   }
   .delivery-info-text strong {
     font-weight: 600;

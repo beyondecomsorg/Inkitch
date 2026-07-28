@@ -81,9 +81,47 @@
     object-fit: contain;
     display: block;
     border-radius: 10px;
-    transition: transform 0.4s ease;
+    /* opacity transition enables crossfade with second image */
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    position: relative;
+    z-index: 1;
   }
 
+  /* Desktop hover: scale only when there is no second image */
+  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-image-{{ ai_gen_id }}:not([data-has-hover]) {
+    transform: scale(1.04);
+  }
+
+  /* Fade primary image OUT on hover/touch when a second image exists */
+  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-image-{{ ai_gen_id }}[data-has-hover],
+  .ai-product-card-wrapper-{{ ai_gen_id }}.touch-hover .ai-product-card-image-{{ ai_gen_id }}[data-has-hover] {
+    opacity: 0;
+  }
+
+  /* ─── Second / hover image overlay ─── */
+  /* Sits on top of the primary image, hidden by default */
+  .ai-product-hover-image-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 16px; /* match container padding so image respects container bounds */
+    border-radius: 10px;
+    box-sizing: border-box;
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* ensure clicks/taps still reach the link behind */
+  }
+
+  /* Reveal second image on desktop hover or mobile touch-hover */
+  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-hover-image-{{ ai_gen_id }},
+  .ai-product-card-wrapper-{{ ai_gen_id }}.touch-hover .ai-product-hover-image-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  /* ─── Placeholder (no image) ─── */
   .ai-product-card-placeholder-{{ ai_gen_id }} {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -101,6 +139,7 @@
     max-height: 200px;
   }
 
+  /* ─── Sale badge ─── */
   .ai-product-card-badge-{{ ai_gen_id }} {
     position: absolute;
     top: 12px;
@@ -112,11 +151,12 @@
     text-transform: uppercase;
     padding: 4px 10px;
     border-radius: 6px;
-    z-index: 2;
+    z-index: 3; /* above hover image */
     letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(227,6,19,0.3);
   }
 
+  /* ─── Holographic shimmer overlay ─── */
   .ai-product-card-shimmer-{{ ai_gen_id }} {
     position: absolute;
     top: 0;
@@ -135,16 +175,13 @@
     );
     pointer-events: none;
     opacity: 0;
+    z-index: 4; /* above everything */
     transition: opacity 0.3s ease;
   }
 
   .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-shimmer-{{ ai_gen_id }} {
     opacity: {{ block.settings.shimmer_opacity }};
     animation: ai-shimmer-{{ ai_gen_id }} {{ block.settings.shimmer_speed }}s infinite;
-  }
-
-  .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-image-{{ ai_gen_id }} {
-    transform: scale(1.04);
   }
 
   @keyframes ai-shimmer-{{ ai_gen_id }} {
@@ -387,6 +424,7 @@
               <div class="ai-product-card-wrapper-{{ ai_gen_id }}">
                 <div class="ai-product-card-image-container-{{ ai_gen_id }}">
                   {% if product.featured_image %}
+                    {%- comment -%}Primary image – fades out on hover when product has a second image{%- endcomment -%}
                     <img
                       src="{{ product.featured_image | image_url: width: 600 }}"
                       alt="{{ product.featured_image.alt | escape }}"
@@ -394,7 +432,20 @@
                       width="{{ product.featured_image.width }}"
                       height="{{ product.featured_image.height }}"
                       class="ai-product-card-image-{{ ai_gen_id }}"
+                      {% if product.images[1] %}data-has-hover="true"{% endif %}
                     >
+                    {%- comment -%}Second image overlay – only rendered when product.images[1] exists{%- endcomment -%}
+                    {% if product.images[1] %}
+                      <img
+                        src="{{ product.images[1] | image_url: width: 600 }}"
+                        alt="{{ product.images[1].alt | escape }}"
+                        loading="lazy"
+                        width="{{ product.images[1].width }}"
+                        height="{{ product.images[1].height }}"
+                        class="ai-product-hover-image-{{ ai_gen_id }}"
+                        aria-hidden="true"
+                      >
+                    {% endif %}
                   {% else %}
                     <div class="ai-product-card-placeholder-{{ ai_gen_id }}">
                       {{ 'product-1' | placeholder_svg_tag }}
@@ -470,6 +521,62 @@
 </product-carousel-{{ ai_gen_id }}>
 
 <script>
+  /* ─────────────────────────────────────────────────────────────
+   * Mobile touch/tap handler for image hover swap.
+   *
+   * Behaviour:
+   *  - First tap on the image container → shows the second image
+   *    (adds .touch-hover to .ai-product-card-wrapper-*)
+   *  - A second tap on the same card → removes the class and lets
+   *    the browser navigate via the wrapping <a> link.
+   *  - Touching outside any card → resets any active card.
+   *  - Scrolling in the carousel → resets active card.
+   *  - Products with only one image are completely unaffected.
+   * ───────────────────────────────────────────────────────────── */
+  (function() {
+    function initCarouselTouchHover(root) {
+      if (!('ontouchstart' in window) && !navigator.maxTouchPoints) return;
+
+      var WRAPPER_SEL = '.ai-product-card-wrapper-{{ ai_gen_id }}';
+      var HOVER_SEL   = '.ai-product-hover-image-{{ ai_gen_id }}';
+      var activeWrapper = null;
+
+      root.addEventListener('touchstart', function(e) {
+        var wrapper = e.target.closest(WRAPPER_SEL);
+        if (!wrapper) {
+          if (activeWrapper) { activeWrapper.classList.remove('touch-hover'); activeWrapper = null; }
+          return;
+        }
+        /* No second image on this card – navigate normally */
+        if (!wrapper.querySelector(HOVER_SEL)) return;
+
+        if (activeWrapper === wrapper) {
+          /* Second tap: restore + allow link navigation */
+          wrapper.classList.remove('touch-hover');
+          activeWrapper = null;
+        } else {
+          /* First tap: show second image, block navigation this tap */
+          if (activeWrapper) { activeWrapper.classList.remove('touch-hover'); }
+          wrapper.classList.add('touch-hover');
+          activeWrapper = wrapper;
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      /* Reset on scroll (carousel swipe) */
+      var track = root.querySelector('.ai-product-carousel-track-{{ ai_gen_id }}');
+      if (track) {
+        track.addEventListener('scroll', function() {
+          if (activeWrapper) { activeWrapper.classList.remove('touch-hover'); activeWrapper = null; }
+        }, { passive: true });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var host = document.querySelector('product-carousel-{{ ai_gen_id }}');
+      if (host) initCarouselTouchHover(host);
+    });
+  })();
   (function() {
     class ProductCarousel{{ ai_gen_id }} extends HTMLElement {
       constructor() {

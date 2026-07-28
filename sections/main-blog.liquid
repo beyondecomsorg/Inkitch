@@ -1,5 +1,3 @@
-{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-main-blog.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -16,39 +14,382 @@
   }
 {%- endstyle -%}
 
-{%- paginate blog.articles by 6 -%}
-  <div class="main-blog page-width section-{{ section.id }}-padding">
-    <h1 class="title--primary{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-      {{ blog.title | escape }}
-    </h1>
+{%- paginate blog.articles by 24 -%}
+  <div class="ik-blog-wrapper section-{{ section.id }}-padding">
+    
+    <!-- ── BREADCRUMB ── -->
+    <nav class="ik-breadcrumb" aria-label="breadcrumbs">
+      <a href="{{ routes.root_url }}" title="Home">Home</a>
+      <span class="ik-breadcrumb__separator" aria-hidden="true">/</span>
+      <span class="ik-breadcrumb__current">{{ blog.title }}</span>
+    </nav>
 
-    <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
-      {%- for article in blog.articles -%}
-        <div
-          class="blog-articles__article article{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
+    <!-- ── HERO BANNER ── -->
+    <div class="ik-blog-hero">
+      {%- if section.settings.hero_image != blank -%}
+        <img 
+          srcset="{%- if section.settings.hero_image.width >= 375 -%}{{ section.settings.hero_image | image_url: width: 375 }} 375w,{%- endif -%}
+            {%- if section.settings.hero_image.width >= 750 -%}{{ section.settings.hero_image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if section.settings.hero_image.width >= 1100 -%}{{ section.settings.hero_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if section.settings.hero_image.width >= 1500 -%}{{ section.settings.hero_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if section.settings.hero_image.width >= 1780 -%}{{ section.settings.hero_image | image_url: width: 1780 }} 1780w,{%- endif -%}
+            {%- if section.settings.hero_image.width >= 2000 -%}{{ section.settings.hero_image | image_url: width: 2000 }} 2000w,{%- endif -%}
+            {{ section.settings.hero_image | image_url }} {{ section.settings.hero_image.width }}w"
+          src="{{ section.settings.hero_image | image_url: width: 1500 }}"
+          alt="{{ section.settings.hero_heading | escape }}"
+          class="ik-blog-hero__bg"
+          loading="eager"
+          width="{{ section.settings.hero_image.width }}"
+          height="{{ section.settings.hero_image.height }}"
         >
-          {%- render 'article-card',
-            article: article,
-            media_height: section.settings.image_height,
-            media_aspect_ratio: article.image.aspect_ratio,
-            show_image: section.settings.show_image,
-            show_date: section.settings.show_date,
-            show_author: section.settings.show_author,
-            show_excerpt: true
-          -%}
-        </div>
-      {%- endfor -%}
+      {%- else -%}
+        <!-- Fallback kitchen image -->
+        <img 
+          src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1600&auto=format&fit=crop"
+          alt="The inKitch Journal"
+          class="ik-blog-hero__bg"
+          loading="eager"
+          width="1600"
+          height="800"
+        >
+      {%- endif -%}
+      <div class="ik-blog-hero__overlay" style="opacity: {{ section.settings.hero_overlay_opacity | divided_by: 100.0 }};"></div>
+      <div class="ik-blog-hero__content">
+        <h1 class="ik-blog-hero__title">{{ section.settings.hero_heading | default: blog.title }}</h1>
+        <p class="ik-blog-hero__subtitle">{{ section.settings.hero_subheading }}</p>
+      </div>
     </div>
 
-    {%- if paginate.pages > 1 -%}
-      {%- render 'pagination', paginate: paginate -%}
+    <!-- ── SEARCH & FILTER CONTROLS ── -->
+    <div class="ik-controls-container">
+      <div class="ik-search-wrapper">
+        <span class="ik-search-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+        <input 
+          type="text" 
+          id="ik-blog-search" 
+          placeholder="Search articles..." 
+          aria-label="Search articles"
+        >
+      </div>
+
+      <div class="ik-filters-scroll">
+        <div class="ik-filters-wrapper" role="tablist" aria-label="Filter articles by category">
+          <button class="ik-filter-chip ik-filter-chip--active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="ik-filter-chip" data-filter="kitchen-tips" role="tab" aria-selected="false">Kitchen Tips</button>
+          <button class="ik-filter-chip" data-filter="cookware" role="tab" aria-selected="false">Cookware</button>
+          <button class="ik-filter-chip" data-filter="storage" role="tab" aria-selected="false">Storage</button>
+          <button class="ik-filter-chip" data-filter="recipes" role="tab" aria-selected="false">Recipes</button>
+          <button class="ik-filter-chip" data-filter="healthy-living" role="tab" aria-selected="false">Healthy Living</button>
+          <button class="ik-filter-chip" data-filter="lifestyle" role="tab" aria-selected="false">Lifestyle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FEATURED STORY ── -->
+    {%- if blog.articles.size > 0 and paginate.current_page == 1 -%}
+      {%- assign featured_article = blog.articles | first -%}
+      
+      {%- comment -%} Determine Tags & Category Badge {%- endcomment -%}
+      {%- assign f_category = 'Lifestyle' -%}
+      {%- assign f_tag_slugs = '' -%}
+      {%- for tag in featured_article.tags -%}
+        {%- assign tag_lower = tag | downcase -%}
+        {%- if tag_lower == 'kitchen tips' or tag_lower == 'cookware' or tag_lower == 'storage' or tag_lower == 'recipes' or tag_lower == 'healthy living' or tag_lower == 'lifestyle' -%}
+          {%- assign f_category = tag -%}
+        {%- endif -%}
+        {%- assign tag_slug = tag | handleize -%}
+        {%- assign f_tag_slugs = f_tag_slugs | append: ' ' | append: tag_slug -%}
+      {%- endfor -%}
+
+      {%- comment -%} Calculate Reading Time {%- endcomment -%}
+      {%- assign f_words = featured_article.content | strip_html | split: ' ' | size -%}
+      {%- assign f_read_time = f_words | divided_by: 200 | at_least: 1 -%}
+
+      <div class="ik-featured-blog" data-tags="{{ f_tag_slugs | strip }}" data-title="{{ featured_article.title | downcase }}">
+        <div class="ik-featured-blog__image-col">
+          <a href="{{ featured_article.url }}" class="ik-featured-blog__img-link" aria-label="{{ featured_article.title }}">
+            {%- if featured_article.image -%}
+              <img
+                srcset="{%- if featured_article.image.width >= 375 -%}{{ featured_article.image | image_url: width: 375 }} 375w,{%- endif -%}
+                  {%- if featured_article.image.width >= 750 -%}{{ featured_article.image | image_url: width: 750 }} 750w,{%- endif -%}
+                  {%- if featured_article.image.width >= 1100 -%}{{ featured_article.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                  {{ featured_article.image | image_url }} {{ featured_article.image.width }}w"
+                src="{{ featured_article.image | image_url: width: 900 }}"
+                alt="{{ featured_article.image.alt | escape }}"
+                loading="eager"
+                width="{{ featured_article.image.width }}"
+                height="{{ featured_article.image.height }}"
+              >
+            {%- endif -%}
+          </a>
+        </div>
+        <div class="ik-featured-blog__content-col">
+          <div class="ik-featured-blog__meta">
+            <span class="ik-badge">{{ f_category }}</span>
+            <span class="ik-dot-separator">•</span>
+            <span class="ik-date">{{ featured_article.published_at | time_tag: format: 'date' }}</span>
+            <span class="ik-dot-separator">•</span>
+            <span class="ik-read-time">{{ f_read_time }} min read</span>
+          </div>
+          
+          <h2 class="ik-featured-blog__title">
+            <a href="{{ featured_article.url }}">{{ featured_article.title }}</a>
+          </h2>
+          
+          <p class="ik-featured-blog__excerpt">
+            {{ featured_article.excerpt_or_content | strip_html | truncatewords: 30 }}
+          </p>
+          
+          <a href="{{ featured_article.url }}" class="ik-btn-pill">
+            <span>Read Article</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
     {%- endif -%}
+
+    <!-- ── ARTICLE GRID ── -->
+    <div class="ik-grid-container">
+      <div class="ik-blog-grid" id="ik-blog-grid">
+        {%- for article in blog.articles -%}
+          {%- comment -%} Skip the first article if we are on the first page as it's featured {%- endcomment -%}
+          {%- if forloop.first and paginate.current_page == 1 -%}
+            {%- continue -%}
+          {%- endif -%}
+
+          {%- comment -%} Determine Tags & Category Badge {%- endcomment -%}
+          {%- assign g_category = 'Lifestyle' -%}
+          {%- assign g_tag_slugs = '' -%}
+          {%- for tag in article.tags -%}
+            {%- assign tag_lower = tag | downcase -%}
+            {%- if tag_lower == 'kitchen tips' or tag_lower == 'cookware' or tag_lower == 'storage' or tag_lower == 'recipes' or tag_lower == 'healthy living' or tag_lower == 'lifestyle' -%}
+              {%- assign g_category = tag -%}
+            {%- endif -%}
+            {%- assign tag_slug = tag | handleize -%}
+            {%- assign g_tag_slugs = g_tag_slugs | append: ' ' | append: tag_slug -%}
+          {%- endfor -%}
+
+          {%- comment -%} Calculate Reading Time {%- endcomment -%}
+          {%- assign g_words = article.content | strip_html | split: ' ' | size -%}
+          {%- assign g_read_time = g_words | divided_by: 200 | at_least: 1 -%}
+
+          <article 
+            class="ik-blog-card" 
+            data-tags="{{ g_tag_slugs | strip }}" 
+            data-title="{{ article.title | downcase }}"
+          >
+            <div class="ik-blog-card__image-wrapper">
+              <a href="{{ article.url }}" aria-label="{{ article.title }}" class="ik-blog-card__img-link">
+                {%- if article.image -%}
+                  <img
+                    srcset="{%- if article.image.width >= 360 -%}{{ article.image | image_url: width: 360 }} 360w,{%- endif -%}
+                      {%- if article.image.width >= 533 -%}{{ article.image | image_url: width: 533 }} 533w,{%- endif -%}
+                      {%- if article.image.width >= 720 -%}{{ article.image | image_url: width: 720 }} 720w,{%- endif -%}
+                      {{ article.image | image_url }} {{ article.image.width }}w"
+                    src="{{ article.image | image_url: width: 533 }}"
+                    alt="{{ article.image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ article.image.width }}"
+                    height="{{ article.image.height }}"
+                  >
+                {%- endif -%}
+              </a>
+            </div>
+            
+            <div class="ik-blog-card__info">
+              <div class="ik-blog-card__meta">
+                <span class="ik-badge">{{ g_category }}</span>
+                <span class="ik-dot-separator">•</span>
+                <span class="ik-read-time">{{ g_read_time }} min read</span>
+              </div>
+              
+              <p class="ik-blog-card__date">{{ article.published_at | time_tag: format: 'date' }}</p>
+              
+              <h3 class="ik-blog-card__title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h3>
+              
+              <p class="ik-blog-card__excerpt">
+                {{ article.excerpt_or_content | strip_html | truncatewords: 18 }}
+              </p>
+              
+              <a href="{{ article.url }}" class="ik-btn-pill ik-btn-pill--card">
+                <span>Read More</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+      
+      <!-- ── NO RESULTS STATE ── -->
+      <div id="ik-no-results" class="ik-no-results-message" style="display: none;">
+        <h3>No matching articles found</h3>
+        <p>Try refining your search or changing the active category filter.</p>
+      </div>
+    </div>
+
+    <!-- ── NEWSLETTER SIGNUP CTA ── -->
+    <div class="ik-newsletter-cta">
+      <div class="ik-newsletter-cta__content">
+        <h2 class="ik-newsletter-cta__heading">Never Miss a Kitchen Tip</h2>
+        <p class="ik-newsletter-cta__text">Get smart kitchen tips, recipes and exclusive product launches directly in your inbox.</p>
+        
+        {%- form 'customer', class: 'ik-newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="ik-newsletter-form__field-wrapper">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="ik-newsletter-form__input"
+              value="{{ form.email }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus
+                aria-invalid="true"
+                aria-describedby="Newsletter-error--{{ section.id }}"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="Newsletter-success--{{ section.id }}"
+              {% endif %}
+              placeholder="Your email address"
+              required
+            >
+            <button
+              type="submit"
+              class="ik-newsletter-form__button"
+              name="commit"
+              id="Subscribe--{{ section.id }}"
+              aria-label="Subscribe"
+            >
+              Subscribe
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <small class="ik-newsletter-error" id="Newsletter-error--{{ section.id }}">
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </small>
+          {%- endif -%}
+          {%- if form.posted_successfully? -%}
+            <h3
+              class="ik-newsletter-success"
+              id="Newsletter-success--{{ section.id }}"
+              tabindex="-1"
+              autofocus
+            >
+              Success! You've subscribed.
+            </h3>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+
+    <!-- ── PAGINATION ── -->
+    {%- if paginate.pages > 1 -%}
+      <div class="ik-pagination-wrapper">
+        {%- render 'pagination', paginate: paginate -%}
+      </div>
+    {%- endif -%}
+
   </div>
 {%- endpaginate -%}
+
+<!-- ── LIVE FILTER SCRIPT ── -->
+<script>
+  (function() {
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('ik-blog-search');
+      const filterChips = document.querySelectorAll('.ik-filter-chip');
+      const articles = document.querySelectorAll('.ik-blog-card');
+      const featuredArticle = document.querySelector('.ik-featured-blog');
+      const noResults = document.getElementById('ik-no-results');
+
+      let currentSearch = '';
+      let currentCategory = 'all';
+
+      function performFilter() {
+        let visibleCount = 0;
+
+        // 1. Filter Featured Article (only if it exists on page 1)
+        if (featuredArticle) {
+          const title = featuredArticle.getAttribute('data-title') || '';
+          const tags = featuredArticle.getAttribute('data-tags') || '';
+          const matchSearch = title.includes(currentSearch);
+          const matchCategory = currentCategory === 'all' || tags.includes(currentCategory);
+
+          if (matchSearch && matchCategory) {
+            featuredArticle.style.display = 'grid';
+            visibleCount++;
+          } else {
+            featuredArticle.style.display = 'none';
+          }
+        }
+
+        // 2. Filter Grid Articles
+        articles.forEach(function(card) {
+          const title = card.getAttribute('data-title') || '';
+          const tags = card.getAttribute('data-tags') || '';
+          const matchSearch = title.includes(currentSearch);
+          const matchCategory = currentCategory === 'all' || tags.includes(currentCategory);
+
+          if (matchSearch && matchCategory) {
+            card.style.display = 'block';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // 3. Toggle No Results message
+        if (visibleCount === 0) {
+          noResults.style.display = 'block';
+        } else {
+          noResults.style.display = 'none';
+        }
+      }
+
+      // Search field input event
+      if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+          currentSearch = e.target.value.toLowerCase().trim();
+          performFilter();
+        });
+      }
+
+      // Category chip click event
+      filterChips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          // Remove active classes
+          filterChips.forEach(c => {
+            c.classList.remove('ik-filter-chip--active');
+            c.setAttribute('aria-selected', 'false');
+          });
+
+          // Set active state
+          this.classList.add('ik-filter-chip--active');
+          this.setAttribute('aria-selected', 'true');
+
+          currentCategory = this.getAttribute('data-filter');
+          performFilter();
+        });
+      });
+    });
+  })();
+</script>
 
 {% schema %}
 {
@@ -57,62 +398,31 @@
   "class": "section",
   "settings": [
     {
-      "type": "select",
-      "id": "layout",
-      "options": [
-        {
-          "value": "grid",
-          "label": "t:sections.main-blog.settings.layout.options__1.label"
-        },
-        {
-          "value": "collage",
-          "label": "t:sections.main-blog.settings.layout.options__2.label"
-        }
-      ],
-      "default": "collage",
-      "label": "t:sections.main-blog.settings.layout.label"
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Background Image"
     },
     {
-      "type": "checkbox",
-      "id": "show_image",
-      "default": true,
-      "label": "t:sections.main-blog.settings.show_image.label"
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Hero Heading",
+      "default": "The inKitch Journal"
     },
     {
-      "type": "select",
-      "id": "image_height",
-      "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.main-blog.settings.image_height.options__1.label"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.main-blog.settings.image_height.options__2.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.main-blog.settings.image_height.options__3.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.main-blog.settings.image_height.options__4.label"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.main-blog.settings.image_height.label"
+      "type": "textarea",
+      "id": "hero_subheading",
+      "label": "Hero Subheading",
+      "default": "Kitchen inspiration, smart cooking tips, product guides and healthy lifestyle ideas."
     },
     {
-      "type": "checkbox",
-      "id": "show_date",
-      "default": true,
-      "label": "t:sections.main-blog.settings.show_date.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_author",
-      "default": false,
-      "label": "t:sections.main-blog.settings.show_author.label"
+      "type": "range",
+      "id": "hero_overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Hero Overlay Darkness",
+      "default": 40
     },
     {
       "type": "header",

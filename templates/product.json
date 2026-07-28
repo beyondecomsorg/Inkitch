@@ -62,7 +62,19 @@
         },
         "delivery_info": {
           "type": "delivery_info",
-          "settings": {}
+          "settings": {
+            "prefix_text": "Receive by **[date]**",
+            "suffix_text": "Free Shipping",
+            "enable_icon": true,
+            "icon_size": 20,
+            "text_color": "#555555",
+            "icon_color": "#cca300",
+            "background_color": "#f9f7f2",
+            "border_color": "#e3e0d8",
+            "border_radius": 4,
+            "padding": "12px 16px",
+            "font_size": 14
+          }
         },
         "trust_badges_strip": {
           "type": "trust_badges_strip",

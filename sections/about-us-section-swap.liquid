@@ -67,6 +67,24 @@
   border-radius: 16px;
 }
 
+/* Hover image crossfade */
+.about-us-swap__hover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.45s ease-in-out;
+  pointer-events: none;
+}
+
+.about-us-swap__image-wrapper:hover .about-us-swap__hover-img {
+  opacity: 1;
+}
+
 .about-us-swap__subtitle {
   font-size: 1.3rem;
   font-weight: 700;
@@ -151,6 +169,15 @@
               <img src="https://cdn.shopify.com/s/files/1/0994/2351/9085/files/shared_image_2.jpg?v=1784915589" alt="Designed for real everyday living" class="about-us-swap__img" loading="lazy">
             {%- endif -%}
           </picture>
+
+          {%- if section.settings.image_hover != blank -%}
+            <img
+              src="{{ section.settings.image_hover | image_url: width: 1200 }}"
+              alt="{{ section.settings.image_hover.alt | default: section.settings.heading | escape }}"
+              class="about-us-swap__hover-img"
+              loading="lazy"
+            >
+          {%- endif -%}
         </div>
       </div>
       <div class="about-us-swap__content-col">
@@ -188,6 +215,11 @@
       "type": "image_picker",
       "id": "image",
       "label": "Section Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_hover",
+      "label": "Hover Image (shown on mouse over)"
     },
     {
       "type": "image_picker",

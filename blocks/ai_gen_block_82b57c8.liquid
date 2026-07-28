@@ -128,17 +128,50 @@
     border-radius: 12px 12px 0 0;
   }
 
+  /* ─── Primary image ─── */
   .ai-new-popular-card-image-{{ ai_gen_id }} {
     max-width: 100%;
     max-height: 100%;
     width: auto;
     height: auto;
     object-fit: contain;
-    transition: transform 0.35s ease;
+    /* opacity transition enables the crossfade */
+    transition: transform 0.35s ease, opacity 0.3s ease;
+    position: relative;
+    z-index: 1;
   }
 
-  .ai-new-popular-card-{{ ai_gen_id }}:hover .ai-new-popular-card-image-{{ ai_gen_id }} {
+  /* Scale primary image only when there is no second image */
+  .ai-new-popular-card-{{ ai_gen_id }}:hover .ai-new-popular-card-image-{{ ai_gen_id }}:not([data-has-hover]) {
     transform: scale(1.05);
+  }
+
+  /* Fade primary OUT on hover when a second image exists */
+  .ai-new-popular-card-{{ ai_gen_id }}:hover .ai-new-popular-card-image-{{ ai_gen_id }}[data-has-hover],
+  .ai-new-popular-card-{{ ai_gen_id }}.touch-hover .ai-new-popular-card-image-{{ ai_gen_id }}[data-has-hover] {
+    opacity: 0;
+  }
+
+  /* ─── Hover / second image overlay ─── */
+  .ai-new-popular-hover-image-{{ ai_gen_id }} {
+    /* Absolutely covers the image wrapper */
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 16px; /* match wrapper padding so image stays inside */
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* clicks/taps fall through to the link */
+    box-sizing: border-box;
+  }
+
+  /* Fade second image IN on hover / touch-hover */
+  .ai-new-popular-card-{{ ai_gen_id }}:hover .ai-new-popular-hover-image-{{ ai_gen_id }},
+  .ai-new-popular-card-{{ ai_gen_id }}.touch-hover .ai-new-popular-hover-image-{{ ai_gen_id }} {
+    opacity: 1;
   }
 
   .ai-new-popular-card-image-placeholder-{{ ai_gen_id }} {
@@ -228,6 +261,13 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+  }
+
+  @media only screen and (max-width: 767px){
+      .ai-new-popular-card-info-{{ ai_gen_id }} {
+    padding: 5px !important;
+  }
+
   }
 
   .ai-new-popular-card-title-{{ ai_gen_id }} {
@@ -404,6 +444,7 @@
       display: block !important;
       outline: none !important;
       cursor: pointer !important;
+      padding: 5px;
     }
 
     .ai-new-popular-card-link-wrapper-{{ ai_gen_id }}:hover .ai-new-popular-card-title-{{ ai_gen_id }} {
@@ -518,6 +559,7 @@
                 <div class="ai-new-popular-card-{{ ai_gen_id }}">
                   <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
                     {% if product.featured_image %}
+                      {%- comment -%}Primary image — fades out on hover when a second image exists{%- endcomment -%}
                       <img
                         src="{{ product.featured_image | image_url: width: 400 }}"
                         alt="{{ product.featured_image.alt | escape }}"
@@ -525,7 +567,20 @@
                         loading="lazy"
                         width="400"
                         height="500"
+                        {% if product.images[1] %}data-has-hover="true"{% endif %}
                       >
+                      {%- comment -%}Second image overlay — only rendered when product has ≥2 images{%- endcomment -%}
+                      {% if product.images[1] %}
+                        <img
+                          src="{{ product.images[1] | image_url: width: 400 }}"
+                          alt="{{ product.images[1].alt | escape }}"
+                          class="ai-new-popular-hover-image-{{ ai_gen_id }}"
+                          loading="lazy"
+                          width="400"
+                          height="500"
+                          aria-hidden="true"
+                        >
+                      {% endif %}
                     {% else %}
                       <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
                         {{ 'product-1' | placeholder_svg_tag }}
@@ -605,6 +660,7 @@
                 <div class="ai-new-popular-card-{{ ai_gen_id }}">
                   <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
                     {% if product.featured_image %}
+                      {%- comment -%}Primary image{%- endcomment -%}
                       <img
                         src="{{ product.featured_image | image_url: width: 400 }}"
                         alt="{{ product.featured_image.alt | escape }}"
@@ -612,7 +668,20 @@
                         loading="lazy"
                         width="400"
                         height="500"
+                        {% if product.images[1] %}data-has-hover="true"{% endif %}
                       >
+                      {%- comment -%}Second image overlay{%- endcomment -%}
+                      {% if product.images[1] %}
+                        <img
+                          src="{{ product.images[1] | image_url: width: 400 }}"
+                          alt="{{ product.images[1].alt | escape }}"
+                          class="ai-new-popular-hover-image-{{ ai_gen_id }}"
+                          loading="lazy"
+                          width="400"
+                          height="500"
+                          aria-hidden="true"
+                        >
+                      {% endif %}
                     {% else %}
                       <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
                         {{ 'product-1' | placeholder_svg_tag }}
@@ -692,6 +761,7 @@
                 <div class="ai-new-popular-card-{{ ai_gen_id }}">
                   <div class="ai-new-popular-card-image-wrapper-{{ ai_gen_id }}">
                     {% if product.featured_image %}
+                      {%- comment -%}Primary image{%- endcomment -%}
                       <img
                         src="{{ product.featured_image | image_url: width: 400 }}"
                         alt="{{ product.featured_image.alt | escape }}"
@@ -699,7 +769,20 @@
                         loading="lazy"
                         width="400"
                         height="500"
+                        {% if product.images[1] %}data-has-hover="true"{% endif %}
                       >
+                      {%- comment -%}Second image overlay{%- endcomment -%}
+                      {% if product.images[1] %}
+                        <img
+                          src="{{ product.images[1] | image_url: width: 400 }}"
+                          alt="{{ product.images[1].alt | escape }}"
+                          class="ai-new-popular-hover-image-{{ ai_gen_id }}"
+                          loading="lazy"
+                          width="400"
+                          height="500"
+                          aria-hidden="true"
+                        >
+                      {% endif %}
                     {% else %}
                       <div class="ai-new-popular-card-image-placeholder-{{ ai_gen_id }}">
                         {{ 'product-1' | placeholder_svg_tag }}
@@ -769,6 +852,61 @@
 </new-popular-tabs-{{ ai_gen_id }}>
 
 <script>
+  /* ─────────────────────────────────────────────────────────
+   * Touch / tap handler for mobile image swap
+   * – First tap on a card that has a second image → show hover image
+   *   (adds .touch-hover to the card div)
+   * – Touching away, or a second tap on the same card → restore
+   * – The product anchor link is NOT interrupted; tapping the title/
+   *   price area always navigates normally.
+   * ───────────────────────────────────────────────────────── */
+  (function() {
+    function initTouchHover(root) {
+      /* Only attach on true touch devices */
+      if (!('ontouchstart' in window) && !navigator.maxTouchPoints) return;
+
+      var CARD_SEL  = '.ai-new-popular-card-{{ ai_gen_id }}';
+      var HOVER_SEL = '.ai-new-popular-hover-image-{{ ai_gen_id }}';
+      var activeCard = null;
+
+      root.addEventListener('touchstart', function(e) {
+        var card = e.target.closest(CARD_SEL);
+        if (!card) {
+          /* Touched outside any card — clear active */
+          if (activeCard) { activeCard.classList.remove('touch-hover'); activeCard = null; }
+          return;
+        }
+        /* Card has no second image — do nothing (link navigates normally) */
+        if (!card.querySelector(HOVER_SEL)) return;
+
+        if (activeCard === card) {
+          /* Second tap on same card: restore first image, then let the
+             browser follow the link (touchend → click will fire) */
+          card.classList.remove('touch-hover');
+          activeCard = null;
+          /* Do NOT preventDefault so the link opens */
+        } else {
+          /* First tap: show second image, suppress navigation this tap */
+          if (activeCard) { activeCard.classList.remove('touch-hover'); }
+          card.classList.add('touch-hover');
+          activeCard = card;
+          /* Prevent the link from opening on THIS first tap */
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      /* Restore when user scrolls away */
+      root.addEventListener('scroll', function() {
+        if (activeCard) { activeCard.classList.remove('touch-hover'); activeCard = null; }
+      }, { passive: true });
+    }
+
+    /* Initialise after the custom element connects */
+    document.addEventListener('DOMContentLoaded', function() {
+      var host = document.querySelector('new-popular-tabs-{{ ai_gen_id }}');
+      if (host) initTouchHover(host);
+    });
+  })();
   (function() {
     class NewPopularTabs{{ ai_gen_id }} extends HTMLElement {
       constructor() {
