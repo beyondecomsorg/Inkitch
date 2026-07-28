@@ -71,6 +71,7 @@
 
 .article-template__title:not(:only-child) {
   margin-bottom: 1rem;
+  font-size: 24px;
 }
 
 .article-template__link {
