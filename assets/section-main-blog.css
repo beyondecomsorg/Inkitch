@@ -365,7 +365,7 @@
   .ik-featured-blog__excerpt,
   .ik-blog-card__title a,
   .ik-blog-card__excerpt{
-    font-size: 12px;
+    font-size: 12px !important;
   }
   .ik-btn-pill{
         padding: 10px;
