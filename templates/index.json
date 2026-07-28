@@ -71,7 +71,7 @@
       "name": "Custom Responsive Banner",
       "settings": {
         "autoplay": true,
-        "autoplay_speed": 3,
+        "autoplay_speed": 5,
         "show_arrows": true,
         "show_dots": true,
         "banner_height": "medium"
