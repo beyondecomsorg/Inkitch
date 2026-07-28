@@ -63,7 +63,7 @@
         "delivery_info": {
           "type": "delivery_info",
           "settings": {
-            "prefix_text": "Receive by **[date]**",
+            "prefix_text": "Receive by 3-5 days",
             "suffix_text": "Free Shipping",
             "enable_icon": true,
             "icon_size": 20,
