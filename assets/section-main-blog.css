@@ -365,6 +365,10 @@
   .ik-featured-blog__excerpt{
     font-size: 12px;
   }
+  .ik-btn-pill{
+        padding: 10px;
+    font-size: 10px;
+  }
   .ik-featured-blog__title{
     line-height: 18px;
   }
