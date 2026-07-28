@@ -74,7 +74,7 @@
 
 .ik-blog-hero__content {
   position: relative;
-  z-index: 3;
+  z-index: 0;
   max-width: 680px;
   padding: 4rem 2rem;
   color: #FFFFFF;
