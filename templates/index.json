@@ -272,7 +272,7 @@
             "heading_size": 32,
             "heading_color": "#121212",
             "tab_1_label": "New Arrivals",
-            "collection_1": "frontpage",
+            "collection_1": "new-arrivals",
             "tab_2_label": "Best Sellers",
             "collection_2": "best-seller",
             "tab_3_label": "Combos",
