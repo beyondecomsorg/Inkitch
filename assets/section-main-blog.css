@@ -361,7 +361,8 @@
 }
 
 @media screen and (max-width: 989px) {
-  .ik-featured-blog__title a{
+  .ik-featured-blog__title a,
+  .ik-featured-blog__excerpt{
     font-size: 12px;
   }
   .ik-featured-blog__title{
