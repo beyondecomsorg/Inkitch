@@ -27,6 +27,7 @@
       "type": "about-us-banner",
       "name": "About Us Banner",
       "settings": {
+        "page_title": "The Story Behind inKitch",
         "image": "shopify://shop_images/shared_image.jpg",
         "image_mobile": "shopify://shop_images/Untitled.png",
         "heading": "",
@@ -53,7 +54,7 @@
         "text_color": "#555555",
         "padding_top_desktop": 40,
         "padding_bottom_desktop": 40,
-        "padding_top_mobile": 20,
+        "padding_top_mobile": 40,
         "padding_bottom_mobile": 20
       }
     },
