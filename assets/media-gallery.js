@@ -22,13 +22,17 @@ if (!customElements.get('media-gallery')) {
       }
 
       onSlideChanged(event) {
-        const thumbnail = this.elements.thumbnails.querySelector(
-          `[data-target="${event.detail.currentElement.dataset.mediaId}"]`
-        );
-        this.setActiveThumbnail(thumbnail);
+        const mediaId = event.detail.currentElement.dataset.mediaId;
+        if (this.elements.thumbnails) {
+          const thumbnail = this.elements.thumbnails.querySelector(
+            `[data-target="${mediaId}"]`
+          );
+          this.setActiveThumbnail(thumbnail);
+        }
+        this.setActiveMedia(mediaId, false, true);
       }
 
-      setActiveMedia(mediaId, prepend) {
+      setActiveMedia(mediaId, prepend, isSwipe = false) {
         console.log('[MediaGallery] Clicked media ID:', mediaId);
         
         let activeMedia =
@@ -114,17 +118,17 @@ if (!customElements.get('media-gallery')) {
          }
 
         // Ensure the slider scrolls to bring the active slide into view
-        if (this.elements.viewer.slider) {
+        if (this.elements.viewer.slider && !isSwipe) {
           this.elements.viewer.slider.scrollTo({ left: activeMedia.offsetLeft, behavior: 'smooth' });
           console.log('[MediaGallery] Slider scrollLeft after switch:', this.elements.viewer.slider.scrollLeft);
         }
         window.setTimeout(() => {
-          if (!this.mql.matches || this.elements.thumbnails) {
+          if (!isSwipe && (!this.mql.matches || this.elements.thumbnails)) {
             activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
           }
           const activeMediaRect = activeMedia.getBoundingClientRect();
           // Don't scroll if the image is already in view
-          if (activeMediaRect.top > -0.5) return;
+          if (activeMediaRect.top > -0.5 || isSwipe) return;
           const top = activeMediaRect.top + window.scrollY;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });

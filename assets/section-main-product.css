@@ -387,9 +387,10 @@ a.product__text {
 
 @media screen and (max-width: 749px) {
   .product__media-list {
-    margin-left: -2.5rem;
+    margin-left: 0 !important;
     margin-bottom: 3rem;
-    width: calc(100% + 4rem);
+    width: 100% !important;
+    scroll-padding-left: 0 !important;
   }
 
   .slider.product__media-list::-webkit-scrollbar {
@@ -423,6 +424,7 @@ a.product__text {
     min-width: 100% !important;
     max-width: 100% !important;
     margin-left: 0 !important;
+    margin-right: 0 !important;
     box-sizing: border-box;
   }
 
@@ -431,13 +433,17 @@ a.product__text {
     margin-left: 0 !important;
   }
 
+  .product__media-list::after {
+    display: none !important;
+  }
+
   /* Original rule for non-peek fallback */
   .product__media-list .product__media-item {
-    width: calc(100% - 3rem - var(--grid-mobile-horizontal-spacing));
+    width: 100% !important;
   }
 
   .product--mobile-columns .product__media-item {
-    width: calc(50% - 1.5rem - var(--grid-mobile-horizontal-spacing));
+    width: 100% !important;
   }
 }
 

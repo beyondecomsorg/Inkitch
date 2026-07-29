@@ -385,86 +385,114 @@
       const availableColors = this.getAllProductColors();
       const availableTypes = this.getAllProductTypes();
 
-      // STRICT expected alt text logic
-      let expectedAlt = '';
-      if (selectedColor && selectedType) {
-        expectedAlt = `${selectedColor} - ${selectedType}`.trim().toLowerCase().replace(/\s+/g, ' ');
-      } else if (selectedColor) {
-        expectedAlt = selectedColor.trim().toLowerCase().replace(/\s+/g, ' ');
-      }
-
-      // Debug Logs as requested
-      console.log("Selected Color:", selectedColor);
-      console.log("Selected Type:", selectedType);
-      console.log("Expected:", expectedAlt);
-      this.mediaCache.forEach(img => {
-        console.log("Image Alt:", img.altText);
-      });
-
-      const matchingImages = [];
-      const defaultImages = [];
-      const otherColorImages = [];
-
-      const matchesColor = (imageAlt, color) => {
-        const normColor = color.trim().toLowerCase().replace(/\s+/g, ' ');
-        if (imageAlt === normColor) return true;
-        if (imageAlt.startsWith(normColor)) {
-          const nextChar = imageAlt.charAt(normColor.length);
-          if (!nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' || (nextChar >= '0' && nextChar <= '9')) {
-            return true;
-          }
-        }
-        return false;
+      // ── Build ALL candidate expected-alt strings to tolerate merchant typos ─────────
+      // Actual formats seen in the wild: "Blue- With Bottle", "Blue -With Bottle",
+      // "Blue-With Bottle", "Blue - With Bottle", "Blue- with bottle" (any casing)
+      const buildExpectedAlts = (color, type) => {
+        if (!color) return [];
+        const c = color.trim();
+        if (!type) return [c.toLowerCase()];
+        const t = type.trim();
+        return [
+          `${c}- ${t}`,      // "Blue- With Bottle"  ← merchant format from screenshot
+          `${c} - ${t}`,     // "Blue - With Bottle"
+          `${c}-${t}`,       // "Blue-With Bottle"
+          `${c} -${t}`,      // "Blue -With Bottle"
+        ].map(s => s.trim().toLowerCase().replace(/\s+/g, ' '));
       };
 
-      this.mediaCache.forEach(item => {
-        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
-        const mediaMeta = mediaMap[shopifyId] || {};
-        const altText = item.altText || mediaMeta.alt || '';
-        const imageAlt = altText.trim().toLowerCase().replace(/\s+/g, ' ');
+      const expectedAlts = buildExpectedAlts(selectedColor, selectedType);
 
-        // Videos, external videos, and 3D models should NEVER be excluded by color filtering.
-        // They have no color-specific alt text and must always remain visible.
+      // Debug – always log so the merchant can verify in console
+      console.log('[GCF] Selected Color:', selectedColor);
+      console.log('[GCF] Selected Type :', selectedType);
+      console.log('[GCF] Expected alts  :', expectedAlts);
+      this.mediaCache.forEach(img => {
+        console.log('[GCF] Image alt raw  :', JSON.stringify(img.altText));
+      });
+
+      // ── Build "all other Color+Type" tag sets for strict exclusion ────────────────
+      const otherExpectedAlts = new Set();
+      availableColors.forEach(color => {
+        if (color.trim().toLowerCase() === (selectedColor || '').trim().toLowerCase()) return;
+        availableTypes.forEach(type => {
+          buildExpectedAlts(color, type).forEach(a => otherExpectedAlts.add(a));
+        });
+        // also add bare color tag
+        buildExpectedAlts(color, null).forEach(a => otherExpectedAlts.add(a));
+      });
+      // If a type IS selected, also exclude same-color but different-type tags
+      if (selectedColor && selectedType) {
+        availableTypes.forEach(type => {
+          if (type.trim().toLowerCase() === selectedType.trim().toLowerCase()) return;
+          buildExpectedAlts(selectedColor, type).forEach(a => otherExpectedAlts.add(a));
+        });
+      }
+
+      console.log('[GCF] Other (excluded) alts:', [...otherExpectedAlts]);
+
+      // ── Classify every media item ──────────────────────────────────────────────────
+      const matchingImages = [];
+      const defaultImages  = [];
+      const otherColorImages = [];
+
+      this.mediaCache.forEach(item => {
+        const shopifyId  = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
+        const mediaMeta  = mediaMap[shopifyId] || {};
+        const rawAlt     = item.altText || mediaMeta.alt || '';
+        const imageAlt   = rawAlt.trim().toLowerCase().replace(/\s+/g, ' ');
+
+        // Videos / models are never filtered
         const isNonImageMedia = !!item.element.querySelector('deferred-media, .deferred-media, product-model') ||
-                                item.element.classList.contains('product__media-item--full');
+                                 item.element.classList.contains('product__media-item--full');
         if (isNonImageMedia) {
           defaultImages.push(item);
           return;
         }
 
+        // No color selected → show everything
         if (!selectedColor) {
-          // If no color selected, treat everything as matching
           matchingImages.push(item);
           return;
         }
 
-        // Check if it matches the selected color
-        if (matchesColor(imageAlt, selectedColor)) {
+        // ── PRIMARY: exact combined match ──────────────────────────────────────────
+        if (expectedAlts.length && expectedAlts.some(e => imageAlt === e)) {
+          console.log('[GCF] ✅ MATCH (exact combined):', imageAlt);
           matchingImages.push(item);
           return;
         }
 
-        // Check if it belongs to any OTHER available colors of the product
-        let belongsToOtherColor = false;
-        for (const color of availableColors) {
-          if (color.trim().toLowerCase() !== selectedColor.trim().toLowerCase()) {
-            if (matchesColor(imageAlt, color)) {
-              belongsToOtherColor = true;
-              break;
+        // ── SECONDARY (no type selected): color-prefix match ──────────────────────
+        if (!selectedType) {
+          const normColor = selectedColor.trim().toLowerCase();
+          const startsWithColor = imageAlt.startsWith(normColor);
+          const nextChar = imageAlt.charAt(normColor.length);
+          const isBoundary = !nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' ||
+                             (nextChar >= '0' && nextChar <= '9');
+          if (startsWithColor && isBoundary) {
+            // Make sure it doesn't belong to a different Color+Type tag
+            if (!otherExpectedAlts.has(imageAlt)) {
+              console.log('[GCF] ✅ MATCH (color prefix):', imageAlt);
+              matchingImages.push(item);
+              return;
             }
           }
         }
 
-        if (belongsToOtherColor) {
+        // ── EXCLUDE: belongs to a different Color+Type combination ─────────────────
+        if (otherExpectedAlts.has(imageAlt)) {
+          console.log('[GCF] ❌ EXCLUDED (other variant):', imageAlt);
           otherColorImages.push(item);
           return;
         }
 
-        // Otherwise, it's a default/untagged image
+        // ── DEFAULT: untagged / neutral image – always show ────────────────────────
+        console.log('[GCF] ℹ️  DEFAULT (untagged):', imageAlt);
         defaultImages.push(item);
       });
 
-      // Maintain original index ordering within each group
+      // Maintain original ordering within groups
       matchingImages.sort((a, b) => a.originalIndex - b.originalIndex);
       defaultImages.sort((a, b) => a.originalIndex - b.originalIndex);
 
@@ -472,14 +500,35 @@
       if (matchingImages.length > 0) {
         visibleItems = [...matchingImages, ...defaultImages];
       } else {
-        visibleItems = [...defaultImages];
+        // No exact match found → graceful fallback: show everything
+        console.warn('[GCF] No matching images found – showing all as fallback');
+        visibleItems = [...this.mediaCache];
       }
 
-      console.log("Matching Color Images:", matchingImages);
-      console.log("Default/Untagged Images:", defaultImages);
-      console.log("Other Color Images (Excluded):", otherColorImages);
+      // ── Pin video/model slides to position 3 (index 2) ───────────────────────────
+      // Separate video/model items from image items, then splice them back in at slot 2.
+      const VIDEO_POSITION = 2; // 0-based → 3rd slot
+      const videoItems  = visibleItems.filter(item =>
+        !!item.element.querySelector('deferred-media, .deferred-media, product-model')
+      );
+      const imageItems  = visibleItems.filter(item =>
+        !item.element.querySelector('deferred-media, .deferred-media, product-model')
+      );
+      if (videoItems.length > 0) {
+        // Clamp insertion point so it never exceeds the image list length
+        const insertAt = Math.min(VIDEO_POSITION, imageItems.length);
+        imageItems.splice(insertAt, 0, ...videoItems);
+        visibleItems = imageItems;
+        console.log('[GCF] 🎬 Video pinned to position', VIDEO_POSITION + 1, '– order:',
+          visibleItems.map(i => i.altText || i.mediaId));
+      }
 
-      // 1. Hide all thumbnails first, to ensure orphaned thumbnails from other variants are hidden
+      console.log('[GCF] Visible items count:', visibleItems.length);
+      console.log('[GCF] Matching images:', matchingImages.map(i => i.altText));
+      console.log('[GCF] Default/Untagged:', defaultImages.map(i => i.altText));
+      console.log('[GCF] Excluded images :', otherColorImages.map(i => i.altText));
+
+      // 1. Hide all thumbnails
       if (this.thumbnailContainer) {
         const allThumbs = this.thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item');
         allThumbs.forEach(thumb => {
@@ -490,7 +539,7 @@
         });
       }
 
-      // 2. Hide all main slide elements first
+      // 2. Hide all main slide elements
       if (this.mainList) {
         const allSlides = this.mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide');
         allSlides.forEach(slide => {
@@ -503,7 +552,7 @@
 
       const visibleSet = new Set(visibleItems.map(i => i.element));
 
-      // 3. Synchronize visibility of the filtered main media slides and thumbnails
+      // 3. Synchronize visibility
       this.mediaCache.forEach(item => {
         const isVisible = visibleSet.has(item.element);
 
@@ -524,7 +573,7 @@
         });
       });
 
-      // 4. Re-append nodes in exact order: Selected Variant Tagged Images FIRST, then Shared
+      // 4. Re-append nodes in order: Matching → Defaults
       visibleItems.forEach(item => {
         if (item.element && this.mainList) {
           this.mainList.appendChild(item.element);
@@ -535,7 +584,7 @@
         }
       });
 
-      // 5. Update active slide and slider pagination/counters
+      // 5. Update active slide and slider counters
       if (visibleItems.length > 0) {
         const firstItem = visibleItems[0];
         const mediaId = firstItem.mediaId || firstItem.element.getAttribute('data-media-id');
@@ -559,7 +608,7 @@
           }
         }
 
-        // 6. Reset slider scroll positions to 0 (start from beginning)
+        // 6. Reset slider scroll positions to start
         if (this.mainList) {
           this.mainList.scrollTo({ left: 0 });
           this.mainList.scrollLeft = 0;
@@ -571,24 +620,16 @@
         }
 
         const counterTotal = this.container.querySelector('.slider-counter--total');
-        if (counterTotal) {
-          counterTotal.textContent = visibleItems.length;
-        }
+        if (counterTotal) counterTotal.textContent = visibleItems.length;
 
         const counterCurrent = this.container.querySelector('.slider-counter--current');
-        if (counterCurrent) {
-          counterCurrent.textContent = '1';
-        }
+        if (counterCurrent) counterCurrent.textContent = '1';
 
-        // 7. Refresh pagination on Dawn's standard slider-components
-        if (this.container.elements?.viewer?.resetPages) {
-          this.container.elements.viewer.resetPages();
-        }
-        if (this.container.elements?.thumbnails?.resetPages) {
-          this.container.elements.thumbnails.resetPages();
-        }
+        // 7. Refresh Dawn slider pagination
+        if (this.container.elements?.viewer?.resetPages) this.container.elements.viewer.resetPages();
+        if (this.container.elements?.thumbnails?.resetPages) this.container.elements.thumbnails.resetPages();
 
-        // 8. Reinitialize or refresh custom slider libraries if present
+        // 8. Refresh 3rd-party sliders if present
         if (this.container.swiper && typeof this.container.swiper.update === 'function') {
           this.container.swiper.update();
           this.container.swiper.slideTo(0, 0);
