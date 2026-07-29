@@ -385,109 +385,115 @@
       const availableColors = this.getAllProductColors();
       const availableTypes = this.getAllProductTypes();
 
-      // ── Build ALL candidate expected-alt strings to tolerate merchant typos ─────────
-      // Actual formats seen in the wild: "Blue- With Bottle", "Blue -With Bottle",
-      // "Blue-With Bottle", "Blue - With Bottle", "Blue- with bottle" (any casing)
-      const buildExpectedAlts = (color, type) => {
+      // ── Normalisation helper ───────────────────────────────────────────────────
+      const norm = (s) => (s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+      const normColor = norm(selectedColor);
+      const normType  = norm(selectedType);
+
+      // ── Build every prefix that belongs to the SELECTED variant ───────────────
+      // Supported Alt Text formats (new format):
+      //   "{Color}"                       → color-only image  (exact match)
+      //   "{Color}-{Type}-{N}"            → specific combo    (prefix: "color-type-")
+      //
+      // We build a list of prefix strings the selected variant's images start with.
+      // E.g. selected Blue + Tiffin + Tumbler:
+      //   selectedColorTypePrefixes = [ "blue-tiffin + tumbler-" ]
+      //
+      // A color-only image ("blue") is matched separately by exact equality with normColor.
+
+      const buildComboPrefixes = (color, type) => {
         if (!color) return [];
-        const c = color.trim();
-        if (!type) return [c.toLowerCase()];
-        const t = type.trim();
+        const c = norm(color);
+        if (!type) return [];
+        const t = norm(type);
+        // Support both "Color-Type-N" (no spaces around hyphen) and legacy "Color- Type-N"
         return [
-          `${c}- ${t}`,      // "Blue- With Bottle"  ← merchant format from screenshot
-          `${c} - ${t}`,     // "Blue - With Bottle"
-          `${c}-${t}`,       // "Blue-With Bottle"
-          `${c} -${t}`,      // "Blue -With Bottle"
-        ].map(s => s.trim().toLowerCase().replace(/\s+/g, ' '));
+          `${c}-${t}-`,       // "blue-tiffin + tumbler-1"  ← primary new format
+          `${c}- ${t}-`,      // "blue- tiffin + tumbler-1" ← legacy with space
+          `${c} - ${t}-`,     // "blue - tiffin + tumbler-1"
+        ];
       };
 
-      const expectedAlts = buildExpectedAlts(selectedColor, selectedType);
+      // Prefixes the selected color+type images start with
+      const selectedPrefixes = buildComboPrefixes(selectedColor, selectedType);
 
-      // Debug – always log so the merchant can verify in console
-      console.log('[GCF] Selected Color:', selectedColor);
-      console.log('[GCF] Selected Type :', selectedType);
-      console.log('[GCF] Expected alts  :', expectedAlts);
-      this.mediaCache.forEach(img => {
-        console.log('[GCF] Image alt raw  :', JSON.stringify(img.altText));
-      });
-
-      // ── Build "all other Color+Type" tag sets for strict exclusion ────────────────
-      const otherExpectedAlts = new Set();
+      // ── Build prefixes that belong to OTHER variants (for exclusion) ──────────
+      // An image is "other" if its alt starts with any of these.
+      const otherPrefixes = [];
       availableColors.forEach(color => {
-        if (color.trim().toLowerCase() === (selectedColor || '').trim().toLowerCase()) return;
         availableTypes.forEach(type => {
-          buildExpectedAlts(color, type).forEach(a => otherExpectedAlts.add(a));
+          // Skip the currently selected combination
+          if (norm(color) === normColor && norm(type) === normType) return;
+          buildComboPrefixes(color, type).forEach(p => otherPrefixes.push(p));
         });
-        // also add bare color tag
-        buildExpectedAlts(color, null).forEach(a => otherExpectedAlts.add(a));
+        // Add same-color/different-type prefixes when a type IS selected
+        // (handled above since we iterate all types)
       });
-      // If a type IS selected, also exclude same-color but different-type tags
-      if (selectedColor && selectedType) {
-        availableTypes.forEach(type => {
-          if (type.trim().toLowerCase() === selectedType.trim().toLowerCase()) return;
-          buildExpectedAlts(selectedColor, type).forEach(a => otherExpectedAlts.add(a));
-        });
-      }
 
-      console.log('[GCF] Other (excluded) alts:', [...otherExpectedAlts]);
+      // Other bare-color strings (e.g. "blue" when selected color is "pink")
+      const otherColorExact = availableColors
+        .map(c => norm(c))
+        .filter(c => c !== normColor);
 
-      // ── Classify every media item ──────────────────────────────────────────────────
-      const matchingImages = [];
-      const defaultImages  = [];
+      // Debug logs
+      console.log('[GCF] Selected Color   :', selectedColor);
+      console.log('[GCF] Selected Type    :', selectedType);
+      console.log('[GCF] Selected prefixes:', selectedPrefixes);
+      console.log('[GCF] Other prefixes   :', otherPrefixes);
+      console.log('[GCF] Other color exact:', otherColorExact);
+      this.mediaCache.forEach(img =>
+        console.log('[GCF] Image alt raw    :', JSON.stringify(img.altText))
+      );
+
+      // ── Image classification ───────────────────────────────────────────────────
+      const matchingImages   = [];
+      const defaultImages    = [];
       const otherColorImages = [];
 
       this.mediaCache.forEach(item => {
-        const shopifyId  = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
-        const mediaMeta  = mediaMap[shopifyId] || {};
-        const rawAlt     = item.altText || mediaMeta.alt || '';
-        const imageAlt   = rawAlt.trim().toLowerCase().replace(/\s+/g, ' ');
+        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
+        const mediaMeta = mediaMap[shopifyId] || {};
+        const rawAlt    = item.altText || mediaMeta.alt || '';
+        const imageAlt  = norm(rawAlt);
 
         // Videos / models are never filtered
         const isNonImageMedia = !!item.element.querySelector('deferred-media, .deferred-media, product-model') ||
                                  item.element.classList.contains('product__media-item--full');
-        if (isNonImageMedia) {
-          defaultImages.push(item);
-          return;
-        }
+        if (isNonImageMedia) { defaultImages.push(item); return; }
 
         // No color selected → show everything
-        if (!selectedColor) {
+        if (!selectedColor) { matchingImages.push(item); return; }
+
+        // ── MATCH: color-only image (exact: "blue") ────────────────────────────
+        if (imageAlt === normColor) {
+          console.log('[GCF] ✅ MATCH (color-only):', imageAlt);
           matchingImages.push(item);
           return;
         }
 
-        // ── PRIMARY: exact combined match ──────────────────────────────────────────
-        if (expectedAlts.length && expectedAlts.some(e => imageAlt === e)) {
-          console.log('[GCF] ✅ MATCH (exact combined):', imageAlt);
+        // ── MATCH: specific combo with number suffix  ("blue-tiffin + tumbler-2") ──
+        if (selectedPrefixes.length > 0 && selectedPrefixes.some(p => imageAlt.startsWith(p))) {
+          console.log('[GCF] ✅ MATCH (combo prefix):', imageAlt);
           matchingImages.push(item);
           return;
         }
 
-        // ── SECONDARY (no type selected): color-prefix match ──────────────────────
-        if (!selectedType) {
-          const normColor = selectedColor.trim().toLowerCase();
-          const startsWithColor = imageAlt.startsWith(normColor);
-          const nextChar = imageAlt.charAt(normColor.length);
-          const isBoundary = !nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '_' ||
-                             (nextChar >= '0' && nextChar <= '9');
-          if (startsWithColor && isBoundary) {
-            // Make sure it doesn't belong to a different Color+Type tag
-            if (!otherExpectedAlts.has(imageAlt)) {
-              console.log('[GCF] ✅ MATCH (color prefix):', imageAlt);
-              matchingImages.push(item);
-              return;
-            }
-          }
-        }
-
-        // ── EXCLUDE: belongs to a different Color+Type combination ─────────────────
-        if (otherExpectedAlts.has(imageAlt)) {
-          console.log('[GCF] ❌ EXCLUDED (other variant):', imageAlt);
+        // ── EXCLUDE: belongs to a DIFFERENT color-only tag ("pink", "green") ────
+        if (otherColorExact.includes(imageAlt)) {
+          console.log('[GCF] ❌ EXCLUDED (other color):', imageAlt);
           otherColorImages.push(item);
           return;
         }
 
-        // ── DEFAULT: untagged / neutral image – always show ────────────────────────
+        // ── EXCLUDE: belongs to a DIFFERENT combo ("pink-tiffin-1", "blue-tiffin-1" when type=tumbler) ──
+        if (otherPrefixes.some(p => imageAlt.startsWith(p))) {
+          console.log('[GCF] ❌ EXCLUDED (other combo):', imageAlt);
+          otherColorImages.push(item);
+          return;
+        }
+
+        // ── DEFAULT: untagged / neutral – always visible ───────────────────────
         console.log('[GCF] ℹ️  DEFAULT (untagged):', imageAlt);
         defaultImages.push(item);
       });

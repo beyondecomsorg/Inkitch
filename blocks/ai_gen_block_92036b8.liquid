@@ -10,10 +10,13 @@
     width: {{ block.settings.desktop_width_percent }}%;
     max-width: 100%;
     position: relative;
-    overflow: hidden;
+    overflow-x: clip;     /* prevent horizontal bleed without clipping vertical */
+    overflow-y: visible;  /* allow badge + card to lift upward on hover */
     background-color: #fafafa;
-    padding top:0px;
+    padding-top: 0px;
     padding-bottom: 60px;
+    isolation: isolate;   /* contain all child z-index stacking contexts */
+    z-index: 0;           /* keep section below sticky header */
   }
 
   .ai-product-carousel-container-{{ ai_gen_id }} {
@@ -30,7 +33,7 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: 15px 5px;
+    padding: 20px 5px 15px; /* extra top padding so badge has room to lift on hover */
   }
 
   .ai-product-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -140,6 +143,8 @@
   }
 
   /* ─── Sale badge ─── */
+  /* Badge is a direct child of .ai-product-card-wrapper (position:relative)    */
+  /* so overflow:hidden on the image container can never clip it.                */
   .ai-product-card-badge-{{ ai_gen_id }} {
     position: absolute;
     top: 12px;
@@ -151,9 +156,10 @@
     text-transform: uppercase;
     padding: 4px 10px;
     border-radius: 6px;
-    z-index: 1; /* above hover image */
+    z-index: 3; /* above image container AND hover overlay */
     letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(227,6,19,0.3);
+    pointer-events: none; /* don't intercept clicks meant for the card link */
   }
 
   /* ─── Holographic shimmer overlay ─── */
@@ -422,6 +428,9 @@
           <div class="ai-product-carousel-slide-{{ ai_gen_id }}">
             <a href="{{ product.url }}" class="ai-product-card-link-{{ ai_gen_id }}">
               <div class="ai-product-card-wrapper-{{ ai_gen_id }}">
+                {% if product.compare_at_price > product.price %}
+                  <span class="ai-product-card-badge-{{ ai_gen_id }}">SALE</span>
+                {% endif %}
                 <div class="ai-product-card-image-container-{{ ai_gen_id }}">
                   {% if product.featured_image %}
                     {%- comment -%}Primary image – fades out on hover when product has a second image{%- endcomment -%}
@@ -450,9 +459,6 @@
                     <div class="ai-product-card-placeholder-{{ ai_gen_id }}">
                       {{ 'product-1' | placeholder_svg_tag }}
                     </div>
-                  {% endif %}
-                  {% if product.compare_at_price > product.price %}
-                    <span class="ai-product-card-badge-{{ ai_gen_id }}">SALE</span>
                   {% endif %}
                   <div class="ai-product-card-shimmer-{{ ai_gen_id }}"></div>
                 </div>
