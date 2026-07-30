@@ -1,799 +1,508 @@
 /**
- * Product Gallery Color Filter & Variant Sync
- * Synchronizes product gallery images with selected Color variant using Alt Text matching:
- * 1. Reads selected variant color name (e.g. Green, Gray, Black)
- * 2. Compares selected color case-insensitively with each product media's Alt Text
- * 3. Displays matching images (e.g. Alt Text: "Green", "Green-1", "Green 2")
- * 4. Hides all media matching other variant colors (e.g. Gray, Black when Green is selected)
- * 5. Re-indexes gallery, updates thumbnails, slider counter, and resets active media
- * 6. Gracefully falls back to all images if no color match is found
+ * Product Gallery Variant Filter & Reorder
+ *
+ * Filters the product image gallery based on the currently selected variant
+ * options, using the image Alt Text as the matching key.
+ *
+ * Alt Text conventions:
+ *   - Format: {Value1}[+{Value2}][+{Value3}]-{Number}
+ *     e.g. "Black-1", "Black+1-2", "Blue+800ml-3"
+ *   - Values = one or more variant option VALUES, joined by "+"
+ *   - {Number} after the last "-" = display order within that group, starting at 1
+ *   - Blank alt text = "shared" image, valid for every variant
+ *
+ * Works for any number of product options (1, 2, or 3+) and any option names.
+ * Videos are priority-classified and forced to position 3 (index 2) or the end.
+ * Hidden items are disabled for screen readers and keyboard focus (aria-hidden & tabindex="-1").
  */
 
 (function () {
   'use strict';
 
-  // Inject CSS styles for hiding/showing filtered media
-  const styleId = 'gallery-color-filter-styles';
-  if (!document.getElementById(styleId)) {
-    const styleTag = document.createElement('style');
-    styleTag.id = styleId;
-    styleTag.innerHTML = `
-      .g-color-filter-hidden {
-        display: none !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        position: absolute !important;
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
+  // ─── CSS: hide / show classes ────────────────────────────────────────────────
+  const STYLE_ID = 'gcf-styles';
+  if (!document.getElementById(STYLE_ID)) {
+    const s = document.createElement('style');
+    s.id = STYLE_ID;
+    s.innerHTML = `
+      .gcf-hidden {
+        display: none !important; opacity: 0 !important; visibility: hidden !important;
+        pointer-events: none !important; position: absolute !important;
+        width: 0 !important; height: 0 !important; overflow: hidden !important;
+        margin: 0 !important; padding: 0 !important; border: 0 !important;
       }
-      .g-color-filter-visible {
-        opacity: 1 !important;
-        visibility: visible !important;
-        position: relative !important;
-        pointer-events: auto !important;
+      .gcf-visible {
+        opacity: 1 !important; visibility: visible !important;
+        position: relative !important; pointer-events: auto !important;
       }
     `;
-    document.head.appendChild(styleTag);
+    document.head.appendChild(s);
   }
 
-  const STRICT_COLOR_REGEX = /^(colou?r|farbe|couleur|coloris|colore|cor|shade|finish|style)$/i;
-  const GENERIC_OPTION_REGEX = /^(shape|design|pattern|model|material|pack|size)$/i;
-  const TYPE_NAME_REGEX = /^(type|typ|art)$/i;
+  // ─── Helper: Set element visibility & accessibility recursive attributes ──────
+  function setElementVisibility(el, visible) {
+    if (!el) return;
+    if (visible) {
+      el.classList.remove('gcf-hidden', 'g-color-filter-hidden', 'hidden');
+      el.classList.add('gcf-visible', 'g-color-filter-visible');
+      el.style.display = '';
+      el.style.opacity = '1';
+      el.removeAttribute('aria-hidden');
+      el.removeAttribute('tabindex');
 
-  function normalizeForMatching(str) {
-    if (!str) return '';
-    return String(str)
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .replace(/\s*-\s*/g, '-');
+      // Enable inner focusable elements
+      el.querySelectorAll('button, a, input, select, textarea, [tabindex]').forEach(item => {
+        item.removeAttribute('tabindex');
+      });
+    } else {
+      el.classList.remove('gcf-visible', 'g-color-filter-visible');
+      el.classList.add('gcf-hidden', 'g-color-filter-hidden');
+      el.style.display = 'none';
+      el.style.opacity = '0';
+      el.setAttribute('aria-hidden', 'true');
+      el.setAttribute('tabindex', '-1');
+
+      // Disable inner focusable elements
+      el.querySelectorAll('button, a, input, select, textarea, [tabindex]').forEach(item => {
+        item.setAttribute('tabindex', '-1');
+      });
+    }
   }
 
-  function normalizeString(str) {
-    if (!str) return '';
-    return String(str).trim().toLowerCase();
+  // ─── Helper: Check if element is a video or 3D model ─────────────────────────
+  function isVideoOrModel(el) {
+    if (!el) return false;
+    const matchesSelector = el.querySelector(
+      '.media-type-video, .media-type-external-video, .media-type-external_video, .media-type-model, deferred-media, .deferred-media, product-model, [class*="--video"]'
+    );
+    const hasClass = el.classList.contains('product__media-item--full') || el.classList.contains('product-single__media-wrapper--full');
+    return !!matchesSelector || hasClass;
   }
 
-  function getMediaAltText(element) {
-    if (!element) return '';
+  // ─── Helper: Parse alt text according to conventions ────────────────────────
+  function parseAlt(alt, productTitle) {
+    const normTitle = productTitle ? productTitle.trim().toLowerCase() : '';
+    const normAlt = alt ? alt.trim() : '';
+    const normAltLower = normAlt.toLowerCase();
 
-    // 1. Check attributes on slide element
-    let alt = element.getAttribute('data-variant-tag') ||
-              element.getAttribute('data-alt') ||
-              element.getAttribute('data-media-alt');
-    if (alt !== null && alt !== undefined && alt.trim() !== '') {
-      return alt.trim();
+    // If blank/empty or matches product title (case-insensitive) -> SHARED
+    if (!normAlt || normAltLower === normTitle) {
+      return { type: 'SHARED', order: 9999, tokens: [] };
     }
 
-    // 2. Check inner button data-variant-tag
-    const button = element.querySelector('button[data-variant-tag]');
-    if (button) {
-      alt = button.getAttribute('data-variant-tag');
-      if (alt !== null && alt !== undefined && alt.trim() !== '') return alt.trim();
+    // Locate the last hyphen
+    let orderNumber = 0;
+    let tokensStr = normAlt;
+    const lastDashIndex = normAlt.lastIndexOf('-');
+    if (lastDashIndex !== -1) {
+      const orderStr = normAlt.substring(lastDashIndex + 1).trim();
+      const parsed = parseInt(orderStr, 10);
+      if (!isNaN(parsed)) {
+        orderNumber = parsed;
+        tokensStr = normAlt.substring(0, lastDashIndex);
+      } else {
+        // Fallback: if text after last hyphen is non-numeric, treat entire string as option tokens and order = 0
+        orderNumber = 0;
+        tokensStr = normAlt;
+      }
     }
 
-    // 3. Check inner img alt attribute
-    const img = element.querySelector('img');
-    if (img) {
-      alt = img.getAttribute('alt');
-      if (alt !== null && alt !== undefined && alt.trim() !== '') return alt.trim();
-    }
+    // Split on "+" and trim
+    const tokens = tokensStr.split('+').map(t => t.trim().toLowerCase()).filter(Boolean);
 
-    return '';
+    return {
+      type: 'TAGGED',
+      order: orderNumber,
+      tokens: tokens
+    };
   }
 
+  // ─── Helper: Get explicit custom alt text attribute from a slide element ─────
+  function getCustomAlt(slideElement) {
+    if (!slideElement) return null;
+    const candidates = [
+      slideElement.getAttribute('data-variant-tag'),
+      slideElement.getAttribute('data-alt'),
+      slideElement.getAttribute('data-media-alt'),
+    ];
+    for (const v of candidates) {
+      if (v && v.trim()) return v.trim();
+    }
+    const btn = slideElement.querySelector('button[data-variant-tag]');
+    if (btn) {
+      const v = btn.getAttribute('data-variant-tag');
+      if (v && v.trim()) return v.trim();
+    }
+    return null;
+  }
 
+  // ─── Helper: Extract currently selected option values ────────────────────────
+  function getSelectedOptionValues(variantObj) {
+    let selected = [];
+    if (variantObj && Array.isArray(variantObj.options)) {
+      selected = variantObj.options;
+    }
 
-  class GalleryColorFilterInstance {
-    constructor(galleryContainer) {
-      this.container = galleryContainer;
-      this.currentColor = null;
-      this.currentFeaturedMediaId = null;
-      this.initCache();
+    // Fallback: Read from DOM inputs
+    if (!selected || selected.length === 0) {
+      const picker = document.querySelector('variant-radios, variant-selects, [data-variant-picker], .variant-picker, .product-form');
+      if (picker) {
+        const optionContainers = Array.from(picker.querySelectorAll('.product-form__input'));
+        if (optionContainers.length > 0) {
+          selected = optionContainers.map(container => {
+            const input = container.querySelector('input:checked, select');
+            if (!input) return '';
+            if (input.tagName === 'SELECT') {
+              return input.value;
+            }
+            return input.value || input.getAttribute('data-value') || '';
+          }).filter(Boolean);
+        }
+      }
+    }
+
+    // Fallback: ShopifyAnalytics
+    if (!selected || selected.length === 0) {
+      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
+        selected = window.ShopifyAnalytics.meta.selectedVariant.options;
+      }
+    }
+
+    return selected.map(v => String(v).trim().toLowerCase()).filter(Boolean);
+  }
+
+  // ─── Helper: Sync reordering & visibility to the Zoom Product Modal ──────────
+  function syncProductModal(visibleItems) {
+    const modal = document.querySelector('product-modal, .product-media-modal');
+    if (!modal) return;
+    const contentWrapper = modal.querySelector('.product-media-modal__content');
+    if (!contentWrapper) return;
+
+    const modalItems = Array.from(contentWrapper.children);
+    const itemsMap = {};
+    modalItems.forEach(el => {
+      const id = el.getAttribute('data-media-id');
+      if (id) {
+        itemsMap[id] = el;
+      }
+    });
+
+    // Hide all items first
+    modalItems.forEach(el => {
+      setElementVisibility(el, false);
+    });
+
+    // Reorder and show in the modal
+    visibleItems.forEach(item => {
+      const shopifyId = item.shopifyId;
+      const el = itemsMap[shopifyId];
+      if (el) {
+        setElementVisibility(el, true);
+        contentWrapper.appendChild(el);
+      }
+    });
+  }
+
+  // ─── GalleryFilterInstance Class ─────────────────────────────────────────────
+  class GalleryFilterInstance {
+    constructor(container) {
+      this.container = container;
+      this.mediaCache = [];
+      this._buildCache();
       this.update();
     }
 
-    initCache() {
-      const mainList = this.container.querySelector('.product__media-list, .product-single__photos, .product__gallery, .product-slideshow, ul.slider') ||
-                       this.container;
-      
-      let mainItems = Array.from(mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide'))
-        .filter((item, index, self) => self.indexOf(item) === index);
-      mainItems = mainItems.filter(item => {
-        return !mainItems.some(other => other !== item && other.contains(item));
-      });
+    // Cache the list of slide and thumbnail elements
+    _buildCache() {
+      const mainList =
+        this.container.querySelector(
+          '.product__media-list, .product-single__photos, .product__gallery, ul.slider'
+        ) || this.container;
 
-      const thumbnailContainer = this.container.querySelector('.thumbnail-list, .product__thumb-item, .product-gallery__thumbnails, [id^="GalleryThumbnails"]') ||
-                                 document.querySelector('.thumbnail-list, [id^="GalleryThumbnails"]');
-      let thumbnailItems = [];
-      if (thumbnailContainer) {
-        thumbnailItems = Array.from(thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item'))
-          .filter((item, index, self) => self.indexOf(item) === index);
-        thumbnailItems = thumbnailItems.filter(item => {
-          return !thumbnailItems.some(other => other !== item && other.contains(item));
-        });
+      let slides = Array.from(
+        mainList.querySelectorAll(
+          '.product__media-item, .product-single__media-wrapper, [data-media-id], .slider__slide'
+        )
+      ).filter((el, i, arr) => arr.indexOf(el) === i);
+
+      // Exclude nested duplicates
+      slides = slides.filter(el => !slides.some(other => other !== el && other.contains(el)));
+
+      const thumbContainer =
+        this.container.querySelector('[id^="GalleryThumbnails"], .thumbnail-list') ||
+        document.querySelector('[id^="GalleryThumbnails"], .thumbnail-list');
+
+      let thumbs = [];
+      if (thumbContainer) {
+        thumbs = Array.from(
+          thumbContainer.querySelectorAll('.thumbnail-list__item, [data-target], .thumbnail-item')
+        ).filter((el, i, arr) => arr.indexOf(el) === i);
+        thumbs = thumbs.filter(el => !thumbs.some(other => other !== el && other.contains(el)));
       }
 
       this.mainList = mainList;
-      this.thumbnailContainer = thumbnailContainer;
+      this.thumbContainer = thumbContainer;
+      this.productTitle = this.container.getAttribute('data-product-title') || '';
 
-      this.mediaCache = mainItems.map((element, index) => {
-        const altText = getMediaAltText(element);
-        const shopifyMediaId = element.getAttribute('data-shopify-media-id');
-        const mediaId = element.getAttribute('data-media-id') || element.getAttribute('id');
-        const cleanMediaId = mediaId ? mediaId.replace('Slide-', '').replace('MediaGallery-', '') : '';
+      this.mediaCache = slides.map((el, idx) => {
+        const shopifyId = el.getAttribute('data-shopify-media-id');
+        const mediaId   = el.getAttribute('data-media-id') || el.getAttribute('id') || '';
+        const cleanId   = mediaId.replace('Slide-', '').replace('MediaGallery-', '');
 
-        let thumbnailElement = null;
-        if (thumbnailItems.length > 0) {
-          thumbnailElement = thumbnailItems.find(thumb => {
-            const thumbShopifyId = thumb.getAttribute('data-shopify-media-id');
-            if (shopifyMediaId && thumbShopifyId && shopifyMediaId === thumbShopifyId) {
-              return true;
-            }
-            const target = thumb.getAttribute('data-target') || thumb.getAttribute('data-media-id') || '';
-            const buttonTarget = thumb.querySelector('button')?.getAttribute('data-target') || '';
-            return (cleanMediaId && (target.includes(cleanMediaId) || buttonTarget.includes(cleanMediaId)));
-          });
-          if (!thumbnailElement && index < thumbnailItems.length) {
-            thumbnailElement = thumbnailItems[index];
-          }
-        }
+        const customAlt = getCustomAlt(el);
 
-        return {
-          element,
-          thumbnailElement,
-          originalIndex: index,
-          shopifyMediaId,
-          mediaId,
-          altText
-        };
+        // Find associated thumbnail
+        const thumb = thumbs.find(t => {
+          const tId = t.getAttribute('data-shopify-media-id');
+          if (shopifyId && tId && shopifyId === tId) return true;
+          const target =
+            t.getAttribute('data-target') ||
+            t.getAttribute('data-media-id') ||
+            t.querySelector('button')?.getAttribute('data-target') || '';
+          return cleanId && target.includes(cleanId);
+        }) || (idx < thumbs.length ? thumbs[idx] : null);
+
+        return { el, thumb, idx, shopifyId, mediaId, customAlt };
       });
     }
 
-    getProductMediaMap() {
-      const jsonScript = this.container.querySelector('script[data-product-media-map]');
-      if (jsonScript) {
-        try {
-          const mediaList = JSON.parse(jsonScript.textContent);
-          const map = {};
-          mediaList.forEach(m => {
-            map[String(m.id)] = {
-              id: m.id,
-              alt: m.alt,
-              variantIds: m.variant_ids || [],
-              variantColors: (m.variant_colors || []).map(c => normalizeString(c)).filter(Boolean)
-            };
-          });
-          return map;
-        } catch (e) {}
-      }
-      return {};
-    }
+    // Main filter, sort, reorder, and render logic
+    update(variantObj = null) {
+      this._buildCache(); // Rebuild cache dynamically in case DOM changes
 
-    getAllProductColors() {
-      const colors = new Set();
-      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
-      
-      for (const picker of pickers) {
-        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
-        for (const fieldset of fieldsets) {
-          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
-          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
-          const optionName = (nameAttr || legendText).split(':')[0].trim();
+      const currentSelection = getSelectedOptionValues(variantObj);
 
-          if (STRICT_COLOR_REGEX.test(optionName) || /color/i.test(optionName) || GENERIC_OPTION_REGEX.test(optionName)) {
-            const inputs = fieldset.querySelectorAll('input[type="radio"], button[data-value], .swatch');
-            inputs.forEach(input => {
-              const val = input.value || input.getAttribute('data-value') || input.getAttribute('value') || input.textContent.trim();
-              if (val && val.length < 30) colors.add(val.trim());
-            });
-          }
-        }
+      const videos = [];
+      const taggedImages = [];
+      const sharedImages = [];
 
-        const selects = picker.querySelectorAll('select');
-        for (const select of selects) {
-          const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
-          const optionName = labelText.split(':')[0].trim();
-          if (STRICT_COLOR_REGEX.test(optionName) || /color/i.test(optionName) || GENERIC_OPTION_REGEX.test(optionName)) {
-            Array.from(select.options).forEach(opt => {
-              if (opt.value) colors.add(opt.value.trim());
-            });
-          }
-        }
-      }
-
-      return Array.from(colors);
-    }
-
-    getOptionIndexByName(regex, extraTest = null) {
-      const matchName = (name) => regex.test(name) || (extraTest && extraTest.test(name));
-      if (window.ShopifyAnalytics?.meta?.product?.options) {
-        const idx = window.ShopifyAnalytics.meta.product.options.findIndex(opt => matchName(opt));
-        if (idx !== -1) return idx;
-      }
-      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
-      for (const picker of pickers) {
-        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper, select');
-        const seenOptions = [];
-        for (const el of fieldsets) {
-          const nameAttr = el.getAttribute('name') || el.getAttribute('data-option-name') || '';
-          const legendText = el.querySelector('legend, label')?.textContent || '';
-          const labelText = el.previousElementSibling?.textContent || el.closest('div')?.querySelector('label')?.textContent || '';
-          const optionName = (nameAttr || legendText || labelText).split(':')[0].trim();
-          if (optionName && !seenOptions.includes(optionName)) {
-            seenOptions.push(optionName);
-          }
-        }
-        const idx = seenOptions.findIndex(opt => matchName(opt));
-        if (idx !== -1) return idx;
-      }
-      return -1;
-    }
-
-    detectSelectedOptionByName(regex, extraTest = null) {
-      const matchName = (name) => regex.test(name) || (extraTest && extraTest.test(name));
-      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
-      
-      for (const picker of pickers) {
-        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
-        for (const fieldset of fieldsets) {
-          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
-          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
-          const optionName = (nameAttr || legendText).split(':')[0].trim();
-
-          if (matchName(optionName)) {
-            const checkedRadio = fieldset.querySelector('input[type="radio"]:checked');
-            if (checkedRadio) {
-              const val = checkedRadio.value || checkedRadio.getAttribute('data-value');
-              if (val) return val.trim();
-            }
-            const activeSwatch = fieldset.querySelector('button.is-active, button[aria-checked="true"], button.active, .swatch-input__input:checked');
-            if (activeSwatch) {
-              const val = activeSwatch.getAttribute('data-value') || activeSwatch.getAttribute('value') || activeSwatch.value || activeSwatch.textContent.trim();
-              if (val) return val.trim();
-            }
-            const selectedSpan = fieldset.querySelector('[data-selected-value]');
-            if (selectedSpan && selectedSpan.textContent.trim()) {
-              return selectedSpan.textContent.trim();
-            }
-          }
-        }
-
-        const selects = picker.querySelectorAll('select');
-        for (const select of selects) {
-          const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
-          const optionName = labelText.split(':')[0].trim();
-          if (matchName(optionName)) {
-            if (select.value) return select.value.trim();
-          }
-        }
-      }
-
-      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
-        const options = window.ShopifyAnalytics.meta.product?.options || [];
-        const optionIndex = options.findIndex(opt => matchName(opt));
-        if (optionIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[optionIndex]) {
-          return window.ShopifyAnalytics.meta.selectedVariant.options[optionIndex];
-        }
-      }
-
-      return null;
-    }
-
-    detectSelectedColor(variantObj = null) {
-      if (variantObj && variantObj.options) {
-        const colorIndex = this.getOptionIndexByName(STRICT_COLOR_REGEX, /color/i);
-        if (colorIndex !== -1 && variantObj.options[colorIndex]) {
-          return variantObj.options[colorIndex].trim();
-        }
-        // Fallback to generic option if no strict color is found
-        const genericIndex = this.getOptionIndexByName(GENERIC_OPTION_REGEX);
-        if (genericIndex !== -1 && variantObj.options[genericIndex]) {
-          return variantObj.options[genericIndex].trim();
-        }
-      }
-      const valFromDom = this.detectSelectedOptionByName(STRICT_COLOR_REGEX, /color/i) || this.detectSelectedOptionByName(GENERIC_OPTION_REGEX);
-      if (valFromDom) return valFromDom;
-
-      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
-        const options = window.ShopifyAnalytics.meta.product?.options || [];
-        let colorIndex = options.findIndex(opt => STRICT_COLOR_REGEX.test(opt) || /color/i.test(opt));
-        if (colorIndex === -1) {
-          colorIndex = options.findIndex(opt => GENERIC_OPTION_REGEX.test(opt));
-        }
-        if (colorIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex]) {
-          return window.ShopifyAnalytics.meta.selectedVariant.options[colorIndex];
-        }
-      }
-
-      return null;
-    }
-
-    detectSelectedType(variantObj = null) {
-      if (variantObj && variantObj.options) {
-        const typeIndex = this.getOptionIndexByName(TYPE_NAME_REGEX);
-        if (typeIndex !== -1 && variantObj.options[typeIndex]) {
-          return variantObj.options[typeIndex].trim();
-        }
-      }
-      const valFromDom = this.detectSelectedOptionByName(TYPE_NAME_REGEX);
-      if (valFromDom) return valFromDom;
-
-      if (window.ShopifyAnalytics?.meta?.selectedVariant?.options) {
-        const options = window.ShopifyAnalytics.meta.product?.options || [];
-        const typeIndex = options.findIndex(opt => TYPE_NAME_REGEX.test(opt));
-        if (typeIndex !== -1 && window.ShopifyAnalytics.meta.selectedVariant.options[typeIndex]) {
-          return window.ShopifyAnalytics.meta.selectedVariant.options[typeIndex];
-        }
-      }
-
-      return null;
-    }
-
-    getAllProductTypes() {
-      const types = new Set();
-      const pickers = document.querySelectorAll('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, form[action*="/cart/add"], .product-form, .product-single__options');
-      
-      for (const picker of pickers) {
-        const fieldsets = picker.querySelectorAll('fieldset, .product-form__input, .selector-wrapper');
-        for (const fieldset of fieldsets) {
-          const nameAttr = fieldset.getAttribute('name') || fieldset.getAttribute('data-option-name') || '';
-          const legendText = fieldset.querySelector('legend, label')?.textContent || '';
-          const optionName = (nameAttr || legendText).split(':')[0].trim();
-
-          if (TYPE_NAME_REGEX.test(optionName)) {
-            const inputs = fieldset.querySelectorAll('input[type="radio"], button[data-value], .swatch');
-            inputs.forEach(input => {
-              const val = input.value || input.getAttribute('data-value') || input.getAttribute('value') || input.textContent.trim();
-              if (val && val.length < 30) types.add(val.trim());
-            });
-          }
-        }
-
-        const selects = picker.querySelectorAll('select');
-        for (const select of selects) {
-          const labelText = select.getAttribute('name') || select.getAttribute('aria-label') || select.getAttribute('data-option-name') || select.previousElementSibling?.textContent || select.closest('div')?.querySelector('label')?.textContent || '';
-          const optionName = labelText.split(':')[0].trim();
-          if (TYPE_NAME_REGEX.test(optionName)) {
-            Array.from(select.options).forEach(opt => {
-              if (opt.value) types.add(opt.value.trim());
-            });
-          }
-        }
-      }
-
-      return Array.from(types);
-    }
-
-    update(forceColor = null, variantObj = null) {
-      this.initCache();
-
-      const selectedColor = forceColor || this.detectSelectedColor(variantObj);
-      const selectedType = this.detectSelectedType(variantObj);
-      const featuredMediaId = variantObj?.featured_media?.id || variantObj?.featured_image?.id;
-
-      const normSelected = normalizeString(selectedColor);
-      this.currentColor = normSelected;
-      this.currentFeaturedMediaId = featuredMediaId;
-
-      const mediaMap = this.getProductMediaMap();
-      const availableColors = this.getAllProductColors();
-      const availableTypes = this.getAllProductTypes();
-
-      // ── Normalisation helper ───────────────────────────────────────────────────
-      const norm = (s) => (s || '').trim().toLowerCase().replace(/\s+/g, ' ');
-
-      const normColor = norm(selectedColor);
-      const normType  = norm(selectedType);
-
-      // ── Build every prefix that belongs to the SELECTED variant ───────────────
-      // Supported Alt Text formats (new format):
-      //   "{Color}"                       → color-only image  (exact match)
-      //   "{Color}-{Type}-{N}"            → specific combo    (prefix: "color-type-")
-      //
-      // We build a list of prefix strings the selected variant's images start with.
-      // E.g. selected Blue + Tiffin + Tumbler:
-      //   selectedColorTypePrefixes = [ "blue-tiffin + tumbler-" ]
-      //
-      // A color-only image ("blue") is matched separately by exact equality with normColor.
-
-      const buildComboPrefixes = (color, type) => {
-        if (!color) return [];
-        const c = norm(color);
-        if (!type) return [];
-        const t = norm(type);
-        // Support hyphens ("Color-Type-N", "Color- Type-N") and pluses ("Color+Type-N", "Color+ Type-N")
-        return [
-          `${c}-${t}-`,       // "blue-without bottle-1"
-          `${c}- ${t}-`,      // "blue- without bottle-1"
-          `${c} - ${t}-`,     // "blue - without bottle-1"
-          `${c}+${t}-`,       // "blue+without bottle-1"
-          `${c}+ ${t}-`,      // "blue+ without bottle-1"
-          `${c} + ${t}-`,     // "blue + without bottle-1"
-        ];
-      };
-
-      // Prefixes the selected color+type images start with
-      const selectedPrefixes = buildComboPrefixes(selectedColor, selectedType);
-
-      // ── Build prefixes that belong to OTHER variants (for exclusion) ──────────
-      // An image is "other" if its alt starts with any of these.
-      const otherPrefixes = [];
-      availableColors.forEach(color => {
-        availableTypes.forEach(type => {
-          // Skip the currently selected combination
-          if (norm(color) === normColor && norm(type) === normType) return;
-          buildComboPrefixes(color, type).forEach(p => otherPrefixes.push(p));
-        });
-        // Add same-color/different-type prefixes when a type IS selected
-        // (handled above since we iterate all types)
-      });
-
-      // Other bare-color strings (e.g. "blue" when selected color is "pink")
-      const otherColorExact = availableColors
-        .map(c => norm(c))
-        .filter(c => c !== normColor);
-
-      // Debug logs
-      console.log('[GCF] Selected Color   :', selectedColor);
-      console.log('[GCF] Selected Type    :', selectedType);
-      console.log('[GCF] Selected prefixes:', selectedPrefixes);
-      console.log('[GCF] Other prefixes   :', otherPrefixes);
-      console.log('[GCF] Other color exact:', otherColorExact);
-      this.mediaCache.forEach(img =>
-        console.log('[GCF] Image alt raw    :', JSON.stringify(img.altText))
-      );
-
-      // ── Image classification ───────────────────────────────────────────────────
-      const matchingImages   = [];
-      const defaultImages    = [];
-      const otherColorImages = [];
-
+      // 1. Prioritize and separate media by type and alt-text classification
       this.mediaCache.forEach(item => {
-        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
-        const mediaMeta = mediaMap[shopifyId] || {};
-        const rawAlt    = item.altText || mediaMeta.alt || '';
-        const imageAlt  = norm(rawAlt);
-
-        // Videos / models are never filtered
-        const isNonImageMedia = !!item.element.querySelector('deferred-media, .deferred-media, product-model') ||
-                                 item.element.classList.contains('product__media-item--full');
-        if (isNonImageMedia) { defaultImages.push(item); return; }
-
-        // No color selected → show everything
-        if (!selectedColor) { matchingImages.push(item); return; }
-
-        // ── MATCH: color-only image (exact: "blue") ────────────────────────────
-        if (imageAlt === normColor) {
-          console.log('[GCF] ✅ MATCH (color-only):', imageAlt);
-          matchingImages.push(item);
-          return;
-        }
-
-        // ── MATCH: specific combo with number suffix  ("blue-tiffin + tumbler-2") ──
-        if (selectedPrefixes.length > 0 && selectedPrefixes.some(p => imageAlt.startsWith(p))) {
-          console.log('[GCF] ✅ MATCH (combo prefix):', imageAlt);
-          matchingImages.push(item);
-          return;
-        }
-
-        // ── EXCLUDE: starts with a DIFFERENT color (e.g. "black+ bottle-1" when selected is "blue") ──
-        const startsWithOtherColor = otherColorExact.some(c => {
-          const starts = imageAlt.startsWith(c);
-          if (!starts) return false;
-          const nextChar = imageAlt.charAt(c.length);
-          return !nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '+' || nextChar === '_';
-        });
-        if (startsWithOtherColor) {
-          console.log('[GCF] ❌ EXCLUDED (starts with other color):', imageAlt);
-          otherColorImages.push(item);
-          return;
-        }
-
-        // ── EXCLUDE: belongs to a DIFFERENT combo of the SAME color ──
-        if (otherPrefixes.some(p => imageAlt.startsWith(p))) {
-          console.log('[GCF] ❌ EXCLUDED (other combo):', imageAlt);
-          otherColorImages.push(item);
-          return;
-        }
-
-        // ── DEFAULT: untagged / neutral – always visible ───────────────────────
-        console.log('[GCF] ℹ️  DEFAULT (untagged):', imageAlt);
-        defaultImages.push(item);
-      });
-
-      // Sort matching images based on the suffix number in the Alt Text (e.g. "Blue-Without Bottle-3" -> 3)
-      const getAltOrder = (item) => {
-        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
-        const mediaMeta = mediaMap[shopifyId] || {};
-        const rawAlt    = item.altText || mediaMeta.alt || '';
-        const imageAlt  = norm(rawAlt);
-        
-        // Match a hyphen or plus followed by a number at the end, e.g. "-3" or "+3"
-        const match = imageAlt.match(/[-+]\s*(\d+)$/);
-        if (match) {
-          return parseInt(match[1], 10);
-        }
-        return 999; // Default fallback for unnumbered items
-      };
-
-      matchingImages.sort((a, b) => {
-        const orderA = getAltOrder(a);
-        const orderB = getAltOrder(b);
-        if (orderA !== orderB) {
-          return orderA - orderB;
-        }
-        return a.originalIndex - b.originalIndex;
-      });
-
-      defaultImages.sort((a, b) => a.originalIndex - b.originalIndex);
-
-      let visibleItems = [];
-      if (matchingImages.length > 0) {
-        visibleItems = [...matchingImages, ...defaultImages];
-      } else {
-        // No exact match found → graceful fallback: show everything
-        console.warn('[GCF] No matching images found – showing all as fallback');
-        visibleItems = [...this.mediaCache];
-      }
-
-      // ── Pin video/model slides to position 3 (index 2) ───────────────────────────
-      // Separate video/model items from image items, then splice them back in at slot 2.
-      const VIDEO_POSITION = 2; // 0-based → 3rd slot
-      const videoItems  = visibleItems.filter(item =>
-        !!item.element.querySelector('deferred-media, .deferred-media, product-model')
-      );
-      const imageItems  = visibleItems.filter(item =>
-        !item.element.querySelector('deferred-media, .deferred-media, product-model')
-      );
-      if (videoItems.length > 0) {
-        // Clamp insertion point so it never exceeds the image list length
-        const insertAt = Math.min(VIDEO_POSITION, imageItems.length);
-        imageItems.splice(insertAt, 0, ...videoItems);
-        visibleItems = imageItems;
-        console.log('[GCF] 🎬 Video pinned to position', VIDEO_POSITION + 1, '– order:',
-          visibleItems.map(i => i.altText || i.mediaId));
-      }
-
-      console.log('[GCF] Visible items count:', visibleItems.length);
-      console.log('[GCF] Matching images:', matchingImages.map(i => i.altText));
-      console.log('[GCF] Default/Untagged:', defaultImages.map(i => i.altText));
-      console.log('[GCF] Excluded images :', otherColorImages.map(i => i.altText));
-
-      // 1. Hide all thumbnails
-      if (this.thumbnailContainer) {
-        const allThumbs = this.thumbnailContainer.querySelectorAll('.thumbnail-list__item, .product__thumb-item, [data-target], .thumbnail-item');
-        allThumbs.forEach(thumb => {
-          thumb.classList.remove('g-color-filter-visible');
-          thumb.classList.add('g-color-filter-hidden');
-          thumb.style.display = 'none';
-          thumb.style.opacity = '0';
-        });
-      }
-
-      // 2. Hide all main slide elements
-      if (this.mainList) {
-        const allSlides = this.mainList.querySelectorAll('.product__media-item, .product-single__media-wrapper, .product-gallery__media, [data-media-id], .slider__slide, .swiper-slide, .slick-slide');
-        allSlides.forEach(slide => {
-          slide.classList.remove('g-color-filter-visible');
-          slide.classList.add('g-color-filter-hidden');
-          slide.style.display = 'none';
-          slide.style.opacity = '0';
-        });
-      }
-
-      const visibleSet = new Set(visibleItems.map(i => i.element));
-
-      // 3. Synchronize visibility
-      this.mediaCache.forEach(item => {
-        const isVisible = visibleSet.has(item.element);
-
-        [item.element, item.thumbnailElement].forEach(el => {
-          if (!el) return;
-
-          if (isVisible) {
-            el.classList.remove('g-color-filter-hidden', 'hidden');
-            el.classList.add('g-color-filter-visible');
-            el.style.display = '';
-            el.style.opacity = '1';
+        if (isVideoOrModel(item.el)) {
+          videos.push(item);
+        } else {
+          const parsed = parseAlt(item.customAlt, this.productTitle);
+          item.parsed = parsed;
+          if (parsed.type === 'SHARED') {
+            sharedImages.push(item);
           } else {
-            el.classList.remove('g-color-filter-visible');
-            el.classList.add('g-color-filter-hidden');
-            el.style.display = 'none';
-            el.style.opacity = '0';
+            taggedImages.push(item);
           }
+        }
+      });
+
+      // 2. Perform matching for tagged images
+      const matchedTaggedImages = taggedImages.filter(item => {
+        const tokens = item.parsed.tokens;
+        if (tokens.length === 0) return false;
+        return tokens.every(token => {
+          return currentSelection.some(optValue => optValue === token);
         });
       });
 
-      // 4. Re-append nodes in order: Matching → Defaults
-      visibleItems.forEach(item => {
-        if (item.element && this.mainList) {
-          this.mainList.appendChild(item.element);
+      // 3. Sort matched tagged images ascending by order number (keep original DOM order on tie)
+      matchedTaggedImages.sort((a, b) => {
+        const diff = a.parsed.order - b.parsed.order;
+        return diff !== 0 ? diff : a.idx - b.idx;
+      });
+
+      // Sort shared images by original DOM order
+      sharedImages.sort((a, b) => a.idx - b.idx);
+
+      // 4. Assemble the sorted list
+      let visible = [];
+      if (matchedTaggedImages.length > 0) {
+        visible = [...matchedTaggedImages];
+        // Insert videos at index 2 (position 3) or at the end if fewer than 2 items exist
+        if (videos.length > 0) {
+          const insertIdx = Math.min(2, visible.length);
+          visible.splice(insertIdx, 0, ...videos);
         }
-        if (item.thumbnailElement && this.thumbnailContainer) {
-          const list = this.thumbnailContainer.querySelector('ul') || this.thumbnailContainer;
-          list.appendChild(item.thumbnailElement);
+        visible = [...visible, ...sharedImages];
+      } else {
+        // Fallback 1: Show videos + shared images only
+        if (sharedImages.length > 0 || videos.length > 0) {
+          visible = [...videos, ...sharedImages];
+        } else {
+          // Fallback 2: Show everything unfiltered
+          visible = [...this.mediaCache];
+        }
+      }
+
+      console.log('[GalleryFilter] Selected values:', currentSelection);
+      console.log('[GalleryFilter] Sorted Visible IDs:', visible.map(i => i.shopifyId || i.mediaId));
+
+      // 5. Hide and show DOM elements with appropriate accessibility attributes
+      const visibleSet = new Set(visible.map(item => item.el));
+
+      this.mediaCache.forEach(item => {
+        const isVisible = visibleSet.has(item.el);
+        setElementVisibility(item.el, isVisible);
+        if (item.thumb) {
+          setElementVisibility(item.thumb, isVisible);
         }
       });
 
-      // 5. Update active slide and slider counters
-      if (visibleItems.length > 0) {
-        const firstItem = visibleItems[0];
-        const mediaId = firstItem.mediaId || firstItem.element.getAttribute('data-media-id');
-        
-        if (typeof this.container.setActiveMedia === 'function') {
-          if (mediaId) {
-            this.container.setActiveMedia(mediaId, false);
-          }
+      // 6. Non-destructively reorder the visible elements in the DOM
+      visible.forEach(item => {
+        if (item.el && this.mainList) {
+          this.mainList.appendChild(item.el);
+        }
+        if (item.thumb && this.thumbContainer) {
+          const list = this.thumbContainer.querySelector('ul') || this.thumbContainer;
+          list.appendChild(item.thumb);
+        }
+      });
+
+      // 7. Sync reordering and visibility with the Zoom Product Modal
+      syncProductModal(visible);
+
+      // 8. Re-calculate SliderComponent pages and scroll position boundaries
+      this.container.elements?.viewer?.resetPages?.();
+      this.container.elements?.thumbnails?.resetPages?.();
+
+      // 9. Reset position and activate the first slide of the filtered set
+      if (visible.length > 0) {
+        const first = visible[0];
+        const mId = first.mediaId || first.el.getAttribute('data-media-id');
+
+        if (typeof this.container.setActiveMedia === 'function' && mId) {
+          this.container.setActiveMedia(mId, false);
         } else {
           this.mediaCache.forEach(i => {
-            if (i.element) i.element.classList.remove('is-active', 'active');
-            if (i.thumbnailElement) {
-              i.thumbnailElement.classList.remove('is-active', 'active');
-              i.thumbnailElement.querySelector('button')?.removeAttribute('aria-current');
+            i.el?.classList.remove('is-active', 'active');
+            if (i.thumb) {
+              i.thumb.classList.remove('is-active', 'active');
+              i.thumb.querySelector('button')?.removeAttribute('aria-current');
             }
           });
-          if (firstItem.element) firstItem.element.classList.add('is-active');
-          if (firstItem.thumbnailElement) {
-            firstItem.thumbnailElement.classList.add('is-active');
-            firstItem.thumbnailElement.querySelector('button')?.setAttribute('aria-current', 'true');
+          first.el?.classList.add('is-active');
+          if (first.thumb) {
+            first.thumb.classList.add('is-active');
+            first.thumb.querySelector('button')?.setAttribute('aria-current', 'true');
           }
         }
 
-        // 6. Reset slider scroll positions to start
-        if (this.mainList) {
-          this.mainList.scrollTo({ left: 0 });
-          this.mainList.scrollLeft = 0;
-        }
-        if (this.thumbnailContainer) {
-          const thumbList = this.thumbnailContainer.querySelector('ul') || this.thumbnailContainer;
-          thumbList.scrollTo({ left: 0 });
-          thumbList.scrollLeft = 0;
-        }
+        // Scroll back to the start of the sliders
+        this.mainList?.scrollTo({ left: 0 });
+        if (this.mainList) this.mainList.scrollLeft = 0;
+        const tl = this.thumbContainer?.querySelector('ul') || this.thumbContainer;
+        tl?.scrollTo({ left: 0 });
+        if (tl) tl.scrollLeft = 0;
 
-        const counterTotal = this.container.querySelector('.slider-counter--total');
-        if (counterTotal) counterTotal.textContent = visibleItems.length;
-
-        const counterCurrent = this.container.querySelector('.slider-counter--current');
-        if (counterCurrent) counterCurrent.textContent = '1';
-
-        // 7. Refresh Dawn slider pagination
-        if (this.container.elements?.viewer?.resetPages) this.container.elements.viewer.resetPages();
-        if (this.container.elements?.thumbnails?.resetPages) this.container.elements.thumbnails.resetPages();
-
-        // 8. Refresh 3rd-party sliders if present
-        if (this.container.swiper && typeof this.container.swiper.update === 'function') {
-          this.container.swiper.update();
-          this.container.swiper.slideTo(0, 0);
-        }
-        if (this.container.flickity && typeof this.container.flickity.resize === 'function') {
-          this.container.flickity.resize();
-          this.container.flickity.select(0, false, true);
-        }
-        if (this.container.splide && typeof this.container.splide.refresh === 'function') {
-          this.container.splide.refresh();
-          this.container.splide.go(0);
-        }
+        // Synchronize display counters
+        const total = this.container.querySelector('.slider-counter--total');
+        const current = this.container.querySelector('.slider-counter--current');
+        if (total) total.textContent = visible.length;
+        if (current) current.textContent = '1';
       }
     }
   }
 
+  // ─── Instance Registry ───────────────────────────────────────────────────────
   const instances = new WeakMap();
 
+  function getOrCreate(container) {
+    if (!instances.has(container)) {
+      instances.set(container, new GalleryFilterInstance(container));
+    }
+    return instances.get(container);
+  }
+
   function initGalleries() {
-    const containers = document.querySelectorAll('media-gallery, [id^="MediaGallery-"], .product__gallery, .product-single__photos');
-    containers.forEach(container => {
-      if (!instances.has(container)) {
-        instances.set(container, new GalleryColorFilterInstance(container));
-      } else {
-        instances.get(container).update();
-      }
-    });
+    document
+      .querySelectorAll('media-gallery, [id^="MediaGallery-"], .product__gallery, .product-single__photos')
+      .forEach(c => getOrCreate(c));
   }
 
-  function updateAllGalleries(color = null, variantObj = null) {
-    const containers = document.querySelectorAll('media-gallery, [id^="MediaGallery-"], .product__gallery, .product-single__photos');
-    containers.forEach(container => {
-      let instance = instances.get(container);
-      if (!instance) {
-        instance = new GalleryColorFilterInstance(container);
-        instances.set(container, instance);
-      }
-      instance.update(color, variantObj);
-    });
+  function updateAll(firstArg = null, secondArg = null) {
+    let variantObj = null;
+    if (firstArg && typeof firstArg === 'object' && firstArg.options) {
+      variantObj = firstArg;
+    } else if (secondArg && typeof secondArg === 'object' && secondArg.options) {
+      variantObj = secondArg;
+    }
+
+    document
+      .querySelectorAll('media-gallery, [id^="MediaGallery-"], .product__gallery, .product-single__photos')
+      .forEach(c => getOrCreate(c).update(variantObj));
   }
 
-  function attachEventListeners() {
-    // PubSub events in Dawn theme
+  // ─── Event Listeners ─────────────────────────────────────────────────────────
+  function attachListeners() {
+    // Dawn PubSub system
     if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-      if (PUB_SUB_EVENTS.optionValueSelectionChange) {
-        subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, () => {
-          setTimeout(() => updateAllGalleries(), 0);
-        });
-      }
       if (PUB_SUB_EVENTS.variantChange) {
-        subscribe(PUB_SUB_EVENTS.variantChange, (e) => {
-          updateAllGalleries(null, e.data?.variant);
-        });
+        subscribe(PUB_SUB_EVENTS.variantChange, e => updateAll(e.data?.variant));
+      }
+      if (PUB_SUB_EVENTS.optionValueSelectionChange) {
+        subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, () => setTimeout(() => updateAll(), 50));
       }
     }
 
-    document.addEventListener('variant:change', (e) => {
-      const variant = e.detail?.variant;
-      if (variant) {
-        const product = e.detail?.product || window.ShopifyAnalytics?.meta?.product;
-        if (product?.options) {
-          let colorIdx = product.options.findIndex(opt => STRICT_COLOR_REGEX.test(opt) || /color/i.test(opt));
-          if (colorIdx === -1) {
-            colorIdx = product.options.findIndex(opt => GENERIC_OPTION_REGEX.test(opt));
-          }
-          const colorVal = colorIdx !== -1 ? variant.options?.[colorIdx] : null;
-          updateAllGalleries(colorVal, variant);
-          return;
-        }
-      }
-      updateAllGalleries();
-    });
+    // Custom theme events
+    document.addEventListener('variant:change', e => updateAll(e.detail?.variant || null));
+    document.addEventListener('variant-change', e => updateAll(e.detail?.variant || null));
+    document.addEventListener('option:change', () => updateAll());
 
-    document.addEventListener('variant-change', (e) => {
-      const variant = e.detail?.variant;
-      updateAllGalleries(null, variant);
-    });
-
-    document.addEventListener('option:change', () => updateAllGalleries());
-
-    document.addEventListener('change', (e) => {
-      const target = e.target;
-      if (target.matches('input[type="radio"], select, input[type="checkbox"]')) {
-        const picker = target.closest('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, .product-form');
-        if (picker) {
-          setTimeout(() => updateAllGalleries(), 0);
-        }
+    // Native inputs inside variant pickers
+    document.addEventListener('change', e => {
+      if (
+        e.target.matches('input[type="radio"], select, input[type="checkbox"]') &&
+        e.target.closest(
+          'variant-radios, variant-selects, [data-variant-picker], .variant-picker, .product-form'
+        )
+      ) {
+        setTimeout(() => updateAll(), 50);
       }
     });
 
-    document.addEventListener('click', (e) => {
-      const button = e.target.closest('button, label, .swatch, input');
-      if (button) {
-        const picker = button.closest('variant-radios, variant-selects, card-variant-picker, [data-variant-picker], .variant-picker, .product-form');
-        if (picker) {
-          setTimeout(() => updateAllGalleries(), 10);
-          setTimeout(() => updateAllGalleries(), 100);
-        }
+    // Swatches and custom buttons
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('button, label, .swatch, input');
+      if (
+        btn &&
+        btn.closest(
+          'variant-radios, variant-selects, [data-variant-picker], .variant-picker, .product-form'
+        )
+      ) {
+        setTimeout(() => updateAll(), 10);
+        setTimeout(() => updateAll(), 100);
       }
     });
 
-    const selectedValueSpans = document.querySelectorAll('[data-selected-value], legend');
-    selectedValueSpans.forEach(span => {
-      const observer = new MutationObserver(() => {
-        updateAllGalleries();
+    // popstate listener for browser back/forward variant URL synchronization
+    window.addEventListener('popstate', () => {
+      setTimeout(() => updateAll(), 50);
+    });
+
+    // MutationObserver on legend elements/selected value texts
+    document.querySelectorAll('[data-selected-value], legend').forEach(el => {
+      new MutationObserver(() => updateAll()).observe(el, {
+        childList: true, characterData: true, subtree: true,
       });
-      observer.observe(span, { childList: true, characterData: true, subtree: true });
     });
   }
 
-  function runInitialFilter() {
+  // ─── Boot execution ──────────────────────────────────────────────────────────
+  function boot() {
     initGalleries();
-    attachEventListeners();
-    setTimeout(() => updateAllGalleries(), 20);
-    setTimeout(() => updateAllGalleries(), 150);
-    setTimeout(() => updateAllGalleries(), 400);
+    attachListeners();
+    setTimeout(() => updateAll(), 50);
+    setTimeout(() => updateAll(), 200);
+    setTimeout(() => updateAll(), 500);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runInitialFilter);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    runInitialFilter();
+    boot();
   }
-  window.addEventListener('load', () => updateAllGalleries());
 
-  window.ProductGalleryColorFilter = {
-    init: initGalleries,
-    update: updateAllGalleries
-  };
+  window.addEventListener('load', () => {
+    setTimeout(() => updateAll(), 50);
+  });
+
+  // Public Interface API
+  window.ProductGalleryColorFilter = { init: initGalleries, update: updateAll };
 })();

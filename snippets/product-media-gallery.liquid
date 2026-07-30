@@ -50,6 +50,7 @@
   {% endif %}
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
+  data-product-title="{{ product.title | escape }}"
 >
   <script type="application/json" data-product-media-map>
     [
