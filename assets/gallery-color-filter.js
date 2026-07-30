@@ -251,6 +251,7 @@
 
       this.mainList = mainList;
       this.thumbContainer = thumbContainer;
+      this.allThumbs = thumbs; // store full list for orphan cleanup
       this.productTitle = this.container.getAttribute('data-product-title') || '';
 
       this.mediaCache = slides.map((el, idx) => {
@@ -410,6 +411,29 @@
       console.log('Which Images/Media Matched (Shown):', matchedList);
       console.log('Which Images/Media Were Hidden:', hiddenList);
       console.log('==================================================');
+
+      // 6b. Orphan-thumb cleanup: hide any thumbnail that has no matching slide in
+      // mediaCache (e.g. recently-added images whose main slide the selector missed).
+      // We identify orphans as thumbs NOT already processed above, then filter them
+      // by their own data-variant-tag against currentSelection.
+      const processedThumbs = new Set(this.mediaCache.map(item => item.thumb).filter(Boolean));
+      if (this.allThumbs) {
+        this.allThumbs.forEach(thumb => {
+          if (processedThumbs.has(thumb)) return; // already handled
+          // Determine visibility using the thumb's own data-variant-tag
+          const thumbAlt = getCustomAlt(thumb);
+          const parsed = parseAlt(thumbAlt, this.productTitle);
+          let shouldShow;
+          if (parsed.type === 'SHARED') {
+            shouldShow = true;
+          } else {
+            shouldShow = parsed.tokens.length > 0 &&
+              parsed.tokens.every(token => currentSelection.some(v => v === token));
+          }
+          setElementVisibility(thumb, shouldShow);
+          console.log(`[GalleryFilter] Orphan thumb alt="${thumbAlt}" → ${shouldShow ? 'shown' : 'hidden'}`);
+        });
+      }
 
       // 6. Non-destructively reorder the visible elements in the DOM
       visible.forEach(item => {
