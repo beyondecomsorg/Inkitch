@@ -203,6 +203,15 @@
     });
   }
 
+  // ─── Helper: Insert videos at position 3 (index 2) ───────────────────────────
+  function insertVideosAtPosition3(baseImageList, videos) {
+    if (!videos || videos.length === 0) return [...baseImageList];
+    const list = [...baseImageList];
+    const insertIdx = Math.min(2, list.length);
+    list.splice(insertIdx, 0, ...videos);
+    return list;
+  }
+
   // ─── GalleryFilterInstance Class ─────────────────────────────────────────────
   class GalleryFilterInstance {
     constructor(container) {
@@ -312,20 +321,16 @@
       // 4. Assemble the sorted list
       let visible = [];
       if (matchedTaggedImages.length > 0) {
-        visible = [...matchedTaggedImages];
-        // Insert videos at index 2 (position 3) or at the end if fewer than 2 items exist
-        if (videos.length > 0) {
-          const insertIdx = Math.min(2, visible.length);
-          visible.splice(insertIdx, 0, ...videos);
-        }
-        visible = [...visible, ...sharedImages];
+        const withVideos = insertVideosAtPosition3(matchedTaggedImages, videos);
+        visible = [...withVideos, ...sharedImages];
       } else {
-        // Fallback 1: Show videos + shared images only
-        if (sharedImages.length > 0 || videos.length > 0) {
-          visible = [...videos, ...sharedImages];
+        // Fallback 1: Show videos + shared images only (in original upload order)
+        if (sharedImages.length > 0) {
+          visible = insertVideosAtPosition3(sharedImages, videos);
         } else {
-          // Fallback 2: Show everything unfiltered
-          visible = [...this.mediaCache];
+          // Fallback 2: Show everything (all images in DOM order, videos pinned to pos 3)
+          const allImages = this.mediaCache.filter(item => !isVideoOrModel(item.el));
+          visible = insertVideosAtPosition3(allImages, videos);
         }
       }
 
