@@ -129,7 +129,7 @@ product-info {
 
 .shopify-payment-button__button--unbranded:hover,
 .shopify-payment-button__button--unbranded:hover:not([disabled]) {
-  background-color: blue;
+  background-color: rgba(var(--color-button-text), 0.3);
 }
 
 .shopify-payment-button__more-options {
