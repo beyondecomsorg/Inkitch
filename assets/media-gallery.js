@@ -118,17 +118,17 @@ if (!customElements.get('media-gallery')) {
          }
 
         // Ensure the slider scrolls to bring the active slide into view
-        if (this.elements.viewer.slider && !isSwipe) {
+        if (this.elements.viewer.slider && isSwipe !== true) {
           this.elements.viewer.slider.scrollTo({ left: activeMedia.offsetLeft, behavior: 'smooth' });
           console.log('[MediaGallery] Slider scrollLeft after switch:', this.elements.viewer.slider.scrollLeft);
         }
         window.setTimeout(() => {
-          if (!isSwipe && (!this.mql.matches || this.elements.thumbnails)) {
+          if (isSwipe !== true && (!this.mql.matches || this.elements.thumbnails)) {
             activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
           }
           const activeMediaRect = activeMedia.getBoundingClientRect();
           // Don't scroll if the image is already in view
-          if (activeMediaRect.top > -0.5 || isSwipe) return;
+          if (activeMediaRect.top > -0.5 || isSwipe === true) return;
           const top = activeMediaRect.top + window.scrollY;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
