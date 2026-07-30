@@ -1,0 +1,23 @@
+{% assign headerDesign = shop.metafields.hulkapps_wishlist.hulkapps_wishlist_buttonstyle.header_icon_design %}
+
+{% assign header_icon_font_size = shop.metafields.hulkapps_wishlist.hulkapps_wishlist_buttonstyle.header_icon_size %}
+{% assign header_icon_color = shop.metafields.hulkapps_wishlist.hulkapps_wishlist_buttonstyle.header_icon_color %}
+{% if headerDesign == blank %}
+    {% assign headerDesign = 'wishlist_page' %}
+{% endif %}
+
+{% if headerDesign == 'wishlist_page' %}
+    {% assign wishlist_url = '/' | append: shop.metafields.hulkapps_wishlist.hulkapps_wishlist_general.app_proxy_prefix | append: '/' | append: shop.metafields.hulkapps_wishlist.hulkapps_wishlist_general.app_proxy_path %}
+{% else %}
+    {% assign wishlist_url = 'javascript:void(0)' %}
+{% endif %}
+
+<div class="hulk-wishlist-icon">
+    <a href="{{ wishlist_url }}" class="hulk-header-icon hulk-wishlist-drawer">
+        <i class="icon-wishlist-heart-empty" style="vertical-align: sub; font-size: {{ header_icon_font_size }}px; color: {{ header_icon_color }};"></i>
+
+        {% if shop.metafields.hulkapps_wishlist.hulkapps_wishlist_general.wishlist_header_count == 'show' %}
+            <span class="header-count count" data-totalwishlistitems>0</span>
+        {% endif %}
+    </a>
+</div>
