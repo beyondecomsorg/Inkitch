@@ -407,11 +407,14 @@
         const c = norm(color);
         if (!type) return [];
         const t = norm(type);
-        // Support both "Color-Type-N" (no spaces around hyphen) and legacy "Color- Type-N"
+        // Support hyphens ("Color-Type-N", "Color- Type-N") and pluses ("Color+Type-N", "Color+ Type-N")
         return [
-          `${c}-${t}-`,       // "blue-tiffin + tumbler-1"  ← primary new format
-          `${c}- ${t}-`,      // "blue- tiffin + tumbler-1" ← legacy with space
-          `${c} - ${t}-`,     // "blue - tiffin + tumbler-1"
+          `${c}-${t}-`,       // "blue-without bottle-1"
+          `${c}- ${t}-`,      // "blue- without bottle-1"
+          `${c} - ${t}-`,     // "blue - without bottle-1"
+          `${c}+${t}-`,       // "blue+without bottle-1"
+          `${c}+ ${t}-`,      // "blue+ without bottle-1"
+          `${c} + ${t}-`,     // "blue + without bottle-1"
         ];
       };
 
@@ -479,14 +482,20 @@
           return;
         }
 
-        // ── EXCLUDE: belongs to a DIFFERENT color-only tag ("pink", "green") ────
-        if (otherColorExact.includes(imageAlt)) {
-          console.log('[GCF] ❌ EXCLUDED (other color):', imageAlt);
+        // ── EXCLUDE: starts with a DIFFERENT color (e.g. "black+ bottle-1" when selected is "blue") ──
+        const startsWithOtherColor = otherColorExact.some(c => {
+          const starts = imageAlt.startsWith(c);
+          if (!starts) return false;
+          const nextChar = imageAlt.charAt(c.length);
+          return !nextChar || nextChar === ' ' || nextChar === '-' || nextChar === '+' || nextChar === '_';
+        });
+        if (startsWithOtherColor) {
+          console.log('[GCF] ❌ EXCLUDED (starts with other color):', imageAlt);
           otherColorImages.push(item);
           return;
         }
 
-        // ── EXCLUDE: belongs to a DIFFERENT combo ("pink-tiffin-1", "blue-tiffin-1" when type=tumbler) ──
+        // ── EXCLUDE: belongs to a DIFFERENT combo of the SAME color ──
         if (otherPrefixes.some(p => imageAlt.startsWith(p))) {
           console.log('[GCF] ❌ EXCLUDED (other combo):', imageAlt);
           otherColorImages.push(item);
@@ -498,8 +507,30 @@
         defaultImages.push(item);
       });
 
-      // Maintain original ordering within groups
-      matchingImages.sort((a, b) => a.originalIndex - b.originalIndex);
+      // Sort matching images based on the suffix number in the Alt Text (e.g. "Blue-Without Bottle-3" -> 3)
+      const getAltOrder = (item) => {
+        const shopifyId = item.shopifyMediaId || (item.mediaId ? item.mediaId.split('-').pop() : null);
+        const mediaMeta = mediaMap[shopifyId] || {};
+        const rawAlt    = item.altText || mediaMeta.alt || '';
+        const imageAlt  = norm(rawAlt);
+        
+        // Match a hyphen or plus followed by a number at the end, e.g. "-3" or "+3"
+        const match = imageAlt.match(/[-+]\s*(\d+)$/);
+        if (match) {
+          return parseInt(match[1], 10);
+        }
+        return 999; // Default fallback for unnumbered items
+      };
+
+      matchingImages.sort((a, b) => {
+        const orderA = getAltOrder(a);
+        const orderB = getAltOrder(b);
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+        return a.originalIndex - b.originalIndex;
+      });
+
       defaultImages.sort((a, b) => a.originalIndex - b.originalIndex);
 
       let visibleItems = [];

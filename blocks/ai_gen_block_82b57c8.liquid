@@ -519,6 +519,7 @@
       <button
         class="ai-new-popular-tab-{{ ai_gen_id }} active"
         data-tab="new-arrivals"
+        data-collection-url="{{ block.settings.collection_1.url | default: '/collections/all' }}"
         aria-selected="true"
         role="tab"
       >
@@ -527,6 +528,7 @@
       <button
         class="ai-new-popular-tab-{{ ai_gen_id }}"
         data-tab="best-sellers"
+        data-collection-url="{{ block.settings.collection_2.url | default: '/collections/all' }}"
         aria-selected="false"
         role="tab"
       >
@@ -535,6 +537,7 @@
       <button
         class="ai-new-popular-tab-{{ ai_gen_id }}"
         data-tab="barista-picks"
+        data-collection-url="{{ block.settings.collection_3.url | default: '/collections/all' }}"
         aria-selected="false"
         role="tab"
       >
@@ -845,7 +848,7 @@
     </div>
 
     <div class="ai-new-popular-cta-wrapper-{{ ai_gen_id }}">
-      <a href="/collections/all" class="ai-new-popular-cta-btn-{{ ai_gen_id }}">View All Products <span>→</span></a>
+      <a href="{{ block.settings.collection_1.url | default: '/collections/all' }}" class="ai-new-popular-cta-btn-{{ ai_gen_id }}">View All Products <span>→</span></a>
     </div>
 
   </div>
@@ -929,6 +932,7 @@
       }
 
       setupTabs() {
+        const ctaBtn = this.querySelector('.ai-new-popular-cta-btn-{{ ai_gen_id }}');
         this.tabs.forEach((tab) => {
           tab.addEventListener('click', () => {
             const targetTab = tab.getAttribute('data-tab');
@@ -944,6 +948,14 @@
 
             tab.classList.add('active');
             tab.setAttribute('aria-selected', 'true');
+
+            // Dynamic collection redirect link
+            if (ctaBtn) {
+              const url = tab.getAttribute('data-collection-url');
+              if (url) {
+                ctaBtn.setAttribute('href', url);
+              }
+            }
 
             const targetContent = this.querySelector(
               `.ai-new-popular-content-{{ ai_gen_id }}[data-content="${targetTab}"]`
