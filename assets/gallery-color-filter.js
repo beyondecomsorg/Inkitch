@@ -334,11 +334,56 @@
         }
       }
 
-      console.log('[GalleryFilter] Selected values:', currentSelection);
-      console.log('[GalleryFilter] Sorted Visible IDs:', visible.map(i => i.shopifyId || i.mediaId));
+      // 5. Console logging requested by user
+      let selectedColor = 'Not Found';
+      let selectedType = 'Not Found';
 
-      // 5. Hide and show DOM elements with appropriate accessibility attributes
+      // Attempt to identify color and type dynamically from currentSelection and DOM labels
+      const picker = document.querySelector('variant-radios, variant-selects, [data-variant-picker], .variant-picker');
+      if (picker) {
+        picker.querySelectorAll('.product-form__input').forEach(container => {
+          const legend = container.querySelector('legend, label');
+          if (legend) {
+            const labelText = legend.textContent.toLowerCase();
+            const input = container.querySelector('input:checked, select');
+            if (input) {
+              const val = (input.value || input.getAttribute('data-value') || '').trim();
+              if (labelText.includes('color')) {
+                selectedColor = val;
+              } else if (labelText.includes('type')) {
+                selectedType = val;
+              }
+            }
+          }
+        });
+      }
+
+      // If not found in DOM, fallback to currentSelection positions
+      if (selectedColor === 'Not Found' && currentSelection.length > 0) {
+        selectedColor = currentSelection[0];
+      }
+      if (selectedType === 'Not Found' && currentSelection.length > 1) {
+        selectedType = currentSelection[1];
+      }
+
+      console.log('=== Product Gallery Selection & Filtering Log ===');
+      console.log('Selected Color:', selectedColor);
+      console.log('Selected Type:', selectedType);
+      console.log('All Current Selection Tokens:', currentSelection);
+
+      console.log('Every Image Alt Text & Parsing:');
+      this.mediaCache.forEach((item, idx) => {
+        if (isVideoOrModel(item.el)) {
+          console.log(`- Media #${idx} [Video/Model]: (ID: ${item.shopifyId || item.mediaId || 'N/A'})`);
+        } else {
+          console.log(`- Image #${idx}: Alt text: "${item.customAlt || ''}" (Parsed: Type=${item.parsed?.type}, Tokens=${JSON.stringify(item.parsed?.tokens)}, Order=${item.parsed?.order})`);
+        }
+      });
+
+      // 6. Hide and show DOM elements with appropriate accessibility attributes and track logs
       const visibleSet = new Set(visible.map(item => item.el));
+      const matchedList = [];
+      const hiddenList = [];
 
       this.mediaCache.forEach(item => {
         const isVisible = visibleSet.has(item.el);
@@ -346,7 +391,25 @@
         if (item.thumb) {
           setElementVisibility(item.thumb, isVisible);
         }
+
+        if (isVisible) {
+          if (!isVideoOrModel(item.el)) {
+            matchedList.push(`Image (Alt: "${item.customAlt || ''}")`);
+          } else {
+            matchedList.push('Video');
+          }
+        } else {
+          if (!isVideoOrModel(item.el)) {
+            hiddenList.push(`Image (Alt: "${item.customAlt || ''}")`);
+          } else {
+            hiddenList.push('Video');
+          }
+        }
       });
+
+      console.log('Which Images/Media Matched (Shown):', matchedList);
+      console.log('Which Images/Media Were Hidden:', hiddenList);
+      console.log('==================================================');
 
       // 6. Non-destructively reorder the visible elements in the DOM
       visible.forEach(item => {
