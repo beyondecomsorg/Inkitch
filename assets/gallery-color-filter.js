@@ -203,11 +203,11 @@
     });
   }
 
-  // ─── Helper: Insert videos at position 3 (index 2) ───────────────────────────
-  function insertVideosAtPosition3(baseImageList, videos) {
+  // ─── Helper: Insert videos at position 4 (index 3) ───────────────────────────
+  function insertVideosAtPosition4(baseImageList, videos) {
     if (!videos || videos.length === 0) return [...baseImageList];
     const list = [...baseImageList];
-    const insertIdx = Math.min(2, list.length);
+    const insertIdx = Math.min(3, list.length);
     list.splice(insertIdx, 0, ...videos);
     return list;
   }
@@ -322,16 +322,16 @@
       // 4. Assemble the sorted list
       let visible = [];
       if (matchedTaggedImages.length > 0) {
-        const withVideos = insertVideosAtPosition3(matchedTaggedImages, videos);
+        const withVideos = insertVideosAtPosition4(matchedTaggedImages, videos);
         visible = [...withVideos, ...sharedImages];
       } else {
         // Fallback 1: Show videos + shared images only (in original upload order)
         if (sharedImages.length > 0) {
-          visible = insertVideosAtPosition3(sharedImages, videos);
+          visible = insertVideosAtPosition4(sharedImages, videos);
         } else {
-          // Fallback 2: Show everything (all images in DOM order, videos pinned to pos 3)
+          // Fallback 2: Show everything (all images in DOM order, videos pinned to pos 4)
           const allImages = this.mediaCache.filter(item => !isVideoOrModel(item.el));
-          visible = insertVideosAtPosition3(allImages, videos);
+          visible = insertVideosAtPosition4(allImages, videos);
         }
       }
 
