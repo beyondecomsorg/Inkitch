@@ -228,14 +228,17 @@
             </h3>
           </div>
           <div class="card__badge {{ settings.badge_position }}">
-            {%- if card_product.available == false -%}
+            {%- liquid
+              assign active_variant = card_product.selected_or_first_available_variant
+            -%}
+            {%- if active_variant.available == false -%}
               <span
                 id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
                 class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
               >
                 {{- 'products.product.sold_out' | t -}}
               </span>
-            {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
+            {%- elsif active_variant.compare_at_price > active_variant.price and active_variant.available -%}
               <span
                 id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
                 class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
@@ -322,8 +325,9 @@
 
             {%- comment -%} Custom Price Rendering (MRP / Selling Price / Discount %) {%- endcomment -%}
             {%- liquid
-              assign compare_at_price = card_product.compare_at_price
-              assign price = card_product.price
+              assign active_variant = card_product.selected_or_first_available_variant
+              assign compare_at_price = active_variant.compare_at_price
+              assign price = active_variant.price
               assign on_sale = false
               if compare_at_price > price
                 assign on_sale = true
@@ -386,7 +390,7 @@
                                 endif
 
                                 assign is_active = false
-                                if value.selected or value_title == selected_val or forloop.first
+                                if value.selected or value_title == selected_val
                                   assign is_active = true
                                 endif
                               -%}
@@ -410,7 +414,7 @@
                               {%- liquid
                                 assign value_title = value.name | default: value
                                 assign is_active = false
-                                if value.selected or value_title == selected_val or forloop.first
+                                if value.selected or value_title == selected_val
                                   assign is_active = true
                                 endif
                               -%}
