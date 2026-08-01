@@ -509,6 +509,69 @@
       font-size: 1.3rem !important;
     }
   }
+
+  /* About Section Manufacturer Info & Map Custom styles */
+  .footer-mfg-address-container-custom {
+    margin-top: 20px !important;
+  }
+
+  .footer-mfg-address-heading-custom {
+    display: inline-flex !important;
+    align-items: center !important;
+    font-family: var(--font-heading-family) !important;
+    font-size: 1.6rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    margin: 0 0 10px 0 !important;
+    gap: 8px !important;
+    line-height: 1.2 !important;
+  }
+
+  .footer-mfg-address-heading-custom svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #ffffff !important;
+    flex-shrink: 0 !important;
+  }
+
+  .footer-mfg-address-text-custom {
+    font-size: 1.4rem !important;
+    color: #888888 !important; /* Soft grey text */
+    line-height: 1.7 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .footer-mfg-map-container-custom {
+    width: 100% !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: none !important;
+    margin-top: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .footer-mfg-map-container-custom iframe {
+    width: 100% !important;
+    height: 180px !important;
+    border: none !important;
+    display: block !important;
+  }
+
+  @media screen and (max-width: 989px) {
+    .footer-mfg-map-container-custom iframe {
+      height: 170px !important;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer-mfg-map-container-custom iframe {
+      height: 160px !important;
+    }
+  }
+
+  .footer-mfg-social-wrapper-custom {
+    margin-top: 20px !important;
+  }
 {%- endstyle -%}
 
 <footer class="footer footer-wrapper-custom-glow color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
@@ -616,6 +679,8 @@
                               </div>
                             </div>
                           {%- endif -%}
+
+                          {% comment %} Manufacturer Address and map embedded moved to brand_information block {% endcomment %}
                         {%- else -%}
                           {%- assign contact_text_clean = block.settings.subtext | replace: '</p>', '' | replace: '<p>', '' | replace: '<br />', '|' | replace: '<br>', '|' -%}
                           {%- assign lines = contact_text_clean | split: '|' -%}
@@ -655,6 +720,27 @@
                           {{ block.settings.address }}
                         </div>
                       {%- endif -%}
+                      {%- if section.settings.enable_manufacturer_address and section.settings.manufacturer_address != blank and forloop.first -%}
+                        <div class="footer-mfg-address-container-custom">
+                          <h3 class="footer-mfg-address-heading-custom">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                              <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Manufacturer Address
+                          </h3>
+                          <div class="footer-mfg-address-text-custom">
+                            {{ section.settings.manufacturer_address | newline_to_br }}
+                          </div>
+                        </div>
+                      {%- endif -%}
+
+                      {%- if section.settings.show_google_map and section.settings.google_map_embed != blank and forloop.first -%}
+                        <div class="footer-mfg-map-container-custom">
+                          {{ section.settings.google_map_embed }}
+                        </div>
+                      {%- endif -%}
+
                       {%- if has_social_icons -%}
                         <div class="footer-social-icons-wrapper-custom">
                           {%- render 'social-icons', class: 'footer__list-social' -%}
@@ -791,6 +877,8 @@
     {%- endunless -%}
   {%- endif -%}
 
+  {% comment %} Map targets removed {% endcomment %}
+
   <!-- Bottom Bar & Divider Custom -->
   <div class="footer-divider-custom"></div>
   {%- assign tagline = section.settings.tagline_text | default: "✦ INKITCH · Built Better for Everyday Use" -%}
@@ -889,13 +977,13 @@
           "type": "text",
           "id": "whatsapp_number",
           "label": "WhatsApp Number",
-          "default": "9175939866"
+          "default": "+91 91759 39866"
         },
         {
           "type": "text",
           "id": "call_number",
           "label": "Call Number",
-          "default": "9175939866"
+          "default": "+91 91759 39866"
         },
         {
           "type": "text",
@@ -959,6 +1047,34 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Manufacturer Contact & Map"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_manufacturer_address",
+      "default": true,
+      "label": "Enable Manufacturer Address"
+    },
+    {
+      "type": "textarea",
+      "id": "manufacturer_address",
+      "label": "Manufacturer Address",
+      "default": "10 - A & B,\nVimal Industrial Estate,\nNaikpada,\nWaliv Golani Naka,\nVasai,\nMumbai,\nMaharashtra - 401208"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_google_map",
+      "default": true,
+      "label": "Enable Google Map"
+    },
+    {
+      "type": "textarea",
+      "id": "google_map_embed",
+      "label": "Google Maps Embed Code",
+      "default": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16189.054520520718!2d72.85538889827855!3d19.409242729519992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7a91c1159fbd5%3A0xc577214511b4d3e0!2sVimal%20Industrial%20Estate!5e1!3m2!1sen!2sin!4v1785586195284!5m2!1sen!2sin\" loading=\"lazy\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>"
     },
     {
       "type": "header",

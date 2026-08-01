@@ -91,7 +91,7 @@
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
-    assign featured_media = card_product.featured_media
+    assign featured_media = card_product.selected_or_first_available_variant.featured_media | default: card_product.featured_media
     assign test_url = featured_media | image_url: width: 100
     assign has_valid_media = true
     if featured_media == null or test_url == blank or test_url contains 'no-image'

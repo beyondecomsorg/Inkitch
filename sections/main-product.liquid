@@ -1838,6 +1838,10 @@
 
 {% render 'sticky-add-to-cart', product: product, section: section %}
 
+{%- if product.metafields.custom.floating_video != blank -%}
+  {% render 'floating-video', product: product %}
+{%- endif -%}
+
 {% schema %}
 {
   "name": "t:sections.main-product.name",

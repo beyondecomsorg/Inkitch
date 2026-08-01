@@ -1,0 +1,110 @@
+{%- assign video_url = null -%}
+{%- assign metafield_val = product.metafields.custom.floating_video.value -%}
+{%- if metafield_val != blank -%}
+  {%- if metafield_val.sources != blank -%}
+    {%- for source in metafield_val.sources -%}
+      {%- if source.format == 'mp4' -%}
+        {%- assign video_url = source.url -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if video_url == null -%}
+      {%- assign video_url = metafield_val.sources[0].url -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign video_url = metafield_val.url -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if video_url != blank -%}
+  {{ 'floating-video.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'floating-video.js' | asset_url }}" defer="defer"></script>
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('test_video') || urlParams.has('reset_video') || urlParams.has('reset-video')) {
+        localStorage.removeItem('ink-floating-video-hidden-{{ product.id }}');
+      }
+    })();
+  </script>
+
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  {%- assign price = current_variant.price -%}
+  {%- assign compare_at_price = current_variant.compare_at_price -%}
+  {%- assign discount = 0 -%}
+  {%- if compare_at_price > price -%}
+    {%- assign diff = compare_at_price | minus: price -%}
+    {%- assign discount = diff | times: 100 | divided_by: compare_at_price -%}
+  {%- endif -%}
+
+  <div
+    class="ink-video-widget ink-hidden"
+    id="inKitchFloatingVideo"
+    data-product-id="{{ product.id }}"
+    data-product-title="{{ product.title | escape }}"
+    data-product-url="{{ product.url }}"
+    data-product-img="{{ product.featured_image | image_url: width: 300 }}"
+    data-product-price="{{ price | money_without_trailing_zeros }}"
+    data-product-compare-price="{% if compare_at_price > price %}{{ compare_at_price | money_without_trailing_zeros }}{% endif %}"
+    data-product-discount="{% if discount > 0 %}{{ discount }}% OFF{% endif %}"
+    data-variant-id="{% if product.has_only_default_variant %}{{ current_variant.id }}{% endif %}"
+    data-video-url="{{ video_url }}"
+  >
+    <div class="ink-widget-wrapper">
+      <button class="ink-widget-close-btn" aria-label="Close video widget" id="inKitchCloseWidget">
+        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="ink-widget-trigger-box" id="inKitchTriggerReels" role="button" aria-haspopup="dialog" aria-label="Open floating video details" tabindex="0">
+        <video class="ink-widget-media" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+          <source src="{{ video_url }}" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <template id="inKitchReelsTemplate">
+    <div class="ink-reels-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="ink-reels-title" tabindex="-1">
+      <div class="ink-reels-container">
+        <button class="ink-reels-close-btn" aria-label="Close popup">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="ink-reels-content">
+          <div class="ink-reels-video-wrapper">
+            <video class="ink-reels-media" autoplay loop muted playsinline webkit-playsinline preload="metadata">
+              <source src="{{ video_url }}" type="video/mp4">
+            </video>
+          </div>
+          <div class="ink-reels-product-info">
+            <div class="ink-reels-product-card">
+              <img class="ink-reels-product-img" src="{{ product.featured_image | image_url: width: 150 }}" alt="{{ product.title | escape }}">
+              <div class="ink-reels-product-details">
+                <h3 id="ink-reels-title" class="ink-reels-product-title">{{ product.title | escape }}</h3>
+                <div class="ink-reels-price-row">
+                  <span class="ink-reels-price">{{ price | money_without_trailing_zeros }}</span>
+                  {%- if compare_at_price > price -%}
+                    <span class="ink-reels-compare-price">{{ compare_at_price | money_without_trailing_zeros }}</span>
+                    <span class="ink-reels-discount">{{ discount }}% OFF</span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+            <button class="ink-reels-atc-btn button button--primary">
+              <span class="ink-atc-text">Add to cart</span>
+              <div class="loading__spinner hidden">
+                <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+{%- endif -%}
