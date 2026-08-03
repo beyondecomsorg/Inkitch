@@ -231,7 +231,7 @@
         "enable_manufacturer_address": true,
         "manufacturer_address": "10 - A & B, Vimal Industrial Estate, Naikpada, Waliv Golani Naka, Vasai, Mumbai, Maharashtra - 401208",
         "show_google_map": true,
-        "google_map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16189.054520520718!2d72.85538889827855!3d19.409242729519992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7a91c1159fbd5%3A0xc577214511b4d3e0!2sVimal%20Industrial%20Estate!5e1!3m2!1sen!2sin!4v1785586195284!5m2!1sen!2sin\" loading=\"lazy\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>",
+        "google_map_embed": "https://share.google/VvrrBqsbRiSOizG65",
         "newsletter_enable": false,
         "newsletter_heading": "Subscribe to our emails",
         "enable_follow_on_shop": true,

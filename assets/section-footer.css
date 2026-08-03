@@ -172,9 +172,14 @@
 }
 
 .footer__list-social.list-social:only-child {
-  justify-content: center;
+  justify-content: left;
 }
 
+.footer-mfg-map-container-custom a {
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-all;
+}
 .footer-block__newsletter {
   text-align: center;
   flex-grow: 1;

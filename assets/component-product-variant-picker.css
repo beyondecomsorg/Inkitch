@@ -14,7 +14,7 @@ variant-selects {
 .product--no-media .product-form__input.product-form__input--pill,
 .product--no-media .product-form__input.product-form__input--swatch {
   flex-wrap: wrap;
-  margin: 0 auto 1.2rem auto;
+  margin: 0 auto 5px auto;
 }
 
 .product--no-media .product-form__input--dropdown {

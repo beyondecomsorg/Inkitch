@@ -268,6 +268,12 @@
     flex-direction: column !important;
     width: 100% !important;
   }
+  @media only screen and (max-width: 749px){
+    .footer-newsletter-field-custom,
+    .footer-community-buttons-custom{
+          width: 80% !important;
+    }
+  }
 
   .footer-newsletter-input-custom {
     width: 100% !important;
@@ -440,7 +446,7 @@
     display: flex !important;
     flex-direction: row !important;
     gap: 12px !important;
-    width: 100% !important;
+    width: 100% ;
     box-sizing: border-box !important;
   }
 
@@ -737,7 +743,13 @@
 
                       {%- if section.settings.show_google_map and section.settings.google_map_embed != blank and forloop.first -%}
                         <div class="footer-mfg-map-container-custom">
-                          {{ section.settings.google_map_embed }}
+                          <a
+    href="{{ section.settings.google_map_embed }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="footer-map-link"
+  >
+                        {{ section.settings.google_map_embed }}</a> 
                         </div>
                       {%- endif -%}
 
