@@ -73,6 +73,27 @@
     .hero-features-strip{
       border-radius: 16px;
     }
+    /* Single feature: compact inline pill */
+    .hero-features-strip--single {
+      display: inline-flex;
+      width: auto;
+      padding: 8px 1.8rem;
+      margin-top: 1rem;
+      margin-bottom: 1.6rem;
+    }
+    .hero-features-strip--single .hero-features-col {
+      min-height: unset;
+      padding: 0 0.5rem;
+      border-right: none;
+    }
+    .hero-features-strip--single .hero-feature-icon {
+      width: 28px !important;
+      height: 28px !important;
+      margin-bottom: 6px;
+    }
+    .hero-features-strip--single .hero-feature-text {
+      font-size: 1.2rem;
+    }
     .hero-features-col{
       min-height: 85px;
     }
@@ -670,7 +691,11 @@
                   {%- assign features_image = product.metafields.custom.custom_product_hero_features_image.value -%}
                 {%- endif -%}
                 {%- if features_text.size > 0 and features_image.size > 0 -%}
-                  <div class="hero-features-strip" {{ block.shopify_attributes }}>
+                  {%- assign strip_class = 'hero-features-strip' -%}
+                  {%- if features_text.size == 1 -%}
+                    {%- assign strip_class = 'hero-features-strip hero-features-strip--single' -%}
+                  {%- endif -%}
+                  <div class="{{ strip_class }}" {{ block.shopify_attributes }}>
                     {%- for text_item in features_text -%}
                       {%- assign current_index = forloop.index0 -%}
                       {%- assign icon_item = blank -%}
