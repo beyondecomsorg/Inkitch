@@ -191,17 +191,17 @@
       },
       "17844675666580048712": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       },
       "3557650678667880288": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       },
       "2166187066657961218": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/review-widget-embed/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
+        "disabled": false,
         "settings": {
           "enable_reviews": true,
           "enable_star_rating": true,
