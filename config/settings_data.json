@@ -164,8 +164,6 @@
           "background_color": "#FFFFFF",
           "font_color": "#000000",
           "button_color": "#000000",
-          "secondary_color": "#ffffff",
-          "ternary_color": "#6a6a6a",
           "button_icon": "chat_bubble",
           "button_text": "chat_with_us",
           "button_horizontal_position": "bottom_right",
@@ -190,6 +188,31 @@
           "video-title": "",
           "use-variant": "false"
         }
+      },
+      "2166187066657961218": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/review-widget-embed/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": false,
+        "settings": {
+          "enable_reviews": true,
+          "enable_star_rating": true,
+          "primary_color": "",
+          "star_color": ""
+        }
+      },
+      "3557650678667880288": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": true,
+        "settings": {}
+      },
+      "17844675666580048712": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": true,
+        "settings": {}
+      },
+      "1232542678405107163": {
+        "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
@@ -199,7 +222,7 @@
           "background_gradient": "",
           "text": "#1a1a1a",
           "button": "#121212",
-          "button_label": "#ff0000",
+          "button_label": "#B5121B",
           "secondary_button_label": "#121212",
           "shadow": "#121212"
         }
@@ -239,7 +262,7 @@
       },
       "scheme-5": {
         "settings": {
-          "background": "#f60000",
+          "background": "#B5121B",
           "background_gradient": "",
           "text": "#ffffff",
           "button": "#ffffff",

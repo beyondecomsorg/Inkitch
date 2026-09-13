@@ -203,26 +203,8 @@
       "settings": {
         "speed": 24,
         "bg_color": "#f8f8f8",
-        "text_color": "#ff0000",
-        "background_color": "#e30613"
-      }
-    },
-    "related-products": {
-      "type": "related-products",
-      "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": "scheme-1",
-        "image_ratio": "square",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "padding_top": 36,
-        "padding_bottom": 28
+        "text_color": "#b5121b",
+        "background_color": "#b5121b"
       }
     },
     "17820441034226e7a6": {
@@ -243,6 +225,24 @@
       ],
       "settings": {
         "include_margins": true
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
       }
     },
     "1782284828efc73605": {
@@ -295,8 +295,8 @@
     "product_description_videos_h3BLXj",
     "product-comparison",
     "infinite_marquee_CEQhQJ",
-    "related-products",
     "17820441034226e7a6",
+    "related-products",
     "1782284828efc73605"
   ]
 }

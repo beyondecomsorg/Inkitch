@@ -57,7 +57,7 @@
       z-index: 5 !important;              /* float above adjacent cards */
     }
     .product-card-wrapper:hover .card {
-      border-color: #E30613 !important;
+      border-color: #B5121B !important;
     }
 
     .product-card-wrapper:focus-within {
@@ -66,7 +66,7 @@
       z-index: 5 !important;
     }
     .product-card-wrapper:focus-within .card {
-      border-color: #E30613 !important;
+      border-color: #B5121B !important;
     }
 
     /* Hover image swap layout — images stacked via absolute positioning */
@@ -78,6 +78,12 @@
       height: 100% !important;
       object-fit: contain !important;
     }
+    @media only screen and (max-width: 768px){
+    .card-wrapper .media.media--hover-effect > img{
+    object-fit: revert-layer !important;
+    }
+  
+  }
     .card__inner {
       background-color: #f7f7f7 !important;
     }
@@ -346,7 +352,7 @@
                 </div>
                 <!-- Row 2: Price and Discount -->
                 <div class="custom-card-price__row" style="display: flex; align-items: center; gap: 8px; line-height: 1.2;">
-                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #B5121B;">
                     {{ money_price }}
                   </span>
                   {%- assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round -%}
@@ -357,7 +363,7 @@
               {%- else -%}
                 <!-- Regular Selling Price only -->
                 <div class="custom-card-price__row" style="display: flex; align-items: center; line-height: 1.2;">
-                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #E30613;">
+                  <span class="custom-card-price__selling" style="font-size: 1.6rem; font-weight: 700; color: #B5121B;">
                     {{ money_price }}
                   </span>
                 </div>

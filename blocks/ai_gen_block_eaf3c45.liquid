@@ -8,9 +8,7 @@
   .ai-text-title-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    {% comment %}
     padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
-    {% endcomment %}
   }
 
   .ai-text-title-container-{{ ai_gen_id }} {
@@ -28,17 +26,16 @@
     line-height: {{ block.settings.line_height }};
     letter-spacing: {{ block.settings.letter_spacing }}px;
     text-transform: {{ block.settings.text_transform }};
-     
   }
 
   @media screen and (max-width: 749px) {
     .ai-text-title-heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.font_size }}px * 0.8);
+      font-size: 24px;
     }
   }
 
   .ai-text-title-subtitle-{{ ai_gen_id }} {
-    margin: 8px 0 0 0;
+    margin: 0px 0 10px 0;
     font-size: 14px;
     font-weight: 400;
     color: #666666;

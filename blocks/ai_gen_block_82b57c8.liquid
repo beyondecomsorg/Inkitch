@@ -12,7 +12,8 @@
     display: block;
     width: 100%;
     background-color: #fafafa;
-    padding: 60px 24px;
+    padding: 20px 24px;
+    padding-top: 40px !important;
   }
 
   .ai-new-popular-container-{{ ai_gen_id }} {
@@ -22,14 +23,15 @@
 
   .ai-new-popular-heading-wrapper-{{ ai_gen_id }} {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
   }
 
   .ai-new-popular-heading-{{ ai_gen_id }} {
     font-size: 32px;
     font-weight: 700;
+    line-height: 1.2;
     color: #111;
-    margin: 0 0 10px 0;
+    margin: 0 0 0px 0;
     position: relative;
     display: inline-block;
     font-family: var(--font-heading), serif;
@@ -40,7 +42,7 @@
     display: block;
     width: 60px;
     height: 3px;
-    margin: 8px auto 0;
+    margin: 0px auto 0;
     border-radius: 2px;
   }
 
@@ -73,12 +75,12 @@
   }
 
   .ai-new-popular-tab-{{ ai_gen_id }}:hover {
-    color: #E30613;
+    color: #B5121B;
   }
 
   .ai-new-popular-tab-{{ ai_gen_id }}.active {
-    color: #E30613;
-    border-bottom: 3px solid #E30613;
+    color: #B5121B;
+    border-bottom: 3px solid #B5121B;
     font-weight: 700;
   }
 
@@ -111,7 +113,7 @@
 
   .ai-new-popular-card-{{ ai_gen_id }}:hover {
     transform: translateY(-6px);
-    border-color: #E30613;
+    border-color: #B5121B;
     box-shadow: 0 8px 30px rgba(227,6,19,0.12);
   }
 
@@ -138,7 +140,7 @@
     /* opacity transition enables the crossfade */
     transition: transform 0.35s ease, opacity 0.3s ease;
     position: relative;
-    z-index: 1;
+    z-index: 0;
   }
 
   /* Scale primary image only when there is no second image */
@@ -194,7 +196,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #E30613;
+    background-color: #B5121B;
     color: #ffffff;
     border: none;
     cursor: pointer;
@@ -204,7 +206,7 @@
     padding: 10px 0;
     transform: translateY(100%);
     transition: transform 0.3s ease;
-    z-index: 3;
+    z-index: 0;
     display: block;
     width: 100%;
   }
@@ -223,7 +225,7 @@
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    z-index: 3;
+    z-index: 0;
     border-radius: 4px;
   }
 
@@ -242,12 +244,12 @@
   }
 
   .ai-new-popular-badge-{{ ai_gen_id }}.badge-new {
-    background-color: #E30613;
+    background-color: #B5121B;
     box-shadow: 0 2px 8px rgba(227,6,19,0.35);
   }
 
   .ai-new-popular-badge-{{ ai_gen_id }}.badge-top {
-    background-color: #E30613;
+    background-color: #B5121B;
     box-shadow: 0 2px 8px rgba(227,6,19,0.35);
   }
 
@@ -285,7 +287,7 @@
   }
 
   .ai-new-popular-card-title-{{ ai_gen_id }}:hover {
-    color: #E30613;
+    color: #B5121B;
     text-decoration: none;
   }
 
@@ -296,7 +298,7 @@
     gap: 8px;
     font-size: 15px;
     font-weight: 700;
-    color: #E30613;
+    color: #B5121B;
     flex-wrap: wrap;
   }
 
@@ -308,7 +310,7 @@
   }
 
   .ai-new-popular-sale-price-{{ ai_gen_id }} {
-    color: #E30613;
+    color: #B5121B;
     font-weight: 700;
   }
 
@@ -329,13 +331,13 @@
 
   .ai-new-popular-cta-wrapper-{{ ai_gen_id }} {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 0px;
   }
 
   .ai-new-popular-cta-btn-{{ ai_gen_id }} {
     display: inline-block;
-    border: 2px solid #E30613;
-    color: #E30613;
+    border: 2px solid #B5121B;
+    color: #B5121B;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 14px 40px;
@@ -346,7 +348,7 @@
   }
 
   .ai-new-popular-cta-btn-{{ ai_gen_id }}:hover {
-    background-color: #E30613;
+    background-color: #B5121B;
     color: #ffffff;
   }
 
@@ -372,12 +374,18 @@
       gap: 16px;
     }
       .ai-new-popular-{{ ai_gen_id }} {
-
-    padding: 40px 24px;
+    padding: 20px 24px;
   }
   }
 
   @media screen and (max-width: 749px) {
+    .ai-new-popular-{{ ai_gen_id }} {
+      padding: 20px 16px;
+    }
+
+    .ai-new-popular-heading-{{ ai_gen_id }} {
+      font-size: 24px;
+    }
     .ai-new-popular-tabs-{{ ai_gen_id }} {
       gap: 20px;
       margin-bottom: 24px;
@@ -448,7 +456,7 @@
     }
 
     .ai-new-popular-card-link-wrapper-{{ ai_gen_id }}:hover .ai-new-popular-card-title-{{ ai_gen_id }} {
-      color: #E30613 !important;
+      color: #B5121B !important;
     }
 
     .ai-new-popular-nav-btn-{{ ai_gen_id }} {

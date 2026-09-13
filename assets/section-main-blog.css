@@ -26,7 +26,7 @@
 }
 
 .ik-breadcrumb a:hover {
-  color: #E30613;
+  color: #B5121B;
 }
 
 .ik-breadcrumb__separator {
@@ -155,8 +155,8 @@
 }
 
 #ik-blog-search:focus {
-  border-color: #E30613;
-  box-shadow: 0 4px 20px rgba(227, 6, 19, 0.08);
+  border-color: #B5121B;
+  box-shadow: 0 4px 20px rgba(181, 18, 27, 0.08);
 }
 
 .ik-filters-scroll {
@@ -194,17 +194,17 @@
 }
 
 .ik-filter-chip:hover {
-  border-color: #E30613;
-  color: #E30613;
+  border-color: #B5121B;
+  color: #B5121B;
   transform: translateY(-1px);
 }
 
 .ik-filter-chip--active,
 .ik-filter-chip--active:hover {
-  background-color: #E30613;
-  border-color: #E30613;
+  background-color: #B5121B;
+  border-color: #B5121B;
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(227, 6, 19, 0.2);
+  box-shadow: 0 4px 12px rgba(181, 18, 27, 0.2);
 }
 
 @media screen and (max-width: 749px) {
@@ -222,7 +222,7 @@
 /* ── BADGES & META ── */
 .ik-badge {
   display: inline-block;
-  background-color: #E30613;
+  background-color: #B5121B;
   color: #FFFFFF;
   padding: 0.4rem 1.2rem;
   font-size: 1.1rem;
@@ -261,11 +261,11 @@
 }
 
 .ik-btn-pill:hover {
-  background-color: #E30613;
-  border-color: #E30613;
+  background-color: #B5121B;
+  border-color: #B5121B;
   color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(227, 6, 19, 0.15);
+  box-shadow: 0 8px 20px rgba(181, 18, 27, 0.15);
 }
 
 .ik-btn-pill:hover svg {
@@ -350,7 +350,7 @@
 }
 
 .ik-featured-blog__title a:hover {
-  color: #E30613;
+  color: #B5121B;
 }
 
 .ik-featured-blog__excerpt {
@@ -490,7 +490,7 @@
 }
 
 .ik-blog-card__title a:hover {
-  color: #E30613;
+  color: #B5121B;
 }
 
 .ik-blog-card__excerpt {
@@ -585,12 +585,12 @@
 }
 
 .ik-newsletter-form__input:focus {
-  border-color: #E30613;
+  border-color: #B5121B;
   background-color: #FFFFFF;
 }
 
 .ik-newsletter-form__button {
-  background-color: #E30613;
+  background-color: #B5121B;
   color: #FFFFFF;
   border: none;
   border-radius: 30px;
@@ -610,7 +610,7 @@
 
 .ik-newsletter-error {
   display: block;
-  color: #E30613;
+  color: #B5121B;
   font-size: 1.3rem;
   margin-top: 1rem;
   font-weight: 500;

@@ -26,8 +26,8 @@
   .ai-why-inkitch-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    padding: 60px 24px !important;
-    background: linear-gradient(135deg, #8b0000 0%, #c0000f 40%, #E30613 100%) !important;
+    padding: 20px 24px !important;
+    background: linear-gradient(135deg, #7D0A11 0%, #B5121B 50%, #960E15 100%) !important;
     border-top: none !important;
     box-sizing: border-box;
   }
@@ -39,12 +39,12 @@
 
   .ai-why-inkitch-header-{{ ai_gen_id }} {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 0px;
   }
 
   .ai-why-inkitch-heading-{{ ai_gen_id }} {
-    font-size: 36px !important;
-    font-weight: 800 !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
     color: #ffffff !important;
     text-align: center !important;
     margin: 0;
@@ -63,7 +63,7 @@
     font-size: 15px !important;
     color: rgba(255, 255, 255, 0.9) !important;
     max-width: 560px !important;
-    margin: 16px auto 0 !important;
+    margin: 0px auto 0 !important;
     line-height: 1.8 !important;
     text-align: center !important;
     font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
@@ -73,7 +73,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
-    margin-top: 48px;
+    margin-top: 15px;
   }
 
   /* Feature Card Base Styles with Solid White Background */
@@ -203,13 +203,16 @@
     }
   }
 
+      .ai-why-inkitch-description-{{ ai_gen_id }} p{
+      margin: 0px !important;
+    }
   /* Mobile Layout Overrides (< 749px) */
   @media screen and (max-width: 749px) {
     .ai-why-inkitch-{{ ai_gen_id }} {
-      padding: 40px 16px !important;
+      padding: 20px 16px !important;
     }
     .ai-why-inkitch-heading-{{ ai_gen_id }} {
-      font-size: 26px !important;
+      font-size: 24px !important;
     }
     .ai-why-inkitch-description-{{ ai_gen_id }} {
       font-size: 14px !important;

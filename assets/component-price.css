@@ -21,7 +21,7 @@
 .price .price-item {
   display: inline-block;
   margin: 0 1rem 0 0;
-  color: #E30613;
+  color: #B5121B;
     font-weight: 700;
 }
 
@@ -32,7 +32,7 @@
 
 .price:not(.price--show-badge) .price-item--last:last-of-type {
   margin: 0;
- color: #E30613;
+ color: #B5121B;
     font-weight: 700;
     font-family: var(--font-body-family);
 }

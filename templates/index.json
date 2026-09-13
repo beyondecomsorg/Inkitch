@@ -124,7 +124,7 @@
             "card_border_width": 1,
             "card_border_color": "#e0e0e0",
             "content_bg_color": "#ffffff",
-            "deal_text_color": "#ff0000",
+            "deal_text_color": "#B5121B",
             "label_size": 14,
             "number_size": 30,
             "symbol_size": 30,
@@ -227,7 +227,7 @@
         "cta_url": "/pages/our-story",
         "section_font": "sans_serif_n4",
         "heading_color": "#ffffff",
-        "heading_size": 40,
+        "heading_size": 32,
         "heading_size_mobile": 24,
         "heading_weight": 700,
         "body_color": "#ffffff",
@@ -256,10 +256,10 @@
         "background_color": "#0c4168",
         "accent_color": "#21f010",
         "blob_color": "#21f010",
-        "padding_top": 60,
-        "padding_bottom": 60,
-        "padding_top_mobile": 30,
-        "padding_bottom_mobile": 30
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20
       }
     },
     "1776874214582f2fe1": {
@@ -287,7 +287,7 @@
             "card_border_color": "#e0e0e0",
             "product_title_color": "#121212",
             "product_price_color": "#121212",
-            "quick_add_bg_color": "#ff0000",
+            "quick_add_bg_color": "#B5121B",
             "quick_add_icon_color": "#ffffff",
             "sold_out_bg_color": "#4a4a4a",
             "sold_out_text_color": "#ffffff",
@@ -299,7 +299,7 @@
           "type": "ai_gen_block_7f2cc22",
           "disabled": true,
           "settings": {
-            "background_color": "#9f0a0a",
+            "background_color": "#B5121B",
             "label": "BACK IN STOCK",
             "label_size": 12,
             "label_color": "#ffffff",
@@ -314,7 +314,7 @@
             "button_link": "shopify://collections/stainless-steel-bottle",
             "button_text_size": 20,
             "button_bg_color": "#ffffff",
-            "button_text_color": "#ff0000",
+            "button_text_color": "#B5121B",
             "lifestyle_image": "shopify://shop_images/458bbdaf-bf0b-45a7-890b-a2a53de6bee0.png",
             "product_image": "shopify://shop_images/ChatGPT_Image_May_9_2026_04_55_52_PM.png"
           },
@@ -325,14 +325,14 @@
           "settings": {
             "title_text": "Top Picks for You",
             "subtitle_text": "Handpicked essentials, just for you.",
-            "font_size": 40,
+            "font_size": 32,
             "font_weight": "700",
             "line_height": "1.2",
             "letter_spacing": 0,
             "text_transform": "none",
             "text_alignment": "center",
             "desktop_width_percent": 100,
-            "padding_top": 60,
+            "padding_top": 20,
             "padding_bottom": 0,
             "text_color": "#121212"
           },
@@ -407,15 +407,15 @@
           "settings": {
             "title_text": "Trending Right Now",
             "subtitle_text": "The essentials everyone's talking about.",
-            "font_size": 40,
+            "font_size": 32,
             "font_weight": "700",
             "line_height": "1.2",
             "letter_spacing": 0,
             "text_transform": "none",
             "text_alignment": "center",
             "desktop_width_percent": 100,
-            "padding_top": 40,
-            "padding_bottom": 12,
+            "padding_top": 20,
+            "padding_bottom": 8,
             "text_color": "#121212"
           },
           "blocks": {}
@@ -441,8 +441,8 @@
             "desc_color": "",
             "custom_class": "",
             "background_color": "",
-            "padding_top": 36,
-            "padding_bottom": 36,
+            "padding_top": 20,
+            "padding_bottom": 20,
             "padding_left_right": 0
           }
         },
@@ -585,34 +585,6 @@
       "type": "_blocks",
       "settings": {}
     },
-    "17769567983c5c5127": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_22e1668_4F6h88": {
-          "type": "ai_gen_block_22e1668",
-          "settings": {
-            "brand_username": "houseofnamah",
-            "show_caption_1": true,
-            "caption_1": "to the person who forces me",
-            "show_caption_2": true,
-            "caption_2": "",
-            "show_caption_3": true,
-            "caption_3": "",
-            "show_caption_4": true,
-            "caption_4": "",
-            "show_caption_5": true,
-            "caption_5": "",
-            "show_caption_6": true,
-            "caption_6": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_22e1668_4F6h88"
-      ],
-      "settings": {}
-    },
     "17768839772f913238": {
       "type": "_blocks",
       "settings": {}
@@ -629,7 +601,7 @@
           "settings": {
             "heading": "Why inKitch",
             "heading_font": "assistant_n4",
-            "heading_size": 36,
+            "heading_size": 32,
             "heading_weight": 600,
             "heading_letter_spacing": 0,
             "heading_margin": 20,
@@ -654,7 +626,7 @@
             "icon_size": 50,
             "icon_stroke_width": 1.5,
             "icon_spacing": 15,
-            "icon_color": "#ff0000",
+            "icon_color": "#B5121B",
             "feature_title_size": 13,
             "feature_title_weight": 500,
             "feature_title_color": "#000000",
@@ -665,8 +637,8 @@
             "grid_column_gap": 30,
             "feature_padding": 10,
             "background_color": "#ffffff",
-            "section_padding_top": 60,
-            "section_padding_bottom": 60
+            "section_padding_top": 20,
+            "section_padding_bottom": 20
           },
           "blocks": {}
         }
@@ -694,8 +666,8 @@
         "show_date": true,
         "show_author": true,
         "color_scheme": "scheme-2",
-        "padding_top": 60,
-        "padding_bottom": 60
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     },
     "17804708302c7f8b07": {
@@ -813,6 +785,35 @@
         "ai_gen_block_5cd1fe4_zip3Xm"
       ],
       "settings": {}
+    },
+    "17888891224a61d519": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_AzthDK": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "Follow Us On Instagram",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 20,
+            "instafeed_margin_bottom": 20,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "left",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_AzthDK"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
@@ -827,7 +828,6 @@
     "178289953232b64777",
     "17768748541cfee548",
     "17768757305788ece8",
-    "17769567983c5c5127",
     "17768839772f913238",
     "1776876887e6e42cc3",
     "1776876022a0f63424",
@@ -836,6 +836,7 @@
     "17804708302c7f8b07",
     "1779278418b3f8f25d",
     "1779279862fa4605f2",
-    "178332104324cb3898"
+    "178332104324cb3898",
+    "17888891224a61d519"
   ]
 }

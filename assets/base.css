@@ -2093,7 +2093,7 @@ input[type='checkbox'] {
 
 .cart-count-bubble {
   position: absolute;
-  background-color: #f60000;
+  background-color: #B5121B;
   color: #ffffff;
   height: 1.7rem;
   width: 1.7rem;
@@ -3757,20 +3757,20 @@ details-disclosure > details {
   align-items: center !important;
   justify-content: center !important;
   background: #ffffff !important;
-  color: #C8102E !important;
-  border: 1.5px solid #C8102E !important;
+  color: #B5121B !important;
+  border: 1.5px solid #B5121B !important;
   border-radius: 8px !important;
 }
 .card-wrapper .custom-product-buttons .cart-btn:hover,
 .card-wrapper .custom-product-buttons .choose-btn:hover,
 .card-wrapper .quick-add__submit:hover,
 .card-wrapper product-form .button:hover {
-  background: #C8102E !important;
+  background: #B5121B !important;
   color: #ffffff !important;
 }
 .shopify-payment-button__button--unbranded,
 button#checkout{
-    background: #f60000 !important;
+    background: #B5121B !important;
   color: #ffffff !important;
   border: none;
 }
@@ -3842,7 +3842,7 @@ a.full-unstyled-link {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
-    min-height: 4.5em;
+    min-height: 1.5em;
     max-height: 4.5em;
     text-transform: uppercase;
 }
@@ -3865,7 +3865,7 @@ body a.cart-btn.choose-btn,
 /* Cart Drawer Checkout Button Redesign */
 #CartDrawer-Checkout,
 .cart-drawer .cart__checkout-button {
-  background-color: #f60000 !important;
+  background-color: #B5121B !important;
   color: #ffffff !important;
   border: none !important;
   font-weight: 600 !important;
@@ -4001,7 +4001,7 @@ body a.cart-btn.choose-btn,
 .drawer-product-price {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #E30613;
+  color: #B5121B;
 }
 
 .drawer-options-wrapper {
@@ -4041,9 +4041,9 @@ body a.cart-btn.choose-btn,
 }
 
 .drawer-pill-button.active {
-  border-color: #E30613;
-  color: #E30613;
-  background: rgba(227, 6, 19, 0.05);
+  border-color: #B5121B;
+  color: #B5121B;
+  background: rgba(181, 18, 27, 0.05);
 }
 
 .mobile-variant-drawer-footer {
@@ -4056,7 +4056,7 @@ body a.cart-btn.choose-btn,
   height: 48px;
   font-size: 1.5rem;
   font-weight: 700;
-  background-color: #E30613;
+  background-color: #B5121B;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -4107,7 +4107,7 @@ body a.cart-btn.choose-btn,
 }
 
 .inkitch-tagline-badge .tagline-badge-star {
-  color: #C8102E;
+  color: #B5121B;
   font-size: 8px;
   flex-shrink: 0;
   line-height: 1;
@@ -4140,4 +4140,9 @@ body a.cart-btn.choose-btn,
   .header-tagline-custom {
     display: none !important;
   }
+}
+
+/* Hide Reelfy pagination dots */
+.flickityrf-page-dots {
+  display: none !important;
 }

@@ -87,6 +87,18 @@ if (!customElements.get('product-info')) {
           } else {
             this.productForm?.toggleSubmitButton(true, window.variantStrings.soldOut);
           }
+
+          // Instantly update the gallery to avoid delay
+          if (window.ProductGalleryColorFilter) {
+            window.ProductGalleryColorFilter.update(null, matchedVariant);
+          }
+          const mediaId = matchedVariant.featured_media?.id || matchedVariant.featured_image?.id;
+          if (mediaId) {
+            this.querySelector('media-gallery')?.setActiveMedia?.(
+              `${this.dataset.section}-${mediaId}`,
+              true
+            );
+          }
         } else {
           this.updateVariantInputs(null);
           this.productForm?.toggleSubmitButton(true, window.variantStrings.unavailable);

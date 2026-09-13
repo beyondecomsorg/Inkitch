@@ -14,7 +14,7 @@
     overflow-y: visible;  /* allow badge + card to lift upward on hover */
     background-color: #fafafa;
     padding-top: 0px;
-    padding-bottom: 60px;
+    padding-bottom: 20px;
     isolation: isolate;   /* contain all child z-index stacking contexts */
     z-index: 0;           /* keep section below sticky header */
   }
@@ -60,8 +60,8 @@
 
   .ai-product-card-wrapper-{{ ai_gen_id }}:hover {
     transform: translateY(-6px);
-    border-color: #E30613;
-    box-shadow: 0 8px 28px rgba(227,6,19,0.12);
+    border-color: #B5121B;
+    box-shadow: 0 8px 28px rgba(181, 18, 27, 0.12);
   }
 
   .ai-product-card-image-container-{{ ai_gen_id }} {
@@ -149,7 +149,7 @@
     position: absolute;
     top: 12px;
     left: 12px;
-    background-color: #E30613;
+    background-color: #B5121B;
     color: #ffffff;
     font-weight: 700;
     font-size: 11px;
@@ -158,7 +158,7 @@
     border-radius: 6px;
     z-index: 3; /* above image container AND hover overlay */
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 6px rgba(227,6,19,0.3);
+    box-shadow: 0 2px 6px rgba(181, 18, 27, 0.3);
     pointer-events: none; /* don't intercept clicks meant for the card link */
   }
 
@@ -238,7 +238,7 @@
   .ai-product-card-sale-price-{{ ai_gen_id }} {
     font-size: 16px;
     font-weight: 700;
-    color: #E30613;
+    color: #B5121B;
   }
 
   .ai-product-card-compare-price-{{ ai_gen_id }} {
@@ -250,7 +250,7 @@
 
   .ai-product-card-savings-badge-{{ ai_gen_id }} {
     background-color: #fff0f0;
-    color: #E30613;
+    color: #B5121B;
     border-radius: 12px;
     padding: 2px 8px;
     font-size: 11px;
@@ -269,8 +269,8 @@
     justify-content: center;
     width: 100%;
     padding: 10px;
-    border: 1.5px solid #E30613;
-    color: #E30613;
+    border: 1.5px solid #B5121B;
+    color: #B5121B;
     background-color: #ffffff;
     font-size: 13px;
     font-weight: 600;
@@ -281,7 +281,7 @@
   }
 
   .ai-product-card-wrapper-{{ ai_gen_id }}:hover .ai-product-card-btn-{{ ai_gen_id }} {
-    background-color: #E30613;
+    background-color: #B5121B;
     color: #ffffff;
   }
 
@@ -298,7 +298,7 @@
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    background-color: #E30613;
+    background-color: #B5121B;
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -307,11 +307,11 @@
     justify-content: center;
     z-index: 1;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(227,6,19,0.3);
+    box-shadow: 0 4px 12px rgba(181, 18, 27, 0.3);
   }
 
   .ai-carousel-nav-{{ ai_gen_id }}:hover {
-    background-color: #c0000f;
+    background-color: #960E15;
     transform: translateY(-50%) scale(1.1);
   }
 
@@ -352,9 +352,10 @@
     font-family: var(--font-heading) !important;
     font-weight: 700 !important;
     color: #111 !important;
-    font-size: 30px !important;
+    font-size: 32px !important;
+    line-height: 1.2 !important;
     display: inline-block !important;
-    padding-bottom: 14px !important;
+    padding-bottom: 0px !important;
 
     text-align: center !important;
   }
@@ -375,7 +376,11 @@
   @media screen and (max-width: 749px) {
     .ai-product-carousel-{{ ai_gen_id }} {
       width: 100%;
-      padding: 40px 0;
+      padding: 10px 0 20px 0;
+    }
+
+    [class*="ai-text-title-heading-"] {
+      font-size: 24px !important;
     }
 
     .ai-product-carousel-container-{{ ai_gen_id }} {

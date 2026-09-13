@@ -225,7 +225,7 @@
 
   .cart-drawer .quantity__button:hover {
     background-color: rgba(var(--color-foreground), 0.05) !important;
-    color: #f60000 !important;
+    color: #B5121B !important;
   }
 
   .cart-drawer .cart-remove-button {
@@ -242,7 +242,7 @@
   }
 
   .cart-drawer .cart-remove-button:hover {
-    color: #f60000 !important;
+    color: #B5121B !important;
   }
 
   /* Footer Action Zone */
@@ -265,7 +265,7 @@
   /* Checkout Button */
   #CartDrawer-Checkout,
   .cart-drawer .cart__checkout-button {
-    background-color: #f60000 !important;
+    background-color: #B5121B !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 6px !important;
@@ -340,7 +340,7 @@
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background-color: #e30613 !important;
+    background-color: #B5121B !important;
     color: #ffffff !important;
     font-size: 1.5rem !important;
     font-weight: 600 !important;
@@ -384,7 +384,7 @@
   }
 
   .cart__login-paragraph a {
-    color: #e30613 !important;
+    color: #B5121B !important;
     font-weight: 600 !important;
     text-decoration: underline !important;
   }
@@ -419,7 +419,7 @@
           <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
             <div class="cart-drawer__empty-content">
               <div class="cart-drawer__empty-icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e30613" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#B5121B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                   <line x1="3" y1="6" x2="21" y2="6"></line>
                   <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -547,7 +547,7 @@
                               </div>
                               <!-- Row 2: Price and Discount -->
                               <div class="custom-card-price__row" style="display: flex; align-items: center; gap: 8px; line-height: 1.2;">
-                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #E30613;">
+                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #B5121B;">
                                   {{ money_price }}
                                 </span>
                                 {%- assign discount_percent = compare_at_line_price | minus: final_line_price | times: 100.0 | divided_by: compare_at_line_price | round -%}
@@ -558,7 +558,7 @@
                             {%- else -%}
                               <!-- Regular Selling Price only -->
                               <div class="custom-card-price__row" style="display: flex; align-items: center; line-height: 1.2;">
-                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #E30613;">
+                                <span class="custom-card-price__selling" style="font-size: 1.4rem; font-weight: 700; color: #B5121B;">
                                   {{ money_price }}
                                 </span>
                               </div>
