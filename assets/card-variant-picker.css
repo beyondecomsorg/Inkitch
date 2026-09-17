@@ -12,7 +12,7 @@
 
 /* ─── Brand / spacing tokens ──────────────────────────────────────────────── */
 .card-wrapper {
-  --card-brand-red: #B5121B;
+  --card-brand-red: #ff2400;
   --card-pill-border: rgba(0, 0, 0, 0.18);
   --card-pill-text: #444444;
   --card-pill-radius: 100px;

@@ -235,7 +235,7 @@
 }
 
 #wau-{{ section.id }} {
-  --wau-bg: linear-gradient(135deg, #7D0A11 0%, #B5121B 50%, #960E15 100%) !important;
+  --wau-bg: #ff2400 !important;
   --wau-accent: var(--color-copper-rivet, #B87333);
   --wau-blob-color: var(--color-raw-denim-blue, #345E8A);
 
@@ -491,14 +491,14 @@
 
 #wau-{{ section.id }} .wau-stat-pill {
   flex: 1 1 0% !important;
-  background: rgba(11, 31, 51, 0.45) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
   padding: 24px 20px !important; /* Increased padding inside stat box */
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
   align-items: flex-start !important;
-  border-radius: 0 !important;
+  border-radius: 8px !important;
   box-sizing: border-box !important;
   text-align: left !important;
   backdrop-filter: blur(10px);
@@ -518,8 +518,8 @@
 }
 
 #wau-{{ section.id }} .wau-stat-pill:hover {
-  background: rgba(11, 31, 51, 0.55) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 #wau-{{ section.id }} .wau-stat-pill strong {
