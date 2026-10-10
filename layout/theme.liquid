@@ -269,13 +269,12 @@
       }
            @media screen and (max-width: 749px) {
    .template-index .shopify-block.shopify-app-block{
-        padding-bottom: 20px !important;
+        padding-bottom: 40px !important;
    }
       }
 
 .template-index .shopify-block.shopify-app-block{
- padding-bottom: 20px;
- padding-top: 20px;
+ padding-bottom: 60px;
 }
 
 
@@ -331,6 +330,11 @@
 </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %} page-{{ page_title | handle }} template-{{ template.name | handle }}">
+   
+   <script>
+      fbq('track', 'Purchase');
+      </script>
+   
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

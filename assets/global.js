@@ -1167,9 +1167,9 @@ class VariantSelects extends HTMLElement {
   }
 
   get selectedOptionValues() {
-    return Array.from(this.querySelectorAll('select option[selected], fieldset input:checked')).map(
-      ({ dataset }) => dataset.optionValueId
-    );
+    return Array.from(this.querySelectorAll('select option[selected], fieldset input:checked'))
+      .map(({ dataset }) => dataset.optionValueId)
+      .filter((id) => id != null && id !== '' && id !== 'undefined');
   }
 }
 

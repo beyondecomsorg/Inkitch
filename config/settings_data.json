@@ -222,7 +222,7 @@
           "background_gradient": "",
           "text": "#1a1a1a",
           "button": "#121212",
-          "button_label": "#ff2400",
+          "button_label": "#ff0000",
           "secondary_button_label": "#121212",
           "shadow": "#121212"
         }
@@ -262,7 +262,7 @@
       },
       "scheme-5": {
         "settings": {
-          "background": "#ff2400",
+          "background": "#f60000",
           "background_gradient": "",
           "text": "#ffffff",
           "button": "#ffffff",

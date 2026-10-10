@@ -12,21 +12,22 @@
     width: 100%;
     display: block;
     background-color: #f7f7f7;
-    padding-top: 20px;
-    padding-bottom: 40px;
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
+
+
 
   .ai-latest-deals__heading-wrapper-{{ ai_gen_id }} {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 40px;
   }
 
   .ai-latest-deals__heading-{{ ai_gen_id }} {
-    font-size: 32px;
+    font-size: clamp(28px, 4vw, 36px);
     font-weight: 700;
-    line-height: 1.2;
     color: #111;
-    margin: 0 0 0px 0;
+    margin: 0 0 12px 0;
     position: relative;
     display: inline-block;
     font-family: var(--font-heading), serif;
@@ -37,7 +38,7 @@
     display: block;
     width: 70px;
     height: 3px;
-    margin: 0px auto 0;
+    margin: 8px auto 0;
     border-radius: 2px;
   }
 
@@ -122,7 +123,7 @@
 
   .ai-latest-deals__badge-{{ ai_gen_id }} {
     display: inline-block;
-    background-color: #ff2400;
+    background-color: #E30613;
     color: #ffffff;
     font-weight: 700;
     font-size: 12px;
@@ -193,21 +194,21 @@
   .ai-latest-deals__discount-number-{{ ai_gen_id }} {
     font-size: 36px;
     font-weight: 700;
-    color: #ff2400;
+    color: #E30613;
     line-height: 1.1;
   }
 
   .ai-latest-deals__discount-symbol-{{ ai_gen_id }} {
     font-size: 24px;
     font-weight: 700;
-    color: #ff2400;
+    color: #E30613;
     line-height: 1.1;
   }
 
   .ai-latest-deals__discount-off-{{ ai_gen_id }} {
     font-size: 18px;
     font-weight: 700;
-    color: #ff2400;
+    color: #E30613;
     line-height: 1.1;
     margin-left: 2px;
   }
@@ -239,8 +240,8 @@
     justify-content: center;
     width: 100%;
     padding: 10px;
-    border: 2px solid #ff2400;
-    color: #ff2400;
+    border: 2px solid #E30613;
+    color: #E30613;
     background-color: #ffffff;
     font-size: 14px;
     font-weight: 600;
@@ -251,7 +252,7 @@
   }
 
   .ai-latest-deals__card-{{ ai_gen_id }}:hover .ai-latest-deals__btn-{{ ai_gen_id }} {
-    background-color: #ff2400;
+    background-color: #E30613;
     color: #ffffff;
   }
 
@@ -261,16 +262,13 @@
 
   @media screen and (max-width: 749px) {
     .ai-latest-deals-{{ ai_gen_id }} {
-      padding: 20px 0;
-    }
-
-    .ai-latest-deals__heading-{{ ai_gen_id }} {
-      font-size: 24px;
+      padding: 40px 0;
+      padding-top: 0;
     }
 
     .ai-latest-deals__heading-wrapper-{{ ai_gen_id }} {
       padding: 0 15px;
-      margin-bottom: 15px;
+      margin-bottom: 24px;
     }
 
     .ai-latest-deals__slider-wrapper-{{ ai_gen_id }} {
@@ -319,7 +317,7 @@
     }
 
     .ai-latest-deals__dot-{{ ai_gen_id }}.active {
-      background-color: #ff2400;
+      background-color: #E30613;
     }
   }
 {% endstyle %}
@@ -679,7 +677,7 @@
       "type": "color",
       "id": "deal_text_color",
       "label": "Text color",
-      "default": "#ff2400"
+      "default": "#ff0000"
     },
     {
       "type": "range",

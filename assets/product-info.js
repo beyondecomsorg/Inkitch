@@ -82,6 +82,8 @@ if (!customElements.get('product-info')) {
         const matchedVariant = this.getMatchingVariantFromDOM(target);
         if (matchedVariant) {
           this.updateVariantInputs(matchedVariant.id);
+          this.updatePrice(matchedVariant);
+          this.updateSelectedVariantScript(matchedVariant);
           if (matchedVariant.available) {
             this.productForm?.toggleSubmitButton(false);
           } else {
@@ -334,8 +336,11 @@ if (!customElements.get('product-info')) {
           params.push(`variant=${matchedVariant.id}`);
         }
 
-        if (optionValues.length) {
-          params.push(`option_values=${optionValues.join(',')}`);
+        const validOptionValues = (optionValues || []).filter(
+          (val) => val != null && val !== '' && val !== 'undefined' && val !== 'null'
+        );
+        if (validOptionValues.length) {
+          params.push(`option_values=${validOptionValues.join(',')}`);
         }
 
         return `${url}?${params.join('&')}`;
@@ -365,8 +370,8 @@ if (!customElements.get('product-info')) {
           this.updateMedia(html, variant?.featured_media?.id);
 
           const updateSourceFromDestination = (id, shouldHide = (source) => false) => {
-            const source = html.getElementById(`${id}-${this.sectionId}`);
-            const destination = this.querySelector(`#${id}-${this.dataset.section}`);
+            const source = html.getElementById(`${id}-${this.sectionId}`) || html.querySelector(`[id^="${id}-"]`);
+            const destination = this.querySelector(`#${id}-${this.dataset.section}`) || this.querySelector(`[id^="${id}-"]`);
             if (source && destination) {
               destination.innerHTML = source.innerHTML;
               destination.classList.toggle('hidden', shouldHide(source));
@@ -418,6 +423,85 @@ if (!customElements.get('product-info')) {
         } catch (e) {
           console.error('Error updating variant product description:', e);
         }
+      }
+
+      updateSelectedVariantScript(variant) {
+        if (!variant) return;
+        const script = this.querySelector('variant-selects [data-selected-variant]') ||
+                       document.querySelector('variant-selects [data-selected-variant]');
+        if (script) {
+          script.textContent = JSON.stringify(variant);
+        }
+      }
+
+      updatePrice(variant) {
+        if (!variant) return;
+        const priceContainer = this.querySelector(`#price-${this.dataset.section}`) ||
+                               document.getElementById(`price-${this.dataset.section}`) ||
+                               document.querySelector('[id^="price-"]');
+        if (!priceContainer) return;
+
+        const priceEl = priceContainer.querySelector('.price');
+        if (!priceEl) return;
+
+        const formatMoney = (cents) => {
+          if (cents == null) return '';
+          if (typeof cents === 'string' && (cents.includes('₹') || cents.includes('$') || cents.includes('Rs'))) {
+            return cents;
+          }
+          const amount = cents / 100;
+          const formatted = amount.toLocaleString('en-IN', {
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0
+          });
+          return `₹${formatted}`;
+        };
+
+        const price = variant.price;
+        const compareAtPrice = variant.compare_at_price;
+        const isOnSale = compareAtPrice && compareAtPrice > price;
+
+        if (variant.available === false) {
+          priceEl.classList.add('price--sold-out');
+        } else {
+          priceEl.classList.remove('price--sold-out');
+        }
+
+        if (isOnSale) {
+          priceEl.classList.add('price--on-sale');
+          const discountPercent = Math.round(((compareAtPrice - price) * 100) / compareAtPrice);
+
+          const compareAtEl = priceEl.querySelector('.price__sale s.price-item--regular');
+          if (compareAtEl) {
+            compareAtEl.textContent = `MRP ${formatMoney(compareAtPrice)}`;
+          }
+
+          const salePriceEl = priceEl.querySelector('.price__sale .price-item--sale');
+          if (salePriceEl) {
+            salePriceEl.textContent = formatMoney(price);
+          }
+
+          let discountEl = priceEl.querySelector('.price__sale .price-item--discount');
+          if (discountEl) {
+            discountEl.textContent = `${discountPercent}% OFF`;
+          } else {
+            const saleContainer = priceEl.querySelector('.price__sale');
+            if (saleContainer) {
+              discountEl = document.createElement('span');
+              discountEl.className = 'price-item price-item--discount';
+              discountEl.textContent = `${discountPercent}% OFF`;
+              saleContainer.appendChild(discountEl);
+            }
+          }
+        } else {
+          priceEl.classList.remove('price--on-sale');
+          const regularPriceEl = priceEl.querySelector('.price__regular .price-item--regular');
+          if (regularPriceEl) {
+            regularPriceEl.textContent = formatMoney(price);
+          }
+        }
+
+        priceContainer.dispatchEvent(new CustomEvent('price:updated', { bubbles: true, detail: { variant } }));
       }
 
       updateVariantInputs(variantId) {
