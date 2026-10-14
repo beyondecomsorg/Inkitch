@@ -76,14 +76,9 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
-      object-fit: contain !important;
+      object-fit: cover !important;
+      object-position: center !important;
     }
-    @media only screen and (max-width: 768px){
-    .card-wrapper .media.media--hover-effect > img{
-    object-fit: revert-layer !important;
-    }
-  
-  }
     .card__inner {
       background-color: #f7f7f7 !important;
     }
@@ -124,16 +119,12 @@
     assign ratio = 1
     if featured_media and media_aspect_ratio == 'portrait'
       assign ratio = 0.8
+    elsif featured_media and media_aspect_ratio == 'square'
+      assign ratio = 1
     elsif featured_media and media_aspect_ratio == 'adapt'
-      if parent_ratio
-        assign ratio = parent_ratio
-      elsif collection.products.first.featured_media
-        assign ratio = collection.products.first.featured_media.aspect_ratio
-      elsif search.results.first.featured_media
-        assign ratio = search.results.first.featured_media.aspect_ratio
-      else
-        assign ratio = featured_media.aspect_ratio
-      endif
+      assign ratio = 1
+    else
+      assign ratio = 1
     endif
     if ratio == 0 or ratio == null
       assign ratio = 1
