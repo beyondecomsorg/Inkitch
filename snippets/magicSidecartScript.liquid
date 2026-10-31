@@ -1,0 +1,5 @@
+{%- comment -%} Razorpay Magic Sidecart - managed by Razorpay. Do not edit. {%- endcomment -%}
+<script id="RazorpayMagicSidecartConfig" type="application/json">
+  {"email": {{ email | default: '' | json }}, "phone": {{ phone | default: '' | json }}, "config": {{ shop.metafields.magic_checkout.sidecartConfig | json }}}
+</script>
+<script src="https://magic-plugins.razorpay.com/shopify-sidecart/magic-shopify-sidecart.js" defer></script>

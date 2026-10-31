@@ -414,5 +414,7 @@
     {% render 'whatsapp-float' %}
   
     {% render 'razorpay-magic-checkout' %}
-  </body>
+  
+{% render 'magicSidecartScript', email: customer.email, phone: customer.phone %}
+</body>
 </html>
