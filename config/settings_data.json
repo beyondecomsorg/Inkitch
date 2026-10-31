@@ -199,18 +199,18 @@
           "star_color": ""
         }
       },
+      "1232542678405107163": {
+        "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
+        "disabled": false,
+        "settings": {}
+      },
       "3557650678667880288": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       },
       "17844675666580048712": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
-        "settings": {}
-      },
-      "1232542678405107163": {
-        "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
         "disabled": false,
         "settings": {}
       }
