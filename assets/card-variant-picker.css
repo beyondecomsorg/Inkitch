@@ -33,6 +33,7 @@
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   overflow: visible;
 }
@@ -47,8 +48,10 @@
   display: flex;
   flex-direction: column;   /* ← groups stacked vertically, not side-by-side */
   align-items: flex-start;
-  gap: 10px;              /* vertical gap between option groups             */
+  gap: 8px;              /* vertical gap between option groups             */
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ─── Single option-group row (label + pills/swatches) ────────────────────── */
@@ -56,8 +59,10 @@
   display: flex;
   flex-direction: column;   /* label above, pill/swatch list below            */
   align-items: flex-start;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Inline label: "Size:", "Color:", "Type:" */
@@ -76,8 +81,10 @@
   display: flex;
   flex-wrap: wrap;           /* ← wrap within the card, never clip/overflow   */
   align-items: center;
-  gap: 10px;       /* row-gap col-gap                               */
+  gap: 6px;       /* row-gap col-gap                               */
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ─── Colour-swatch circle buttons ───────────────────────────────────────── */
@@ -111,15 +118,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: var(--card-pill-height);   /* fixed height for consistency           */
-  min-width: 40px;
-  padding: 0 0.85rem;
-  font-size: 1.1rem;
+  min-height: var(--card-pill-height);
+  height: auto;
+  min-width: 32px;
+  max-width: 100%;
+  padding: 4px 9px;
+  font-size: 1.05rem;
   font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  box-sizing: border-box;
   border: 1.5px solid var(--card-pill-border);
-  border-radius: var(--card-pill-radius);
+  border-radius: 14px;
   background-color: #ffffff;
   color: var(--card-pill-text);
   cursor: pointer;
@@ -128,6 +140,16 @@
     background-color 0.15s ease,
     border-color 0.15s ease,
     color 0.15s ease;
+}
+
+@media screen and (max-width: 749px) {
+  .card-pill-button {
+    font-size: 0.95rem;
+    padding: 3px 7px;
+    border-radius: 12px;
+    min-height: 24px;
+    line-height: 1.15;
+  }
 }
 
 /* Hover / tap — light red tint with brand border */
