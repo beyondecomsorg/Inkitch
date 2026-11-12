@@ -189,30 +189,30 @@
           "use-variant": "false"
         }
       },
-      "2166187066657961218": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/review-widget-embed/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": false,
-        "settings": {
-          "enable_reviews": true,
-          "enable_star_rating": true,
-          "primary_color": "",
-          "star_color": ""
-        }
-      },
       "1232542678405107163": {
         "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
         "disabled": false,
-        "settings": {}
-      },
-      "3557650678667880288": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
         "settings": {}
       },
       "17844675666580048712": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
         "disabled": true,
         "settings": {}
+      },
+      "3557650678667880288": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": false,
+        "settings": {}
+      },
+      "2166187066657961218": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/review-widget-embed/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": true,
+        "settings": {
+          "enable_reviews": true,
+          "enable_star_rating": true,
+          "primary_color": "",
+          "star_color": ""
+        }
       }
     },
     "color_schemes": {
