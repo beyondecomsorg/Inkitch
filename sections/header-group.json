@@ -24,14 +24,22 @@
         "announcement_Ct6bnf": {
           "type": "announcement",
           "settings": {
-            "text": "Get 10% off your first order – code WELCOME10",
+            "text": "EXTRA 5% OFF UNLOCKED - CODE: EXTRA5",
+            "link": ""
+          }
+        },
+        "announcement_gML8aL": {
+          "type": "announcement",
+          "settings": {
+            "text": "EXTRA 10% OFF UNLOCKED - CODE: EXTRA10",
             "link": ""
           }
         }
       },
       "block_order": [
         "announcement_DCqyRd",
-        "announcement_Ct6bnf"
+        "announcement_Ct6bnf",
+        "announcement_gML8aL"
       ],
       "settings": {
         "auto_rotate": true,
