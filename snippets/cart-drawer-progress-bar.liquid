@@ -1,0 +1,530 @@
+{% comment %}
+  Cart Drawer Progress Bar – Matches Reference Design
+  - Using Brand Color: #E30613 (Inkitch Red)
+  - Non-overlapping regular flow layout
+  - 3 Milestones: BUY 1 (Free Shipping), BUY 2 (5% Off), BUY 3 (10% Off)
+  - Copyable Coupon Box (BUY2G5 / BUY3G10) with one-click copy feedback
+  - Customizable via Shopify Theme Settings > Cart Progress Bar
+{% endcomment %}
+
+{%- liquid
+  if settings.cp_enable == false
+    assign show_bar = false
+  else
+    assign show_bar = true
+  endif
+-%}
+
+{%- if show_bar -%}
+{%- liquid
+  assign cart_qty      = cart.item_count | plus: 0
+
+  assign brand_color   = settings.cp_theme_color   | default: "#E30613"
+
+  assign tier1_step    = settings.cp_tier1_step    | default: ""
+  assign tier1_val     = settings.cp_tier1_value   | default: "FREE SHIPPING"
+  assign tier1_head    = settings.cp_tier1_headline | default: "BUY 1 MORE PRODUCT TO UNLOCK 5% OFF"
+
+  assign tier2_step    = settings.cp_tier2_step    | default: "BUY 2"
+  assign tier2_val     = settings.cp_tier2_value   | default: "+5% OFF"
+  assign tier2_coupon  = settings.cp_tier2_coupon  | default: "EXTRA5"
+  assign tier2_sub     = settings.cp_tier2_sub     | default: "5% OFF UNLOCKED"
+  assign tier2_head    = settings.cp_tier2_headline | default: "BUY 1 MORE PRODUCT TO UNLOCK 10% OFF"
+
+  assign tier3_step    = settings.cp_tier3_step    | default: "BUY 3"
+  assign tier3_val     = settings.cp_tier3_value   | default: "+10% OFF"
+  assign tier3_coupon  = settings.cp_tier3_coupon  | default: "EXTRA10"
+  assign tier3_sub     = settings.cp_tier3_sub     | default: "10% OFF UNLOCKED"
+  assign tier3_head    = settings.cp_tier3_headline | default: "EXTRA 10% OFF UNLOCKED - CODE: EXTRA10"
+
+  assign coupon_prefix = settings.cp_coupon_label  | default: "Coupon unlocked:"
+  assign coupon_btn    = settings.cp_coupon_btn    | default: "COPY"
+
+  if cart_qty >= 3
+    assign active_tier  = 3
+    assign progress_pct = 100
+    assign show_coupon  = true
+    assign active_code  = tier3_coupon
+    assign discount_txt = tier3_sub
+    if tier3_head contains '[code]'
+      assign top_banner = tier3_head | replace: '[code]', active_code
+    else
+      assign top_banner = tier3_head
+    endif
+  elsif cart_qty >= 2
+    assign active_tier  = 2
+    assign progress_pct = 50
+    assign show_coupon  = true
+    assign active_code  = tier2_coupon
+    assign discount_txt = tier2_sub
+    if tier2_head contains '[code]'
+      assign top_banner = tier2_head | replace: '[code]', active_code
+    else
+      assign top_banner = tier2_head
+    endif
+  elsif cart_qty >= 1
+    assign active_tier  = 1
+    assign progress_pct = 0
+    assign show_coupon  = false
+    assign active_code  = ""
+    assign discount_txt = ""
+    assign top_banner   = tier1_head
+  else
+    assign active_tier  = 0
+    assign progress_pct = 0
+    assign show_coupon  = false
+    assign active_code  = ""
+    assign discount_txt = ""
+    assign top_banner   = tier1_head
+  endif
+-%}
+
+<style>
+  /* Outer Card */
+  .cart-pb-card {
+    background: #ffffff;
+    border: 1px solid #EAEAEA;
+    border-radius: 12px;
+    padding: 14px 14px 14px 14px;
+    margin: 0.4rem 0 0.8rem 0;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Top Headline Banner */
+  .cart-pb-headline {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: {{ brand_color }};
+    letter-spacing: 0.04em;
+    margin-bottom: 1.2rem;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  /* Track Container (Normal Flow, No Absolute Collapsing) */
+  .cart-pb-track-wrap {
+    position: relative;
+    margin: 0 26px 14px 26px;
+    box-sizing: border-box;
+  }
+
+  /* Connecting Line Behind Circles */
+  .cart-pb-track-line {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    right: 18px;
+    height: 4px;
+    background-color: #E5E7EB !important;
+    border-radius: 99px;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .cart-pb-track-fill {
+    display: block !important;
+    height: 4px !important;
+    min-height: 4px !important;
+    background-color: {{ brand_color }} !important;
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  /* Milestone Nodes in Normal Flow */
+  .cart-pb-nodes {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cart-pb-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 36px;
+    flex-shrink: 0;
+  }
+
+  /* Node Circle Badge */
+  .cart-pb-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #CBD5E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    box-sizing: border-box;
+  }
+
+  .cart-pb-circle svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .cart-pb-circle__pct {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  /* Active Node State - Brand Color */
+  .cart-pb-node.is-active .cart-pb-circle {
+    background: {{ brand_color }};
+    border-color: {{ brand_color }};
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(227, 6, 19, 0.25);
+  }
+
+  /* Labels below Circle */
+  .cart-pb-node-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 6px;
+    text-align: center;
+    width: max-content;
+  }
+
+  .cart-pb-node-step {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111827;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .cart-pb-node-val {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #475569;
+    margin-top: 2px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .cart-pb-node.is-active .cart-pb-node-val {
+    color: #111827;
+  }
+
+  /* Discount Badge Pill */
+  .cart-pb-badge {
+    background: #DCFCE7;
+    color: #15803D;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-block;
+  }
+
+  /* Coupon Box (Never Overflows) */
+  .cart-pb-coupon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F0FDF4;
+    border: 1.5px dashed #4ADE80;
+    border-radius: 8px;
+    padding: 7px 8px;
+    gap: 6px;
+    margin-top: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cart-pb-coupon-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .cart-pb-coupon-tag-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    background: #DCFCE7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #15803D;
+  }
+
+  .cart-pb-coupon-tag-icon svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+  }
+
+  .cart-pb-coupon-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .cart-pb-coupon-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cart-pb-coupon-title strong {
+    font-weight: 800;
+    color: {{ brand_color }};
+  }
+
+  .cart-pb-coupon-sub {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #166534;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cart-pb-coupon-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .cart-pb-coupon-pill {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 800;
+    color: {{ brand_color }};
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .cart-pb-coupon-btn {
+    background: {{ brand_color }};
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(227, 6, 19, 0.2);
+  }
+
+  @media screen and (max-width: 370px) {
+    .cart-pb-coupon-code-span {
+      display: none;
+    }
+  }
+
+  .cart-pb-coupon-btn:hover {
+    background: #c40410;
+    transform: translateY(-1px);
+  }
+
+  .cart-pb-coupon-btn.copied {
+    background: #15803D !important;
+    box-shadow: 0 2px 4px rgba(21, 128, 61, 0.2) !important;
+  }
+</style>
+
+<div class="cart-pb-card" id="cart-pb-card" data-qty="{{ cart_qty }}">
+  <!-- Top Headline from Customizer -->
+  <div class="cart-pb-headline">
+    {{ top_banner }}
+  </div>
+
+  <!-- Progress Bar with 3 circular nodes in Normal Flow (Never overlaps) -->
+  <div class="cart-pb-track-wrap">
+    <!-- Connecting line -->
+    <div class="cart-pb-track-line">
+      <div
+        class="cart-pb-track-fill"
+        style="width: {{ progress_pct }}% !important; height: 4px !important; background-color: {{ brand_color }} !important; display: block !important;"
+      ></div>
+    </div>
+
+    <!-- 3 Nodes -->
+    <div class="cart-pb-nodes">
+      <!-- Node 1: BUY 1 / FREE SHIPPING -->
+      <div class="cart-pb-node cart-pb-node--1{% if active_tier >= 1 %} is-active{% endif %}">
+        <div class="cart-pb-circle">
+          <!-- Tag icon -->
+          <svg viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <div class="cart-pb-node-labels">
+          <span class="cart-pb-node-step">{{ tier1_step }}</span>
+          <span class="cart-pb-node-val">{{ tier1_val }}</span>
+        </div>
+      </div>
+
+      <!-- Node 2: BUY 2 / +5% OFF -->
+      <div class="cart-pb-node cart-pb-node--2{% if active_tier >= 2 %} is-active{% endif %}">
+        <div class="cart-pb-circle">
+          <!-- Tag icon -->
+          <svg viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <div class="cart-pb-node-labels">
+          <span class="cart-pb-node-step">{{ tier2_step }}</span>
+          <span class="cart-pb-node-val{% if active_tier >= 2 %} cart-pb-badge{% endif %}">{{ tier2_val }}</span>
+        </div>
+      </div>
+
+      <!-- Node 3: BUY 3 / +10% OFF -->
+      <div class="cart-pb-node cart-pb-node--3{% if active_tier >= 3 %} is-active{% endif %}">
+        <div class="cart-pb-circle">
+          <!-- % Icon -->
+          <span class="cart-pb-circle__pct">%</span>
+        </div>
+        <div class="cart-pb-node-labels">
+          <span class="cart-pb-node-step">{{ tier3_step }}</span>
+          <span class="cart-pb-node-val cart-pb-badge">{{ tier3_val }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coupon Box (Cleanly Placed Below Nodes) -->
+  {%- if show_coupon -%}
+    <div class="cart-pb-coupon">
+      <div class="cart-pb-coupon-left">
+        <div class="cart-pb-coupon-tag-icon">
+          <!-- Tag filled icon -->
+          <svg viewBox="0 0 24 24">
+            <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+          </svg>
+        </div>
+        <div class="cart-pb-coupon-text">
+          <div class="cart-pb-coupon-title">
+            {{ coupon_prefix }}
+          </div>
+          <div class="cart-pb-coupon-sub">
+            {{ discount_txt }}
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-pb-coupon-right">
+        <div class="cart-pb-coupon-pill" id="cart-pb-code-text">{{ active_code }}</div>
+        <button
+          class="cart-pb-coupon-btn"
+          type="button"
+          onclick="cpCopyCoupon(this, '{{ active_code }}')"
+          aria-label="Copy coupon code {{ active_code }}"
+        >
+          {{ coupon_btn }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    var card = document.getElementById('cart-pb-card');
+    if (!card) return;
+    var fill = card.querySelector('.cart-pb-track-fill');
+    var qty = parseInt(card.getAttribute('data-qty') || '0', 10);
+    if (fill) {
+      if (qty >= 3) {
+        fill.style.setProperty('width', '100%', 'important');
+      } else if (qty >= 2) {
+        fill.style.setProperty('width', '50%', 'important');
+      } else {
+        fill.style.setProperty('width', '0%', 'important');
+      }
+    }
+  })();
+
+  if (typeof cpCopyCoupon === 'undefined') {
+    function cpCopyCoupon(btn, code) {
+      var targetCode = code || (document.getElementById('cart-pb-code-text') ? document.getElementById('cart-pb-code-text').textContent.trim() : '');
+      if (!targetCode) return;
+
+      function onCopied() {
+        btn.classList.add('copied');
+        btn.textContent = 'COPIED!';
+
+        /* Auto apply to checkout form if present */
+        var checkoutBtn = document.getElementById('CartDrawer-Checkout');
+        if (checkoutBtn && checkoutBtn.form) {
+          var existingInput = checkoutBtn.form.querySelector('input[name="discount"]');
+          if (!existingInput) {
+            existingInput = document.createElement('input');
+            existingInput.type = 'hidden';
+            existingInput.name = 'discount';
+            checkoutBtn.form.appendChild(existingInput);
+          }
+          existingInput.value = targetCode;
+        }
+
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.textContent = 'COPY';
+        }, 2500);
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(targetCode).then(onCopied).catch(function() {
+          cpFallbackCopy(targetCode, onCopied);
+        });
+      } else {
+        cpFallbackCopy(targetCode, onCopied);
+      }
+    }
+
+    function cpFallbackCopy(text, callback) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+      } catch (e) {}
+      document.body.removeChild(ta);
+      if (callback) callback();
+    }
+  }
+</script>
+{%- endif -%}

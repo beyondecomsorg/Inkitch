@@ -1451,5 +1451,130 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "Cart Progress Bar",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cp_enable",
+        "label": "Enable Cart Progress Bar",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "cp_theme_color",
+        "label": "Theme / Active Color (Nodes, Bar & Copy Button)",
+        "default": "#E30613"
+      },
+      {
+        "type": "header",
+        "content": "Milestone 1 (1 Item – Free Shipping)"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier1_headline",
+        "label": "Milestone 1 Top Headline Text",
+        "default": "FREE SHIPPING UNLOCKED — BUY 2 FOR 5% OFF"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier1_step",
+        "label": "Step 1 Label",
+        "default": "BUY 1"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier1_value",
+        "label": "Step 1 Offer Text",
+        "default": "FREE SHIPPING"
+      },
+      {
+        "type": "header",
+        "content": "Milestone 2 (2 Items – 5% Off)"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier2_headline",
+        "label": "Milestone 2 Top Headline Text",
+        "default": "5% OFF UNLOCKED — CODE: [code]",
+        "info": "Use [code] to automatically insert the coupon code below"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier2_step",
+        "label": "Step 2 Label",
+        "default": "BUY 2"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier2_value",
+        "label": "Step 2 Offer Text",
+        "default": "+5% OFF"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier2_coupon",
+        "label": "Step 2 Coupon Code",
+        "default": "EXTRA5"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier2_sub",
+        "label": "Step 2 Coupon Box Subtitle",
+        "default": "5% OFF UNLOCKED"
+      },
+      {
+        "type": "header",
+        "content": "Milestone 3 (3 Items – 10% Off)"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier3_headline",
+        "label": "Milestone 3 Top Headline Text",
+        "default": "10% OFF UNLOCKED — CODE: [code]",
+        "info": "Use [code] to automatically insert the coupon code below"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier3_step",
+        "label": "Step 3 Label",
+        "default": "BUY 3"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier3_value",
+        "label": "Step 3 Offer Text",
+        "default": "+10% OFF"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier3_coupon",
+        "label": "Step 3 Coupon Code",
+        "default": "BUY3G10"
+      },
+      {
+        "type": "text",
+        "id": "cp_tier3_sub",
+        "label": "Step 3 Coupon Box Subtitle",
+        "default": "10% OFF UNLOCKED"
+      },
+      {
+        "type": "header",
+        "content": "Coupon Box Labels"
+      },
+      {
+        "type": "text",
+        "id": "cp_coupon_label",
+        "label": "Coupon Title Prefix",
+        "default": "Coupon unlocked:"
+      },
+      {
+        "type": "text",
+        "id": "cp_coupon_btn",
+        "label": "Copy Button Label",
+        "default": "COPY"
+      }
+    ]
   }
 ]

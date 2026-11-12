@@ -33,6 +33,24 @@
     font-size: 2.2rem !important;
     font-weight: 600 !important;
     margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+  }
+
+  .drawer__header-count-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #E30613 !important;
+    color: #ffffff !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    min-width: 2.4rem !important;
+    height: 2.4rem !important;
+    padding: 0 0.6rem !important;
+    border-radius: 9999px !important;
+    line-height: 1 !important;
   }
 
   .drawer__header {
@@ -40,20 +58,20 @@
     justify-content: space-between !important;
     align-items: center !important;
     position: relative !important;
-    padding: 1.5rem !important;
-    margin: 0 -1.5rem 1.5rem -1.5rem !important;
+    padding: 1.0rem 1.5rem !important;
+    margin: 0 -1.5rem 0 -1.5rem !important;
     border-bottom: 1px solid rgba(var(--color-foreground), 0.08) !important;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02) !important;
   }
 
   .drawer__close {
     position: static !important;
-    height: 4.4rem !important;
-    width: 4.4rem !important;
+    height: 3.6rem !important;
+    width: 3.6rem !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-right: -1rem !important;
+    margin-right: -0.5rem !important;
   }
 
   /* Product Row Styling */
@@ -64,13 +82,21 @@
     width: 100% !important;
   }
 
+  .cart-drawer .cart-items thead {
+    display: none !important;
+  }
+
+  .cart-drawer .cart-items tbody tr:first-child {
+    padding-top: 0 !important;
+  }
+
   .cart-drawer .cart-item {
     display: grid !important;
     grid-template-columns: 80px 1fr !important; /* Column 1: Image, Column 2: Content (Details & Stepper) */
     grid-template-rows: auto auto !important;
-    gap: 1.2rem 1.6rem !important;
+    gap: 1.0rem 1.4rem !important;
     border-bottom: 1px solid rgba(var(--color-foreground), 0.08) !important;
-    padding: 1.5rem 0 !important;
+    padding: 1.2rem 0 !important;
     align-items: start !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -401,7 +427,12 @@
       tabindex="-1"
     >
       <div class="drawer__header">
-        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
+        <h2 class="drawer__heading">
+          {{ 'sections.cart.title' | t }}
+          {%- if cart.item_count > 0 -%}
+            <span class="drawer__header-count-badge">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </h2>
         <button
           class="drawer__close"
           type="button"
@@ -454,6 +485,9 @@
           class=" is-empty"
         {% endif %}
       >
+        {%- if cart != empty -%}
+          {%- render 'cart-drawer-progress-bar' -%}
+        {%- endif -%}
         <form
           action="{{ routes.cart_url }}"
           id="CartDrawer-Form"
