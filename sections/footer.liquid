@@ -578,6 +578,73 @@
   .footer-mfg-social-wrapper-custom {
     margin-top: 20px !important;
   }
+
+  /* Popular Searches Section Custom Styling */
+  .footer-popular-searches-custom {
+    padding: 10px 0 25px 0 !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .footer-popular-searches-heading-custom {
+    font-family: var(--font-heading-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    margin: 0 0 16px 0 !important;
+    line-height: 1.3 !important;
+  }
+
+  .footer-popular-searches-list-custom {
+    font-size: 1.25rem !important;
+    line-height: 2.1 !important;
+    color: #cccccc !important;
+    word-break: normal !important;
+  }
+
+  .footer-popular-searches-link-custom {
+    color: #d1d5db !important;
+    text-decoration: none !important;
+    font-size: 1.25rem !important;
+    font-weight: 400 !important;
+    display: inline !important;
+    transition: color 0.2s ease, text-decoration 0.2s ease !important;
+  }
+
+  .footer-popular-searches-link-custom:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+  }
+
+  .footer-popular-searches-sep-custom {
+    margin: 0 8px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-weight: 300 !important;
+    user-select: none !important;
+    display: inline !important;
+  }
+
+  @media screen and (max-width: 768px) {
+    .footer-popular-searches-custom {
+      padding: 10px 0 20px 0 !important;
+      text-align: left !important;
+    }
+    .footer-popular-searches-heading-custom {
+      font-size: 1.2rem !important;
+      margin-bottom: 12px !important;
+    }
+    .footer-popular-searches-link-custom,
+    .footer-popular-searches-list-custom {
+      font-size: 1.15rem !important;
+      line-height: 1.85 !important;
+    }
+    .footer-popular-searches-sep-custom {
+      margin: 0 6px !important;
+    }
+  }
 {%- endstyle -%}
 
 <footer class="footer footer-wrapper-custom-glow color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
@@ -893,6 +960,57 @@
 
   <!-- Bottom Bar & Divider Custom -->
   <div class="footer-divider-custom"></div>
+
+  {%- if section.settings.enable_popular_searches -%}
+    {%- assign p_heading = section.settings.popular_searches_heading | default: "MOST POPULAR inKitch" -%}
+    {%- assign p_menu = section.settings.popular_searches_menu -%}
+    {%- capture newline %}
+{% endcapture -%}
+
+    <div class="footer-popular-searches-custom page-width">
+      {%- if p_heading != blank -%}
+        <h3 class="footer-popular-searches-heading-custom">{{ p_heading }}</h3>
+      {%- endif -%}
+      <div class="footer-popular-searches-list-custom">
+        {%- if p_menu != blank and linklists[p_menu].links.size > 0 -%}
+          {%- assign count = 0 -%}
+          {%- for link in linklists[p_menu].links -%}
+            {%- if count > 0 -%}<span class="footer-popular-searches-sep-custom" aria-hidden="true">|</span>{%- endif -%}
+            <a href="{{ link.url }}" class="footer-popular-searches-link-custom">{{ link.title }}</a>
+            {%- assign count = count | plus: 1 -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign items_raw = section.settings.popular_searches_items -%}
+          {%- if items_raw == blank -%}
+            {%- assign items_raw = "All Lunch Boxes;/collections/tiffin-or-lunch-box | Office Lunch Boxes;/collections/office-lunch-boxes | School & Kids Lunch Boxes;/collections/school-and-kids-lunch-boxes | Microwave-Safe Lunch Boxes;/collections/microwave-safe-lunch-boxes | Bento & Compartment Lunch Boxes;/collections/bento-and-compartment-lunch-boxes | Lunch Box with Bottle / Tumbler;/collections/lunch-box-with-bottle-tumbler | Leak-Proof Lunch Boxes;/collections/leak-proof-lunch-boxes | Hot Meals On The Go;/collections/hot-meals-on-the-go | All Bottles & Flasks;/collections/stainless-steel-bottle | Hot & Cold Flasks;/collections/hot-and-cold-flasks | 1 Litre Bottles;/collections/1-litre-bottles | Gym & Sports Bottles;/collections/gym-and-sports-bottles | Everyday Bottles, Sippers & Tumblers;/collections/everyday-bottles-sippers-and-tumblers | Bottle Family Packs;/collections/bottle-family-packs | ISI-Certified Bottles & Flasks;/collections/isi-certified-bottles-and-flasks | All Storage;/collections/storage-container | Airtight Containers;/collections/airtight-containers | See-Through Containers;/collections/see-through-containers | Puri, Roti & Namkeen Dabbas;/collections/puri-roti-and-namkeen-dabbas | Dry Fruit & Snack Storage;/collections/dry-fruit-and-snack-storage | Container Sets;/collections/container-sets | Fridge Storage;/collections/fridge-storage | Masala & Spice Boxes;/collections/spice-box | All Dining;/collections/plates-and-bowls | Compartment Thali Plates;/collections/compartment-thali-plates | Street Food at Home;/collections/street-food-at-home | Katori, Bowls & Cutlery;/collections/katori-bowls-and-cutlery | Complete Dinner Set;/collections/complete-dinner-set | All Kitchen Tools;/collections/kitchen-tools | Chopping & Prep Tools;/collections/chopping-and-prep-tools | Homemade Indian Kitchen;/collections/homemade-indian-kitchen | Cooking Essentials;/collections/cooking-essentials | Office Essentials;/collections/office-essentials | Back to School;/collections/back-to-school | Gym & Fitness;/collections/gym-and-fitness | Travel & Picnic;/collections/travel-and-picnic | New Home Setup;/collections/new-home-setup | Diwali Gifts;/collections/diwali-gifts | Corporate Diwali Gifting;/collections/corporate-diwali-gifting | Gifts Under ₹499;/collections/gifts-under-rs-499 | Gifts Under ₹999;/collections/gifts-under-rs-999 | Premium Gifts ₹1,000+;/collections/premium-gifts-rs-1-000plus | Housewarming Gifts;/collections/housewarming-gifts | Under ₹299;/collections/under-rs-299 | Under ₹499;/collections/under-rs-499 | ₹500 – ₹999;/collections/rs-500-rs-999 | ₹1,000 & Above;/collections/rs-1-000-and-above | Best Sellers;/collections/best-sellers | New Arrivals;/collections/new-arrivals | Value Packs & Combos;/collections/combo | Heavy-Gauge Collection;/collections/heavy-gauge-collection | Colour Pop;/collections/colour-pop" -%}
+          {%- endif -%}
+          {%- assign items_clean = items_raw | replace: newline, '|' -%}
+          {%- assign items = items_clean | split: '|' -%}
+          {%- assign count = 0 -%}
+          {%- for item in items -%}
+            {%- assign trimmed = item | strip -%}
+            {%- if trimmed != blank -%}
+              {%- assign item_title = trimmed -%}
+              {%- assign item_url = routes.search_url | append: '?q=' | append: trimmed | url_encode | append: '&type=product' -%}
+              {%- if trimmed contains ';' -%}
+                {%- assign parts = trimmed | split: ';' -%}
+                {%- assign item_title = parts[0] | strip -%}
+                {%- assign item_url = parts[1] | strip -%}
+              {%- elsif trimmed contains '::' -%}
+                {%- assign parts = trimmed | split: '::' -%}
+                {%- assign item_title = parts[0] | strip -%}
+                {%- assign item_url = parts[1] | strip -%}
+              {%- endif -%}
+              {%- if count > 0 -%}<span class="footer-popular-searches-sep-custom" aria-hidden="true">|</span>{%- endif -%}
+              <a href="{{ item_url }}" class="footer-popular-searches-link-custom">{{ item_title }}</a>
+              {%- assign count = count | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
   {%- assign tagline = section.settings.tagline_text | default: "✦ INKITCH · Built Better for Everyday Use" -%}
   {%- if tagline != blank -%}
     <div class="footer-tagline-strip-custom page-width">
@@ -1175,6 +1293,35 @@
       "type": "url",
       "id": "telegram_channel_url",
       "label": "Telegram Channel URL"
+    },
+    {
+      "type": "header",
+      "content": "Popular Searches Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_popular_searches",
+      "default": true,
+      "label": "Enable Popular Searches"
+    },
+    {
+      "type": "text",
+      "id": "popular_searches_heading",
+      "default": "MOST POPULAR INKITCH",
+      "label": "Heading"
+    },
+    {
+      "type": "link_list",
+      "id": "popular_searches_menu",
+      "label": "Menu (optional)",
+      "info": "If selected, links from this menu will be used. Otherwise, items below are used."
+    },
+    {
+      "type": "textarea",
+      "id": "popular_searches_items",
+      "label": "Popular Search Items",
+      "info": "Enter items separated by pipe (|) or new line. Format as 'Title;URL' or simply 'Keyword' to link to search.",
+      "default": "All Lunch Boxes;/collections/tiffin-or-lunch-box | Office Lunch Boxes;/collections/office-lunch-boxes | School & Kids Lunch Boxes;/collections/school-and-kids-lunch-boxes | Microwave-Safe Lunch Boxes;/collections/microwave-safe-lunch-boxes | Bento & Compartment Lunch Boxes;/collections/bento-and-compartment-lunch-boxes | Lunch Box with Bottle / Tumbler;/collections/lunch-box-with-bottle-tumbler | Leak-Proof Lunch Boxes;/collections/leak-proof-lunch-boxes | Hot Meals On The Go;/collections/hot-meals-on-the-go | All Bottles & Flasks;/collections/stainless-steel-bottle | Hot & Cold Flasks;/collections/hot-and-cold-flasks | 1 Litre Bottles;/collections/1-litre-bottles | Gym & Sports Bottles;/collections/gym-and-sports-bottles | Everyday Bottles, Sippers & Tumblers;/collections/everyday-bottles-sippers-and-tumblers | Bottle Family Packs;/collections/bottle-family-packs | ISI-Certified Bottles & Flasks;/collections/isi-certified-bottles-and-flasks | All Storage;/collections/storage-container | Airtight Containers;/collections/airtight-containers | See-Through Containers;/collections/see-through-containers | Puri, Roti & Namkeen Dabbas;/collections/puri-roti-and-namkeen-dabbas | Dry Fruit & Snack Storage;/collections/dry-fruit-and-snack-storage | Container Sets;/collections/container-sets | Fridge Storage;/collections/fridge-storage | Masala & Spice Boxes;/collections/spice-box | All Dining;/collections/plates-and-bowls | Compartment Thali Plates;/collections/compartment-thali-plates | Street Food at Home;/collections/street-food-at-home | Katori, Bowls & Cutlery;/collections/katori-bowls-and-cutlery | Complete Dinner Set;/collections/complete-dinner-set | All Kitchen Tools;/collections/kitchen-tools | Chopping & Prep Tools;/collections/chopping-and-prep-tools | Homemade Indian Kitchen;/collections/homemade-indian-kitchen | Cooking Essentials;/collections/cooking-essentials | Office Essentials;/collections/office-essentials | Back to School;/collections/back-to-school | Gym & Fitness;/collections/gym-and-fitness | Travel & Picnic;/collections/travel-and-picnic | New Home Setup;/collections/new-home-setup | Diwali Gifts;/collections/diwali-gifts | Corporate Diwali Gifting;/collections/corporate-diwali-gifting | Gifts Under ₹499;/collections/gifts-under-rs-499 | Gifts Under ₹999;/collections/gifts-under-rs-999 | Premium Gifts ₹1,000+;/collections/premium-gifts-rs-1-000plus | Housewarming Gifts;/collections/housewarming-gifts | Under ₹299;/collections/under-rs-299 | Under ₹499;/collections/under-rs-499 | ₹500 – ₹999;/collections/rs-500-rs-999 | ₹1,000 & Above;/collections/rs-1-000-and-above | Best Sellers;/collections/best-sellers | New Arrivals;/collections/new-arrivals | Value Packs & Combos;/collections/combo | Heavy-Gauge Collection;/collections/heavy-gauge-collection | Colour Pop;/collections/colour-pop"
     },
     {
       "type": "header",
