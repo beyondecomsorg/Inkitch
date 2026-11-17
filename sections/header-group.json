@@ -21,6 +21,13 @@
             "link": ""
           }
         },
+        "announcement_qFDfeL": {
+          "type": "announcement",
+          "settings": {
+            "text": "Cash on Delivery (COD) Available",
+            "link": ""
+          }
+        },
         "announcement_Ct6bnf": {
           "type": "announcement",
           "settings": {
@@ -38,6 +45,7 @@
       },
       "block_order": [
         "announcement_DCqyRd",
+        "announcement_qFDfeL",
         "announcement_Ct6bnf",
         "announcement_gML8aL"
       ],
